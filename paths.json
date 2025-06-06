@@ -1,8 +1,8 @@
 {
   "mappings": [
-    "/content/aem-boilerplate/:/",
-    "/content/aem-boilerplate/configuration:/.helix/config.json",
-    "/content/aem-boilerplate/metadata:/metadata.json"
+    "/content/e2e-crosswalk/:/",
+    "/content/e2e-crosswalk/configuration:/.helix/config.json",
+    "/content/e2e-crosswalk/metadata:/metadata.json"
   ],
   "includes": [
     "content/e2e-crosswalk/"
