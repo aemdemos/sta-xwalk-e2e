@@ -1,33 +1,48 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the hero.block div
+  // Find the hero block
   const heroBlock = element.querySelector('.hero.block');
+  if (!heroBlock) return;
+  // The relevant content is inside .hero.block > div > div
+  let contentRoot = heroBlock.querySelector('div > div');
+  if (!contentRoot) contentRoot = heroBlock;
 
-  let imgEl = null;
-  let headingEl = null;
-
-  if (heroBlock) {
-    // Find img (inside <picture> inside <p>)
-    const pictureP = heroBlock.querySelector('picture')?.closest('p');
-    if (pictureP) {
-      const picture = pictureP.querySelector('picture');
-      if (picture) {
-        imgEl = pictureP;
-      }
+  // IMAGE: find the <picture> or <img>
+  let imageEl = null;
+  const picture = contentRoot.querySelector('picture');
+  if (picture) {
+    imageEl = picture;
+  } else {
+    const img = contentRoot.querySelector('img');
+    if (img) {
+      // Wrap in <picture> if necessary for consistency
+      const pic = document.createElement('picture');
+      pic.appendChild(img);
+      imageEl = pic;
     }
-    // Find heading (prefer h1, fallback to h2, etc)
-    headingEl = heroBlock.querySelector('h1, h2, h3, h4, h5, h6');
-    // Also handle possibility of empty <p> lines (for spacing)
   }
 
-  // Compose the rows as per the example markdown: Header, image, heading
-  const rows = [
+  // CONTENT: gather heading(s) and non-empty <p> not containing the picture
+  const contentNodes = [];
+  for (const node of contentRoot.childNodes) {
+    if (node.nodeType === 1) {
+      const tag = node.tagName.toLowerCase();
+      if (tag === 'p') {
+        if (node.querySelector('picture, img')) continue;
+        if (node.textContent.trim() === '') continue;
+        contentNodes.push(node);
+      } else if (/^h[1-6]$/.test(tag)) {
+        contentNodes.push(node);
+      }
+    }
+  }
+
+  // Compose the table as per the example: 3 rows, 1 column
+  const cells = [
     ['Hero'],
-    [imgEl ? imgEl : ''],
-    [headingEl ? headingEl : ''],
+    [imageEl || ''],
+    [contentNodes.length ? contentNodes : '']
   ];
-
-  const table = WebImporter.DOMUtils.createTable(rows, document);
-
+  const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }

@@ -1,26 +1,32 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the inner columns block
-  const columnsBlock = element.querySelector('.columns.block');
-  if (!columnsBlock) return;
+  // Find the main columns block within the wrapper
+  const block = element.querySelector('[data-block-name="columns"]');
+  if (!block) return;
 
-  // Get all direct child divs of the columnsBlock (these are the column rows)
-  const rowDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
-  if (!rowDivs.length) return;
+  // Get all immediate rows in the block (each row is a <div>)
+  const rows = Array.from(block.children);
+  if (rows.length === 0) return;
 
-  // The header row should always be a single column (per the example)
-  const headerRow = ['Columns (columns3)'];
-  const tableRows = [headerRow];
+  // Prepare the content rows (each row is an array of columns)
+  const contentRows = rows.map(row => Array.from(row.children));
+  // Calculate the maximum number of columns in any row
+  const maxCols = Math.max(...contentRows.map(cols => cols.length));
 
-  // Each rowDiv corresponds to a row, each direct child div of rowDiv is a cell
-  rowDivs.forEach((rowDiv) => {
-    const cellDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
-    if (cellDivs.length) {
-      tableRows.push(cellDivs);
+  // Header: exactly one <th> with the exact text from the example
+  const tableRows = [['Columns']];
+
+  // For each row, fill to maxCols columns, so the table is rectangular
+  contentRows.forEach(cols => {
+    const padded = cols.slice();
+    while (padded.length < maxCols) {
+      padded.push('');
     }
+    tableRows.push(padded);
   });
 
-  // Create the table
+  // Create the table using the helper
   const table = WebImporter.DOMUtils.createTable(tableRows, document);
+  // Replace the original element with the new table
   element.replaceWith(table);
 }
