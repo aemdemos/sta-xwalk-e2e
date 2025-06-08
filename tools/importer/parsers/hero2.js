@@ -1,48 +1,47 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the hero block
-  const heroBlock = element.querySelector('.hero.block');
-  if (!heroBlock) return;
-  // The relevant content is inside .hero.block > div > div
-  let contentRoot = heroBlock.querySelector('div > div');
-  if (!contentRoot) contentRoot = heroBlock;
+  // Find the innermost hero block content
+  // Example HTML: .hero-wrapper > .hero.block > div > div
+  const container = element.querySelector('.hero-wrapper .hero.block > div > div');
 
-  // IMAGE: find the <picture> or <img>
-  let imageEl = null;
-  const picture = contentRoot.querySelector('picture');
-  if (picture) {
-    imageEl = picture;
+  // Defensive: fallback to .hero.block > div > div if .hero-wrapper is missing
+  let contentRoot = container || element.querySelector('.hero.block > div > div') || element;
+
+  // The block header for Hero must be 'Hero', matching the example, no bold tags
+  const headerRow = ['Hero'];
+
+  // The background image is the <picture> (preferred) or <img>
+  let bgImage = '';
+  let pic = contentRoot.querySelector('picture');
+  if (pic) {
+    bgImage = pic;
   } else {
-    const img = contentRoot.querySelector('img');
+    // fallback to standalone img
+    let img = contentRoot.querySelector('img');
     if (img) {
-      // Wrap in <picture> if necessary for consistency
-      const pic = document.createElement('picture');
-      pic.appendChild(img);
-      imageEl = pic;
+      bgImage = img;
+    } else {
+      bgImage = '';
     }
   }
 
-  // CONTENT: gather heading(s) and non-empty <p> not containing the picture
-  const contentNodes = [];
-  for (const node of contentRoot.childNodes) {
-    if (node.nodeType === 1) {
-      const tag = node.tagName.toLowerCase();
-      if (tag === 'p') {
-        if (node.querySelector('picture, img')) continue;
-        if (node.textContent.trim() === '') continue;
-        contentNodes.push(node);
-      } else if (/^h[1-6]$/.test(tag)) {
-        contentNodes.push(node);
-      }
-    }
+  // The headline is the first <h1>, <h2>, or <h3>
+  let heading = '';
+  let h = contentRoot.querySelector('h1, h2, h3');
+  if (h) {
+    heading = h;
+  } else {
+    heading = '';
   }
 
-  // Compose the table as per the example: 3 rows, 1 column
-  const cells = [
-    ['Hero'],
-    [imageEl || ''],
-    [contentNodes.length ? contentNodes : '']
+  // Final table structure - 1 column, 3 rows, matching the example
+  const rows = [
+    headerRow,
+    [bgImage],
+    [heading],
   ];
-  const table = WebImporter.DOMUtils.createTable(cells, document);
+
+  const table = WebImporter.DOMUtils.createTable(rows, document);
+  // Replace the original element with the new block table
   element.replaceWith(table);
 }

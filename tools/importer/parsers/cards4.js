@@ -1,43 +1,29 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the <ul> that contains the cards
+  // Find the <ul> with all card <li>s
   const ul = element.querySelector('ul');
   if (!ul) return;
-  const cards = Array.from(ul.children).filter(li => li.tagName === 'LI');
-
-  // Header row as in the example
-  const rows = [['Cards (cards4)']];
-
-  // For each card, add a row with two cells: image and text
-  cards.forEach(li => {
-    // First cell: image (picture or img)
+  const cards = Array.from(ul.children);
+  const rows = [];
+  // Header row:
+  rows.push(['Cards (cards4)']);
+  // Each card: two cells, [image, text]
+  cards.forEach((li) => {
+    // First cell: image or icon
+    let imgCell = '';
     const imgDiv = li.querySelector('.cards-card-image');
-    let imageCell = '';
     if (imgDiv) {
+      // Prefer the picture element (for possible responsive images)
       const picture = imgDiv.querySelector('picture');
-      const img = imgDiv.querySelector('img');
-      imageCell = picture || img || '';
+      imgCell = picture || imgDiv;
     }
-
-    // Second cell: text (all content inside .cards-card-body, preserve structure)
-    const bodyDiv = li.querySelector('.cards-card-body');
+    // Second cell: text (title, description, cta)
     let textCell = '';
-    if (bodyDiv) {
-      // Keep the strong, paragraphs, etc - reference the actual nodes
-      // (avoid creating new elements or strings)
-      // Filter out empty text nodes
-      const nodes = Array.from(bodyDiv.childNodes).filter(node => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          return node.textContent.trim().length > 0;
-        }
-        return true;
-      });
-      textCell = nodes.length === 1 ? nodes[0] : nodes;
-    }
-    rows.push([imageCell, textCell]);
+    const bodyDiv = li.querySelector('.cards-card-body');
+    if (bodyDiv) textCell = bodyDiv;
+    rows.push([imgCell, textCell]);
   });
-
-  // Create table and replace element
+  // Create the block table
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }

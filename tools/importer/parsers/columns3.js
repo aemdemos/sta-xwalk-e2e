@@ -1,32 +1,26 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the main columns block within the wrapper
-  const block = element.querySelector('[data-block-name="columns"]');
-  if (!block) return;
+  // Find the columns block (might be the element itself, or a descendant)
+  let columnsBlock = element;
+  if (!columnsBlock.classList.contains('columns')) {
+    columnsBlock = element.querySelector('.columns');
+  }
 
-  // Get all immediate rows in the block (each row is a <div>)
-  const rows = Array.from(block.children);
-  if (rows.length === 0) return;
+  // Prepare the header row exactly as required
+  const cells = [
+    ['Columns (columns3)']
+  ];
 
-  // Prepare the content rows (each row is an array of columns)
-  const contentRows = rows.map(row => Array.from(row.children));
-  // Calculate the maximum number of columns in any row
-  const maxCols = Math.max(...contentRows.map(cols => cols.length));
-
-  // Header: exactly one <th> with the exact text from the example
-  const tableRows = [['Columns']];
-
-  // For each row, fill to maxCols columns, so the table is rectangular
-  contentRows.forEach(cols => {
-    const padded = cols.slice();
-    while (padded.length < maxCols) {
-      padded.push('');
+  // Get all direct rows (columns per row) inside the columns block
+  const rowDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
+  for (const rowDiv of rowDivs) {
+    const colDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
+    // Each cell should contain an array with the referenced source element(s)
+    if (colDivs.length > 0) {
+      cells.push(colDivs.map(col => [col]));
     }
-    tableRows.push(padded);
-  });
+  }
 
-  // Create the table using the helper
-  const table = WebImporter.DOMUtils.createTable(tableRows, document);
-  // Replace the original element with the new table
+  const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }
