@@ -2,23 +2,34 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const fetch = require('node-fetch');
 
-const creds = JSON.parse(fs.readFileSync(process.env.SERVICE_CREDENTIALS_PATH, 'utf8'));
+const credsRaw = JSON.parse(fs.readFileSync(process.env.SERVICE_CREDENTIALS_PATH, 'utf8'));
+
+// Extract fields from the custom format
+const integration = credsRaw.integration || {};
+const technicalAccount = integration.technicalAccount || {};
+
+const client_id = technicalAccount.clientId;
+const client_secret = technicalAccount.clientSecret;
+const technical_account_id = integration.id;
+const org_id = integration.org;
+const private_key = integration.privateKey;
+const metascopes = [integration.metascopes]; // assuming it's a string, wrap in array
 
 const payload = {
-  iss: creds.client_id,
-  sub: creds.technical_account_id,
-  aud: `https://ims-na1.adobelogin.com/c/${creds.client_id}`,
-  [`https://ims-na1.adobelogin.com/s/${creds.metascopes[0]}`]: true,
+  iss: client_id,
+  sub: technical_account_id,
+  aud: `https://ims-na1.adobelogin.com/c/${client_id}`,
+  [`https://ims-na1.adobelogin.com/s/${metascopes[0]}`]: true,
 };
 
-const token = jwt.sign(payload, creds.private_key, { algorithm: 'RS256', expiresIn: '5m' });
+const token = jwt.sign(payload, private_key, { algorithm: 'RS256', expiresIn: '5m' });
 
 fetch('https://ims-na1.adobelogin.com/ims/exchange/jwt', {
   method: 'POST',
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   body: new URLSearchParams({
-    client_id: creds.client_id,
-    client_secret: creds.client_secret,
+    client_id: client_id,
+    client_secret: client_secret,
     jwt_token: token,
   }),
 })
