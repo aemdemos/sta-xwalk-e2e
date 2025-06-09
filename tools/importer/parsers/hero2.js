@@ -1,47 +1,50 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the innermost hero block content
-  // Example HTML: .hero-wrapper > .hero.block > div > div
-  const container = element.querySelector('.hero-wrapper .hero.block > div > div');
+  // Find the content container inside the hero block
+  // This block is usually: .hero-wrapper > .hero > div > div
+  let contentDiv = element.querySelector('.hero-wrapper .hero > div > div');
+  if (!contentDiv) {
+    // fallback for slight variations
+    contentDiv = element.querySelector('.hero-wrapper .hero > div');
+  }
+  if (!contentDiv) {
+    contentDiv = element;
+  }
 
-  // Defensive: fallback to .hero.block > div > div if .hero-wrapper is missing
-  let contentRoot = container || element.querySelector('.hero.block > div > div') || element;
+  // Find the <picture> element for the image, if present
+  let pictureEl = null;
+  const pictureP = contentDiv.querySelector('picture');
+  if (pictureP) {
+    pictureEl = pictureP;
+  }
 
-  // The block header for Hero must be 'Hero', matching the example, no bold tags
-  const headerRow = ['Hero'];
-
-  // The background image is the <picture> (preferred) or <img>
-  let bgImage = '';
-  let pic = contentRoot.querySelector('picture');
-  if (pic) {
-    bgImage = pic;
-  } else {
-    // fallback to standalone img
-    let img = contentRoot.querySelector('img');
-    if (img) {
-      bgImage = img;
-    } else {
-      bgImage = '';
+  // Collect all heading and paragraph elements under contentDiv, in appearance order
+  // We'll allow for: h1, h2, h3, h4, h5, h6, p
+  const contentNodes = [];
+  for (const node of contentDiv.children) {
+    // skip the picture-containing <p> if we already grabbed it
+    if (node.querySelector && node.querySelector('picture') && pictureEl) {
+      continue;
+    }
+    if (node.tagName.match(/^H[1-6]$/) || node.tagName === 'P') {
+      // Only append if not empty
+      if (node.textContent.trim().length > 0) {
+        contentNodes.push(node);
+      }
     }
   }
 
-  // The headline is the first <h1>, <h2>, or <h3>
-  let heading = '';
-  let h = contentRoot.querySelector('h1, h2, h3');
-  if (h) {
-    heading = h;
-  } else {
-    heading = '';
-  }
+  // Table rows as per the "Hero" block (Header, Image, Text)
+  const headerRow = ['Hero'];
+  const imageRow = [pictureEl || ''];
+  // The text row: if we have any heading or p, otherwise blank
+  const textRow = [contentNodes.length ? contentNodes : ''];
 
-  // Final table structure - 1 column, 3 rows, matching the example
-  const rows = [
+  const table = WebImporter.DOMUtils.createTable([
     headerRow,
-    [bgImage],
-    [heading],
-  ];
+    imageRow,
+    textRow
+  ], document);
 
-  const table = WebImporter.DOMUtils.createTable(rows, document);
-  // Replace the original element with the new block table
   element.replaceWith(table);
 }
