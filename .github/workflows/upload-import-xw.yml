@@ -54,15 +54,6 @@ jobs:
           
           # Required parameters
           missing_vars=""
-      
-          if [ -z "${{ env.XWALK_UPLOAD_TOKEN }}" ]; then
-            missing_vars+="JS_LF- XWALK_UPLOAD_TOKEN (secret) "
-          fi
-
-          if [ -n "$missing_vars" ]; then
-            errorMessage="❌ The following variables are not set in your GitHub repo: $missing_vars JS_LF"
-            echo "errorMessage=$errorMessage" >> $GITHUB_ENV
-          fi
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -158,6 +149,12 @@ jobs:
           echo "Access token is set (not shown for security)"
         env:
           XWALK_UPLOAD_TOKEN: ${{ steps.get-token.outputs.access_token }}
+
+      - name: Check if access token was generated
+        if: ${{ steps.get-token.outputs.access_token == '' }}
+        run: |
+          echo "Failed to generate access token"
+          exit 1
 
       - name: Run XWalk upload action
         id: xwalk-upload-step
