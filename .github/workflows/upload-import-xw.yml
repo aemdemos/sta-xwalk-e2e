@@ -144,6 +144,21 @@ jobs:
           status_type: progress
           agent_name: upload-import-xw
 
+      - name: Write service credentials to file
+        run: echo "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON }}" > service-credentials.json
+
+      - name: Generate JWT and exchange for access token
+        id: get-token
+        run: node ./scripts/generate-access-token.js
+        env:
+          SERVICE_CREDENTIALS_PATH: ./service-credentials.json
+
+      - name: Use the access token
+        run: |
+          echo "Access token is set (not shown for security)"
+        env:
+          XWALK_UPLOAD_TOKEN: ${{ steps.get-token.outputs.access_token }}
+
       - name: Run XWalk upload action
         id: xwalk-upload-step
         uses: ./.github/actions/sta-xwalk-upload
