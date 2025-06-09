@@ -138,8 +138,8 @@ jobs:
       - name: Write service credentials to file
         run: echo "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON }}" > service-credentials.json
 
-      - name: Install Node.js dependencies for token generation
-        run: npm install jsonwebtoken node-fetch
+      - name: Install Adobe JWT Auth
+        run: npm install @adobe/jwt-auth
 
       - name: Generate JWT and exchange for access token
         id: get-token
