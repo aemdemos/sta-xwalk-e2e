@@ -4,6 +4,15 @@ const fetch = require('node-fetch');
 
 const credsRaw = JSON.parse(fs.readFileSync(process.env.SERVICE_CREDENTIALS_PATH, 'utf8'));
 
+// Log the parsed JSON (redact sensitive fields)
+const safeLog = JSON.parse(JSON.stringify(credsRaw));
+if (safeLog.integration) {
+  if (safeLog.integration.privateKey) safeLog.integration.privateKey = '***redacted***';
+  if (safeLog.integration.publicKey) safeLog.integration.publicKey = '***redacted***';
+  if (safeLog.integration.technicalAccount && safeLog.integration.technicalAccount.clientSecret) safeLog.integration.technicalAccount.clientSecret = '***redacted***';
+}
+console.log('Loaded credentials JSON:', JSON.stringify(safeLog, null, 2));
+
 // Extract fields from the custom format
 const integration = credsRaw.integration || {};
 const technicalAccount = integration.technicalAccount || {};

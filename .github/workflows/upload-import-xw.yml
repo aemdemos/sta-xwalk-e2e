@@ -193,3 +193,6 @@ jobs:
         run: |
           # Delete the temp dir immediately, having system delete it eventually as a redundancy.
           rm -rf "${{ steps.download-zip.outputs.temp_dir }}"
+
+      - name: Check service credentials file size
+        run: wc -c < service-credentials.json
