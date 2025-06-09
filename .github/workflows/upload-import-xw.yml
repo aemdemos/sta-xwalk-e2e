@@ -137,7 +137,7 @@ jobs:
 
       - name: Write service credentials to file
         run: |
-          printf "%s" "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON }}" > service-credentials.json
+          echo "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON_BASE64 }}" | base64 --decode > service-credentials.json
 
       - name: Install Adobe JWT Auth
         run: npm install @adobe/jwt-auth
