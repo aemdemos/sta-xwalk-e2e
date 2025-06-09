@@ -1,26 +1,34 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the columns block (might be the element itself, or a descendant)
-  let columnsBlock = element;
-  if (!columnsBlock.classList.contains('columns')) {
-    columnsBlock = element.querySelector('.columns');
-  }
+  // Find the columns block inside the wrapper
+  const columnsBlock = element.querySelector(':scope > .columns.block');
+  if (!columnsBlock) return;
 
-  // Prepare the header row exactly as required
-  const cells = [
-    ['Columns (columns3)']
-  ];
+  // Get all rows (each row is a div containing two columns)
+  const rows = Array.from(columnsBlock.querySelectorAll(':scope > div'));
+  if (rows.length === 0) return;
 
-  // Get all direct rows (columns per row) inside the columns block
-  const rowDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
-  for (const rowDiv of rowDivs) {
-    const colDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
-    // Each cell should contain an array with the referenced source element(s)
-    if (colDivs.length > 0) {
-      cells.push(colDivs.map(col => [col]));
+  // Prepare the table rows array
+  const tableRows = [];
+  // The header row must match the example exactly
+  tableRows.push(['Columns (columns3)']);
+
+  // For each content row
+  rows.forEach((row) => {
+    // Each column is an immediate child <div>
+    const cols = Array.from(row.querySelectorAll(':scope > div'));
+    // Always include the correct number of columns (here, 2 per row)
+    if (cols.length === 2) {
+      tableRows.push([cols[0], cols[1]]);
+    } else if (cols.length === 1) {
+      // Edge case, rare: only one column/div in the row
+      tableRows.push([cols[0], '']);
     }
-  }
+    // If no columns, skip row
+  });
 
-  const table = WebImporter.DOMUtils.createTable(cells, document);
+  // Build the block table
+  const table = WebImporter.DOMUtils.createTable(tableRows, document);
+  // Replace the original element (wrapper) with the new table
   element.replaceWith(table);
 }
