@@ -136,7 +136,8 @@ jobs:
           agent_name: upload-import-xw
 
       - name: Write service credentials to file
-        run: echo "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON }}" > service-credentials.json
+        run: |
+          printf "%s" "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON }}" > service-credentials.json
 
       - name: Install Adobe JWT Auth
         run: npm install @adobe/jwt-auth

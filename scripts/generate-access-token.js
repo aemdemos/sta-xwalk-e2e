@@ -3,7 +3,6 @@ const jwtAuth = require('@adobe/jwt-auth');
 
 // Read and parse the credentials
 const fileContent = fs.readFileSync(process.env.SERVICE_CREDENTIALS_PATH, 'utf8');
-console.log('Raw credentials JSON:', fileContent);
 const credsRaw = JSON.parse(fileContent);
 const integration = credsRaw.integration || {};
 const technicalAccount = integration.technicalAccount || {};
