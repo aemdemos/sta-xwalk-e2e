@@ -23,7 +23,7 @@ jwtAuth(config)
     const output = `access_token=${response.access_token}\n`;
     fs.appendFileSync(process.env.GITHUB_OUTPUT, output);
   })
-  .catch((err) => {
+  .catch(() => {
     // Optionally log error (but redact sensitive info)
     process.exit(1);
   });
