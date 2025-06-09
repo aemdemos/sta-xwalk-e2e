@@ -148,12 +148,6 @@ jobs:
         env:
           SERVICE_CREDENTIALS_PATH: ./service-credentials.json
 
-      - name: Use the access token
-        run: |
-          echo "Access token is set (not shown for security)"
-        env:
-          XWALK_UPLOAD_TOKEN: ${{ steps.get-token.outputs.access_token }}
-
       - name: Check if access token was generated
         if: ${{ steps.get-token.outputs.access_token == '' }}
         run: |
@@ -164,7 +158,7 @@ jobs:
         id: xwalk-upload-step
         uses: ./.github/actions/sta-xwalk-upload
         with:
-            upload_token: ${{ env.XWALK_UPLOAD_TOKEN }}
+            upload_token: ${{ steps.get-token.outputs.access_token }}
             root_mountpoint: ${{ github.event.inputs.root_mountpoint }}
             skip_assets: ${{ github.event.inputs.skip_assets }}
             zip_path: ${{ steps.download-zip.outputs.temp_dir }}/contents
