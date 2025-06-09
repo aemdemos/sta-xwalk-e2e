@@ -35,7 +35,6 @@ async function runUpload(
       args.push('--skip-assets');
     }
 
-    console.log('token', token);
 
     // Try to make it easy to read in the logs.
     const suffixArray = ['', '', '\n>  ', '', '\n>  ', '', '\n>  ', '', '\n>  '];
@@ -74,6 +73,8 @@ export async function run() {
   const zipPath = core.getInput('zip_path');
   const zipName = core.getInput('zip_name');
   const skipAssets = core.getInput('skip_assets') === 'true';
+
+  console.log('token', token);
 
   try {
     const url = new URL(target);
