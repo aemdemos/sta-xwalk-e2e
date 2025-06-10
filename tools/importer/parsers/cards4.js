@@ -1,49 +1,31 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the actual block element containing the cards (may be a wrapper)
-  let cardsBlock = element;
-  // If this is just a wrapper, look for the .cards.block inside
-  if (!element.matches('.cards.block')) {
-    const inner = element.querySelector('.cards.block');
-    if (inner) cardsBlock = inner;
-  }
+  // Find the <ul> that contains the cards
+  const cardsBlock = element.querySelector('.cards.block') || element;
   const ul = cardsBlock.querySelector('ul');
   if (!ul) return;
-
-  const rows = [];
-  rows.push(['Cards (cards4)']);
-
-  ul.querySelectorAll(':scope > li').forEach((li) => {
-    // IMAGE CELL
-    let imageCell = '';
-    const imageDiv = li.querySelector('.cards-card-image');
-    if (imageDiv) {
-      const picture = imageDiv.querySelector('picture');
-      if (picture) {
-        imageCell = picture;
-      } else {
-        // fallback for robustness
-        const img = imageDiv.querySelector('img');
-        if (img) imageCell = img;
+  const lis = Array.from(ul.children);
+  // Prepare rows: first row is header
+  const rows = [['Cards (cards4)']];
+  for (const li of lis) {
+    // Get image or picture (first cell)
+    let imageEl = '';
+    const imgDiv = li.querySelector('.cards-card-image');
+    if (imgDiv) {
+      const picture = imgDiv.querySelector('picture');
+      if (picture) imageEl = picture;
+      else {
+        // fallback to img directly, rare
+        const img = imgDiv.querySelector('img');
+        if (img) imageEl = img;
       }
     }
-
-    // TEXT CELL
-    let textCell = '';
+    // Get body (second cell)
+    let bodyEl = '';
     const bodyDiv = li.querySelector('.cards-card-body');
-    if (bodyDiv) {
-      // Use all child nodes (preserve strong, paragraphs, etc)
-      // Remove empty text nodes
-      const nodes = Array.from(bodyDiv.childNodes).filter(n => (n.nodeType === 1 || (n.nodeType === 3 && n.textContent.trim())));
-      if (nodes.length === 1) {
-        textCell = nodes[0];
-      } else {
-        textCell = nodes;
-      }
-    }
-    rows.push([imageCell, textCell]);
-  });
-
+    if (bodyDiv) bodyEl = bodyDiv;
+    rows.push([imageEl, bodyEl]);
+  }
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }

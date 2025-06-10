@@ -1,50 +1,43 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the content container inside the hero block
-  // This block is usually: .hero-wrapper > .hero > div > div
-  let contentDiv = element.querySelector('.hero-wrapper .hero > div > div');
-  if (!contentDiv) {
-    // fallback for slight variations
-    contentDiv = element.querySelector('.hero-wrapper .hero > div');
-  }
-  if (!contentDiv) {
-    contentDiv = element;
+  // Find the first image (picture) and its containing <p>
+  const picture = element.querySelector('picture');
+  let imageCell = '';
+  if (picture) {
+    imageCell = picture.closest('p') || picture;
   }
 
-  // Find the <picture> element for the image, if present
-  let pictureEl = null;
-  const pictureP = contentDiv.querySelector('picture');
-  if (pictureP) {
-    pictureEl = pictureP;
+  // Find all heading and paragraph nodes (h1, h2, h3, p) after the image
+  let contentCell = '';
+  // The content is inside the same div as the image and headings
+  let contentDiv = null;
+  if (picture) {
+    contentDiv = picture.closest('div');
+  } else {
+    // fallback: try to grab innermost div with headings
+    contentDiv = element.querySelector('h1, h2, h3, p')?.closest('div');
   }
-
-  // Collect all heading and paragraph elements under contentDiv, in appearance order
-  // We'll allow for: h1, h2, h3, h4, h5, h6, p
-  const contentNodes = [];
-  for (const node of contentDiv.children) {
-    // skip the picture-containing <p> if we already grabbed it
-    if (node.querySelector && node.querySelector('picture') && pictureEl) {
-      continue;
-    }
-    if (node.tagName.match(/^H[1-6]$/) || node.tagName === 'P') {
-      // Only append if not empty
-      if (node.textContent.trim().length > 0) {
-        contentNodes.push(node);
-      }
+  if (contentDiv) {
+    // Get all direct children (preserving order)
+    const contentNodes = Array.from(contentDiv.children).filter(node => {
+      // Only headings and paragraphs
+      return ['H1','H2','H3','P'].includes(node.tagName);
+    });
+    // Remove empty paragraph nodes
+    const filtered = contentNodes.filter(n => n.tagName !== 'P' || n.textContent.trim() !== '');
+    if (filtered.length > 0) {
+      contentCell = filtered;
+    } else {
+      contentCell = '';
     }
   }
 
-  // Table rows as per the "Hero" block (Header, Image, Text)
-  const headerRow = ['Hero'];
-  const imageRow = [pictureEl || ''];
-  // The text row: if we have any heading or p, otherwise blank
-  const textRow = [contentNodes.length ? contentNodes : ''];
-
-  const table = WebImporter.DOMUtils.createTable([
-    headerRow,
-    imageRow,
-    textRow
-  ], document);
-
+  // Build the cells for the table
+  const cells = [
+    ['Hero'],
+    [imageCell],
+    [contentCell]
+  ];
+  const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }
