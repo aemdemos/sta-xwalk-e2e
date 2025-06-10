@@ -74,8 +74,6 @@ export async function run() {
   const zipName = core.getInput('zip_name');
   const skipAssets = core.getInput('skip_assets') === 'true';
 
-  console.log('token', token);
-
   try {
     const url = new URL(target);
     const hostTarget = `${url.origin}/`;
