@@ -27,11 +27,11 @@
   ],
   "blocks": [
     {
-      "name": "Columns",
+      "name": "Embed (video)",
       "cluster": 1,
-      "source": "Columns",
-      "target": "Columns (columns1)",
-      "key": "columns1",
+      "source": "Embed",
+      "target": "Embed (embedVideo1)",
+      "key": "embedVideo1",
       "instances": [
         {
           "url": "https://main--aem-boilerplate--adobe.aem.page/",
