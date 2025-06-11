@@ -1,32 +1,41 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the columns block element
-  let columnsBlock = element;
-  // If the wrapper was passed, get the first columns block inside
-  if (columnsBlock.classList.contains('columns-wrapper')) {
-    const maybeBlock = columnsBlock.querySelector('.columns.block');
-    if (maybeBlock) columnsBlock = maybeBlock;
+  // Find the block containing the columns
+  const columnsBlock = element.querySelector('.columns.block');
+  if (!columnsBlock) return;
+
+  // Header row - must match example exactly
+  const headerRow = ['Columns (columns3)'];
+
+  // Each top-level child of the columns block represents a row in the columns layout
+  const rowDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
+  const tableRows = [];
+  for (const rowDiv of rowDivs) {
+    // Each row contains two columns: either order: [left, right] or [image, text]
+    const colDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
+    // Ensure exactly 2 columns per row as per structure
+    if (colDivs.length === 2) {
+      // For each column, gather all children (preserving nodes)
+      const cells = colDivs.map(col => {
+        // Remove empty text nodes
+        const children = Array.from(col.childNodes).filter(
+          (node) => !(node.nodeType === Node.TEXT_NODE && node.textContent.trim() === '')
+        );
+        // If only one child, return it directly
+        if (children.length === 1) {
+          return children[0];
+        } else {
+          return children;
+        }
+      });
+      tableRows.push(cells);
+    }
   }
 
-  // The top-level structure: immediate children of the block are the rows (each with two columns)
-  const rows = Array.from(columnsBlock.querySelectorAll(':scope > div'));
-
-  // Table header matches the exact block name as in the example
-  const tableRows = [['Columns (columns3)']];
-
-  rows.forEach((rowDiv) => {
-    // Each row consists of two columns (divs)
-    const cols = Array.from(rowDiv.querySelectorAll(':scope > div'));
-    // Defensive: Only push non-empty arrays
-    if (cols.length > 0) {
-      tableRows.push(cols);
-    } else {
-      // If for some reason the rowDiv doesn't have columns, treat the whole rowDiv as a single cell
-      tableRows.push([rowDiv]);
-    }
-  });
-
-  // Create the block table with existing elements (no clones)
-  const block = WebImporter.DOMUtils.createTable(tableRows, document);
-  element.replaceWith(block);
+  // Only proceed if we collected at least one row
+  if (tableRows.length) {
+    const cells = [headerRow, ...tableRows];
+    const table = WebImporter.DOMUtils.createTable(cells, document);
+    columnsBlock.replaceWith(table);
+  }
 }
