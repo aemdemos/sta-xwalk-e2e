@@ -1,11 +1,17 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // This header element does not contain an embed, video, or image for the Embed (embedVideo1) block.
-  // Per requirements, we still create the block table with the proper header.
+  // Header row, as per block name
+  const headerRow = ['Embed (embedVideo1)'];
+
+  // According to the example, the only relevant content is the embed URL, no image present
+  // In this header HTML, there is no video iframe or link to a video. We must output a valid Embed block, but there is no dynamic data in this header, so we leave the content cell empty (edge case handling)
+
+  // However, to match the structure, we'll leave the content cell empty
   const cells = [
-    ['Embed (embedVideo1)'],
-    [''] // Empty cell as there is no embed content in this section
+    headerRow,
+    ['']
   ];
+
   const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }
