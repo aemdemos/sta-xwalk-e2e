@@ -1,41 +1,36 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the block containing the columns
+  // Find the columns block inside the wrapper
   const columnsBlock = element.querySelector('.columns.block');
   if (!columnsBlock) return;
+  // Get the immediate child divs of the .columns.block (each represents a visual row of columns)
+  const rowGroups = Array.from(columnsBlock.children);
 
-  // Header row - must match example exactly
-  const headerRow = ['Columns (columns3)'];
+  // Determine the maximum number of columns from the children
+  let maxCols = 0;
+  rowGroups.forEach(group => {
+    const cols = Array.from(group.children);
+    if (cols.length > maxCols) maxCols = cols.length;
+  });
 
-  // Each top-level child of the columns block represents a row in the columns layout
-  const rowDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
-  const tableRows = [];
-  for (const rowDiv of rowDivs) {
-    // Each row contains two columns: either order: [left, right] or [image, text]
-    const colDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
-    // Ensure exactly 2 columns per row as per structure
-    if (colDivs.length === 2) {
-      // For each column, gather all children (preserving nodes)
-      const cells = colDivs.map(col => {
-        // Remove empty text nodes
-        const children = Array.from(col.childNodes).filter(
-          (node) => !(node.nodeType === Node.TEXT_NODE && node.textContent.trim() === '')
-        );
-        // If only one child, return it directly
-        if (children.length === 1) {
-          return children[0];
-        } else {
-          return children;
-        }
-      });
-      tableRows.push(cells);
+  // Build the cells array for the table
+  const cells = [];
+  // Header must be a single column, always
+  cells.push(['Columns (columns3)']);
+
+  // All other rows must have the same number of columns as the widest row
+  rowGroups.forEach(group => {
+    const cols = Array.from(group.children);
+    // Pad with empty divs if less than maxCols
+    const row = [];
+    for (let i = 0; i < maxCols; i++) {
+      row.push(cols[i] || document.createElement('div'));
     }
-  }
+    cells.push(row);
+  });
 
-  // Only proceed if we collected at least one row
-  if (tableRows.length) {
-    const cells = [headerRow, ...tableRows];
-    const table = WebImporter.DOMUtils.createTable(cells, document);
-    columnsBlock.replaceWith(table);
-  }
+  // Create the block table
+  const table = WebImporter.DOMUtils.createTable(cells, document);
+  // Replace the original element
+  element.replaceWith(table);
 }

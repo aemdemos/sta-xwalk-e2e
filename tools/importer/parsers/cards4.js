@@ -1,34 +1,39 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the <ul> containing all cards
-  const ul = element.querySelector('ul');
+  // Locate the main cards block
+  const cardsBlock = element.querySelector('.cards.block');
+  if (!cardsBlock) return;
+  const ul = cardsBlock.querySelector('ul');
   if (!ul) return;
-  const cards = Array.from(ul.children); // li elements
+  const lis = ul.querySelectorAll(':scope > li');
 
-  const headerRow = ['Cards (cards4)'];
-  const rows = [headerRow];
+  const rows = [];
+  // Header row exactly as in example
+  rows.push(['Cards (cards4)']);
 
-  cards.forEach((li) => {
-    // First column: image (picture or the div itself)
+  lis.forEach((li) => {
+    // First cell: image or icon
+    let imgCell = null;
     const imgDiv = li.querySelector('.cards-card-image');
-    let imgContent = null;
     if (imgDiv) {
-      const picture = imgDiv.querySelector('picture');
-      imgContent = picture ? picture : imgDiv;
+      // Prefer <picture>, fallback to <img>
+      const pic = imgDiv.querySelector('picture');
+      if (pic) {
+        imgCell = pic;
+      } else {
+        const img = imgDiv.querySelector('img');
+        if (img) imgCell = img;
+      }
     }
-    // Second column: text content (all children of .cards-card-body)
+
+    // Second cell: text content
+    let textCell = null;
     const bodyDiv = li.querySelector('.cards-card-body');
-    let bodyContent = [];
     if (bodyDiv) {
-      bodyContent = Array.from(bodyDiv.childNodes).filter(node => {
-        // Only include element nodes and non-empty text nodes
-        return node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim());
-      });
+      textCell = bodyDiv;
     }
-    rows.push([
-      imgContent,
-      bodyContent
-    ]);
+
+    rows.push([imgCell, textCell]);
   });
 
   const table = WebImporter.DOMUtils.createTable(rows, document);
