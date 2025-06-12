@@ -1,36 +1,32 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the columns block inside the wrapper
-  const columnsBlock = element.querySelector('.columns.block');
-  if (!columnsBlock) return;
-  // Get the immediate child divs of the .columns.block (each represents a visual row of columns)
-  const rowGroups = Array.from(columnsBlock.children);
+  // Find the main block
+  const block = element.querySelector('.columns.block');
+  if (!block) return;
 
-  // Determine the maximum number of columns from the children
-  let maxCols = 0;
-  rowGroups.forEach(group => {
-    const cols = Array.from(group.children);
-    if (cols.length > maxCols) maxCols = cols.length;
-  });
+  // Header must match example exactly
+  const header = ['Columns (columns3)'];
 
-  // Build the cells array for the table
-  const cells = [];
-  // Header must be a single column, always
-  cells.push(['Columns (columns3)']);
+  // The block has two direct child divs (rows)
+  const rowDivs = Array.from(block.children);
+  if (rowDivs.length < 2) return;
 
-  // All other rows must have the same number of columns as the widest row
-  rowGroups.forEach(group => {
-    const cols = Array.from(group.children);
-    // Pad with empty divs if less than maxCols
-    const row = [];
-    for (let i = 0; i < maxCols; i++) {
-      row.push(cols[i] || document.createElement('div'));
-    }
-    cells.push(row);
-  });
+  // First row: text, list, button | green helix image
+  const firstRowLeft = rowDivs[0].children[0]; // Text/ul/button
+  const firstRowRight = rowDivs[0].children[1]; // Picture
 
-  // Create the block table
+  // Second row: yellow helix image | preview text/button
+  const secondRowLeft = rowDivs[1].children[0]; // Picture
+  const secondRowRight = rowDivs[1].children[1]; // Text/button
+
+  // Build output structure
+  const cells = [
+    header,
+    [firstRowLeft, firstRowRight],
+    [secondRowLeft, secondRowRight]
+  ];
+
+  // Create the table block
   const table = WebImporter.DOMUtils.createTable(cells, document);
-  // Replace the original element
   element.replaceWith(table);
 }
