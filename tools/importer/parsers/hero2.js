@@ -1,47 +1,34 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the hero block main wrapper
+  // Find the hero block's inner content div
   const heroBlock = element.querySelector('.hero.block');
-  let imageEl = null;
-  let contentEls = [];
+  let image = '';
+  let heading = '';
 
   if (heroBlock) {
-    // Find the inner container div for content
-    let containerDiv = heroBlock;
-    // Sometimes extra divs, detect the innermost with content
-    const possibleInner = heroBlock.querySelector(':scope > div > div');
-    if (possibleInner) containerDiv = possibleInner;
-    // Look for picture/image
-    const picture = containerDiv.querySelector('picture');
-    if (picture) {
-      imageEl = picture;
-    }
-    // Find all children after the image for the content row
-    // This supports common variations (empty <p>, various headings, etc)
-    let foundPicture = false;
-    for (const child of Array.from(containerDiv.children)) {
-      if (child.tagName === 'PICTURE') {
-        foundPicture = true;
-        continue;
+    // The structure is: hero.block > div > div > ...
+    const contentDiv = heroBlock.querySelector('div > div');
+    if (contentDiv) {
+      // Find the <picture> (with the image)
+      const picture = contentDiv.querySelector('picture');
+      if (picture) {
+        image = picture;
       }
-      if (foundPicture) {
-        // Only add non-empty paragraphs/headings/etc.
-        if (child.textContent.trim() !== '' || /^H[1-6]$/.test(child.tagName)) {
-          contentEls.push(child);
-        }
+      // Find the main heading (h1-h6)
+      const mainHeading = contentDiv.querySelector('h1, h2, h3, h4, h5, h6');
+      if (mainHeading) {
+        heading = mainHeading;
       }
     }
   }
 
-  // Build table as per the structure: [header], [image], [content]
-  // Header must match example exactly
-  const tableCells = [
+  // Build the table: 1 col, 3 rows: header, image, text (heading)
+  const rows = [
     ['Hero'],
-    [imageEl ? imageEl : ''],
-    [contentEls.length > 0 ? contentEls : ''],
+    [image || ''],
+    [heading || ''],
   ];
-  const table = WebImporter.DOMUtils.createTable(tableCells, document);
 
-  // No Section Metadata in example markdown, so no <hr> or metadata!
+  const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
