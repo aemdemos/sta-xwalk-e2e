@@ -1,32 +1,34 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the main block
-  const block = element.querySelector('.columns.block');
-  if (!block) return;
+  // Get the columns block inside the wrapper
+  const columnsBlock = element.querySelector('.columns.block');
+  if (!columnsBlock) return;
 
-  // Header must match example exactly
-  const header = ['Columns (columns3)'];
+  // Each direct child <div> of columnsBlock is a row
+  const rowDivs = Array.from(columnsBlock.children);
+  if (rowDivs.length === 0) return;
 
-  // The block has two direct child divs (rows)
-  const rowDivs = Array.from(block.children);
-  if (rowDivs.length < 2) return;
+  // Find the maximum number of columns in any row
+  let maxCols = 0;
+  rowDivs.forEach(row => {
+    maxCols = Math.max(maxCols, row.children.length);
+  });
 
-  // First row: text, list, button | green helix image
-  const firstRowLeft = rowDivs[0].children[0]; // Text/ul/button
-  const firstRowRight = rowDivs[0].children[1]; // Picture
+  // The header row must be a single column, per spec
+  const headerRow = ['Columns (columns3)'];
 
-  // Second row: yellow helix image | preview text/button
-  const secondRowLeft = rowDivs[1].children[0]; // Picture
-  const secondRowRight = rowDivs[1].children[1]; // Text/button
+  // For each row, fill with direct children. If fewer than maxCols, pad with empty strings
+  const tableRows = rowDivs.map(rowDiv => {
+    const colDivs = Array.from(rowDiv.children);
+    const cells = colDivs.map(div => div);
+    // pad if needed
+    while (cells.length < maxCols) cells.push('');
+    return cells;
+  });
 
-  // Build output structure
-  const cells = [
-    header,
-    [firstRowLeft, firstRowRight],
-    [secondRowLeft, secondRowRight]
-  ];
-
-  // Create the table block
+  // Compose the full cells array: header is always a single cell
+  const cells = [headerRow, ...tableRows];
+  
   const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }
