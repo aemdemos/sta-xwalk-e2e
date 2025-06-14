@@ -179,12 +179,14 @@ export function mergeInventory(siteUrls, inventory, publishUrl) {
   // Extract originUrl and targetUrl from siteUrls
   const { originUrl, targetUrl } = siteUrls;
 
-  // Transform URLs array to remove source property
-  const urls = siteUrls.urls.map(({ url, targetPath, id }) => ({
-    url,
-    targetPath,
-    id,
-  }));
+  // Transform URLs array to filter out excluded URLs and remove source property
+  const urls = siteUrls.urls
+    .filter(({ status }) => status !== 'EXCLUDED')
+    .map(({ url, targetPath, id }) => ({
+      url,
+      targetPath,
+      id,
+    }));
 
   // Transform fragments to use simplified instance format
   const fragments = inventory.fragments.map((fragment) => ({

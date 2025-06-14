@@ -1,34 +1,37 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Get the columns block inside the wrapper
-  const columnsBlock = element.querySelector('.columns.block');
-  if (!columnsBlock) return;
+  // Find the block within the columns-wrapper (in case element is the wrapper)
+  let block = element;
+  if (!block.classList.contains('block')) {
+    const maybeBlock = element.querySelector('.block');
+    if (maybeBlock) {
+      block = maybeBlock;
+    }
+  }
 
-  // Each direct child <div> of columnsBlock is a row
-  const rowDivs = Array.from(columnsBlock.children);
-  if (rowDivs.length === 0) return;
+  // Get each row (these are direct children of the columns block)
+  const rows = Array.from(block.querySelectorAll(':scope > div'));
 
-  // Find the maximum number of columns in any row
-  let maxCols = 0;
-  rowDivs.forEach(row => {
-    maxCols = Math.max(maxCols, row.children.length);
-  });
-
-  // The header row must be a single column, per spec
+  // The first row of the table is always the block name
   const headerRow = ['Columns (columns3)'];
 
-  // For each row, fill with direct children. If fewer than maxCols, pad with empty strings
-  const tableRows = rowDivs.map(rowDiv => {
-    const colDivs = Array.from(rowDiv.children);
-    const cells = colDivs.map(div => div);
-    // pad if needed
-    while (cells.length < maxCols) cells.push('');
-    return cells;
+  // Each row in the block is a set of columns (usually two per row)
+  // For each row, the direct child <div>s are the cells
+  const tableRows = rows.map(row => {
+    const cols = Array.from(row.querySelectorAll(':scope > div'));
+    // Defensive fallback: if not subdivided, treat the row itself as a single column
+    if (cols.length === 0) {
+      return [row];
+    }
+    return cols;
   });
 
-  // Compose the full cells array: header is always a single cell
-  const cells = [headerRow, ...tableRows];
-  
-  const table = WebImporter.DOMUtils.createTable(cells, document);
+  // Compose the full table data
+  const tableData = [headerRow, ...tableRows];
+
+  // Create the block table
+  const table = WebImporter.DOMUtils.createTable(tableData, document);
+
+  // Replace the original element with the new table
   element.replaceWith(table);
 }
