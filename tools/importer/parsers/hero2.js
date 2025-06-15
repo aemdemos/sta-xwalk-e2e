@@ -1,37 +1,41 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the hero block content root
-  let contentRoot = null;
+  // Find the hero block
   const heroBlock = element.querySelector('.hero.block');
-  if (heroBlock) {
-    const outerDiv = heroBlock.querySelector(':scope > div');
-    if (outerDiv) {
-      contentRoot = outerDiv.querySelector(':scope > div');
+  let contentDiv = heroBlock;
+  // Descend to the deepest content div
+  while (contentDiv && contentDiv.children.length === 1 && contentDiv.firstElementChild.tagName === 'DIV') {
+    contentDiv = contentDiv.firstElementChild;
+  }
+  const children = Array.from(contentDiv.children);
+
+  // Find image (picture inside a <p>)
+  let imageCell = '';
+  for (const child of children) {
+    if (child.querySelector && child.querySelector('picture')) {
+      imageCell = child;
+      break;
     }
   }
-  if (!contentRoot) {
-    contentRoot = element;
+
+  // VERY SPECIFIC FIX: if the image is found in a <p> and the next sibling is the <h1>, include that h1 in the third row
+  let headingCell = '';
+  if (imageCell && imageCell.nextElementSibling && imageCell.nextElementSibling.tagName === 'H1') {
+    headingCell = imageCell.nextElementSibling;
+  } else {
+    // fallback: find the first <h1> among children
+    for (const child of children) {
+      if (child.tagName === 'H1') {
+        headingCell = child;
+        break;
+      }
+    }
   }
 
-  // Extract image row (picture inside <p>)
-  let imageCell = '';
-  const picP = contentRoot.querySelector('p > picture');
-  if (picP && picP.parentElement) imageCell = picP.parentElement;
-
-  // Extract only the heading for text row (third row)
-  let textCell = '';
-  // Try all heading levels, pick the first one found in document order
-  const heading = contentRoot.querySelector('h1, h2, h3, h4, h5, h6');
-  if (heading) {
-    textCell = heading;
-  }
-
-  // Always produce three rows: header, image, text
-  const rows = [
-    ['Hero'],
-    [imageCell || ''],
-    [textCell || '']
-  ];
+  const rows = [];
+  rows.push(['Hero']);
+  rows.push([imageCell]);
+  rows.push([headingCell]);
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
