@@ -1,34 +1,49 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the UL containing the cards
-  const ul = element.querySelector('ul');
+  // Find the inner block containing the <ul>
+  const cardsBlock = element.querySelector('.cards.block');
+  if (!cardsBlock) return;
+  const ul = cardsBlock.querySelector('ul');
   if (!ul) return;
-  const cards = Array.from(ul.children); // li elements
 
-  // Header row as required by the block spec
-  const headerRow = ['Cards (cards4)'];
-  const rows = [headerRow];
+  // Initialize rows: first row is header
+  const rows = [['Cards (cards4)']];
 
-  cards.forEach(card => {
-    // Card image: first column
-    const imageDiv = card.querySelector('.cards-card-image');
-    let imageContent = null;
-    if (imageDiv) {
-      // Use the <picture> element if present, fall back to <img>
-      imageContent = imageDiv.querySelector('picture') || imageDiv.querySelector('img');
+  // For each card <li> in the list
+  ul.querySelectorAll('li').forEach((li) => {
+    // Image cell: get the <picture> or <img> only (NO wrapper div)
+    let imgCell = '';
+    const imgDiv = li.querySelector('.cards-card-image');
+    if (imgDiv) {
+      const picture = imgDiv.querySelector('picture');
+      if (picture) {
+        imgCell = picture;
+      } else {
+        const img = imgDiv.querySelector('img');
+        if (img) {
+          imgCell = img;
+        }
+      }
     }
-
-    // Card body: second column
-    const bodyDiv = card.querySelector('.cards-card-body');
-    let bodyContent = null;
+    // Text cell: get children of body div (NO wrapper div)
+    let textCell = '';
+    const bodyDiv = li.querySelector('.cards-card-body');
     if (bodyDiv) {
-      // Reference the existing element (may contain <p>, <strong>, etc.)
-      bodyContent = bodyDiv;
+      // Only use element nodes and non-empty text nodes
+      const nodes = [];
+      bodyDiv.childNodes.forEach((n) => {
+        if (n.nodeType === 1) { // Element nodes only
+          nodes.push(n);
+        } else if (n.nodeType === 3 && n.textContent.trim().length > 0) { // Text node
+          nodes.push(document.createTextNode(n.textContent));
+        }
+      });
+      textCell = nodes;
     }
-
-    rows.push([imageContent, bodyContent]);
+    rows.push([imgCell, textCell]);
   });
 
+  // Create and replace with the new table
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
