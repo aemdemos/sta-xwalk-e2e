@@ -1,9 +1,8 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Since the input HTML does not contain any video link or embed, we output only the header and an empty cell.
-  const headerRow = ['Embed (embedVideo1)'];
+  // The provided HTML contains only navigation/header, no embeds. So produce an empty embed block cell.
   const cells = [
-    headerRow,
+    ['Embed (embedVideo1)'],
     ['']
   ];
   const table = WebImporter.DOMUtils.createTable(cells, document);
