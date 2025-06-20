@@ -1,33 +1,32 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the hero block
-  let heroContent = element.querySelector('.hero-wrapper .hero.block');
-  if (!heroContent) heroContent = element;
+  // Find the .hero.block inside the section
+  const heroBlock = element.querySelector('.hero.block');
+  // Defensive: exit if not found
+  if (!heroBlock) return;
 
-  // Find the inner content div
-  let blockInner = heroContent.querySelector('div > div');
-  if (!blockInner) blockInner = heroContent;
-
-  // Find image <p> containing <picture>
-  let imageParagraph = null;
-  const paragraphs = Array.from(blockInner.querySelectorAll('p'));
-  for (const p of paragraphs) {
-    if (p.querySelector('picture')) {
-      imageParagraph = p;
-      break;
-    }
+  // The hero content is deeply nested: hero.block > div > div
+  // We want the innermost div that contains the picture and heading
+  let contentDiv = heroBlock;
+  // Drill down if there's only one child and it's a div
+  while (contentDiv && contentDiv.children.length === 1 && contentDiv.firstElementChild.tagName === 'DIV') {
+    contentDiv = contentDiv.firstElementChild;
   }
 
-  // Find the heading (h1-h6) from blockInner
-  let heading = blockInner.querySelector('h1, h2, h3, h4, h5, h6');
+  // Find the picture (image) for the background row
+  const picture = contentDiv.querySelector('picture');
+  // Find the heading (title)
+  // This is typically the first heading element
+  const heading = contentDiv.querySelector('h1, h2, h3, h4, h5, h6');
+  // Typically, the structure may allow for optional subheading or CTA here, but in this example, only heading is present
 
-  // Compose table rows: header, image, heading
-  const tableRows = [
-    ['Hero'],
-    [imageParagraph || ''],
-    [heading || ''],
+  // Compose the table rows as in the example: header, image, then text content
+  const rows = [
+    ['Hero (hero2)'],
+    [picture ? picture : ''],
+    [heading ? heading : ''],
   ];
 
-  const block = WebImporter.DOMUtils.createTable(tableRows, document);
+  const block = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(block);
 }
