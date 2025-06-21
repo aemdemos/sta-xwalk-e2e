@@ -1,73 +1,47 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Compose a string of all visible navigation text in order
-  // This includes brand, nav sections/links, and search icon's semantic meaning
-  // We'll retain some elements for structure, i.e., brand as <strong> and links
-  const contentFragments = [];
-
-  // Brand (e.g., 'Boilerplate')
-  const brand = element.querySelector('.nav-brand');
-  if (brand) {
-    // Try to find the anchor tag inside brand
-    const brandLink = brand.querySelector('a');
-    if (brandLink) {
-      // Use strong for brand
-      const strong = document.createElement('strong');
-      strong.textContent = brandLink.textContent.trim();
-      contentFragments.push(strong);
-    }
-  }
-
-  // Navigation Sections (main menu)
-  const navSections = element.querySelector('.nav-sections');
-  if (navSections) {
-    const lis = navSections.querySelectorAll('li.nav-drop');
-    lis.forEach((li) => {
-      // Main nav section title
-      contentFragments.push(document.createTextNode(' ' + li.firstChild.textContent.trim() + ' '));
-      // Submenu links
-      const submenuLinks = li.querySelectorAll('ul li a');
-      submenuLinks.forEach((a) => {
-        contentFragments.push(document.createTextNode(a.textContent.trim() + ' '));
-      });
-    });
-  }
-
-  // Search icon: represent with 'Q' (as in screenshot)
-  // The rightmost icon
-  const navTools = element.querySelector('.nav-tools');
-  if (navTools) {
-    // In the screenshot, the search icon is just a Q for simplicity
-    contentFragments.push(document.createTextNode('Q'));
-  }
-
-  // Compose cell content
-  // Remove any accidental trailing spaces
-  let finalFragments = [];
-  for (let i = 0; i < contentFragments.length; i++) {
-    const frag = contentFragments[i];
-    if (typeof frag === 'string' || frag instanceof Text) {
-      if (frag.textContent && frag.textContent.trim()) {
-        finalFragments.push(document.createTextNode(frag.textContent.trim() + ' '));
-      } else if (typeof frag === 'string' && frag.trim()) {
-        finalFragments.push(document.createTextNode(frag.trim() + ' '));
-      }
-    } else if (frag instanceof HTMLElement) {
-      finalFragments.push(frag);
-    }
-  }
-
-  // Remove trailing spaces from final text
-  if (finalFragments.length && finalFragments[finalFragments.length-1] instanceof Text) {
-    finalFragments[finalFragments.length-1].textContent = finalFragments[finalFragments.length-1].textContent.trim();
-  }
-
-  // Table structure
+  // The block name header row, as specified
   const headerRow = ['Embed (embedVideo1)'];
-  const cells = [
-    headerRow,
-    [finalFragments]
-  ];
+
+  // Gather all visible text content from the header navigation (ignore icons/images)
+  // Reference existing DOM elements rather than clones
+  const nav = element.querySelector('nav');
+  let textContent = '';
+
+  if (nav) {
+    // Remove images and buttons from the nav visually (do NOT clone; reference only)
+    // Gather only visible text nodes
+    // We'll walk through all child nodes, extract text from element nodes, ignoring images/buttons
+    function getText(el) {
+      let output = '';
+      for (const child of el.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          output += child.textContent + ' ';
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          // Skip img, svg, button
+          if (['IMG', 'SVG', 'BUTTON'].includes(child.tagName)) continue;
+          output += getText(child);
+        }
+      }
+      return output;
+    }
+    textContent = getText(nav).replace(/\s+/g, ' ').trim();
+  }
+  // Fallback: if nothing found, try element's text
+  if (!textContent) {
+    textContent = element.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  // Create a single paragraph for the text for semantic meaning
+  const para = document.createElement('p');
+  para.textContent = textContent;
+
+  // Content row as an array containing the referenced paragraph element
+  const contentRow = [para];
+
+  // Assemble the table rows
+  const cells = [headerRow, contentRow];
   const table = WebImporter.DOMUtils.createTable(cells, document);
+  // Replace the original element with the new block table
   element.replaceWith(table);
 }
