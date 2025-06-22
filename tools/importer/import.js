@@ -11,8 +11,8 @@
  */
 /* global WebImporter */
 /* eslint-disable no-console */
-import cards4Parser from './parsers/cards4.js';
 import hero2Parser from './parsers/hero2.js';
+import cards4Parser from './parsers/cards4.js';
 import columns3Parser from './parsers/columns3.js';
 import embedVideo1Parser from './parsers/embedVideo1.js';
 import headerParser from './parsers/header.js';
@@ -30,8 +30,8 @@ import {
 
 const parsers = {
   metadata: metadataParser,
-  cards4: cards4Parser,
   hero2: hero2Parser,
+  cards4: cards4Parser,
   columns3: columns3Parser,
   embedVideo1: embedVideo1Parser,
 };
