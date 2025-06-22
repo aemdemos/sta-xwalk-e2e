@@ -1,32 +1,26 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // The block structure is: header row (1 cell), then N rows, each with M columns (as per source HTML)
-  // Get all top-level rows (each immediate child div of element)
-  const rowDivs = element.querySelectorAll(':scope > div');
-  
-  // Determine the max number of columns in any row
-  let maxCols = 0;
-  const rows = Array.from(rowDivs).map(rowDiv => {
-    const columns = Array.from(rowDiv.querySelectorAll(':scope > div'));
-    if (columns.length > maxCols) maxCols = columns.length;
-    return columns;
-  });
-  // Pad rows with fewer columns
-  const normalizedRows = rows.map(row => {
-    if (row.length < maxCols) {
-      const emptyCells = Array(maxCols - row.length).fill(document.createElement('div'));
-      return [...row, ...emptyCells];
-    }
-    return row;
-  });
-  
-  // Compose the header
-  const headerRow = ['Columns (columns3)'];
+  // Find the main columns block (div with class 'columns' directly under the wrapper)
+  const columnsBlock = element.querySelector(':scope > .columns');
+  if (!columnsBlock) return;
 
-  // Compose the cells array: header, then each actual row
-  const cells = [headerRow, ...normalizedRows];
-  
-  // Create and replace
-  const table = WebImporter.DOMUtils.createTable(cells, document);
-  element.replaceWith(table);
+  // Find each row in the columns block (each direct child div of .columns)
+  const rowDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
+
+  // We'll build up the block rows. First row is always the header.
+  const blockRows = [ ['Columns (columns3)'] ];
+
+  // For each row in the columns block
+  rowDivs.forEach(rowDiv => {
+    // For each row, find direct children (the columns for the row)
+    const cols = Array.from(rowDiv.children);
+    // Reference the actual elements directly
+    blockRows.push(cols);
+  });
+
+  // Create the columns block table
+  const blockTable = WebImporter.DOMUtils.createTable(blockRows, document);
+
+  // Replace the original wrapper with the new block table
+  element.replaceWith(blockTable);
 }

@@ -1,73 +1,54 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Helper: find direct descendant by class
-  function findDescendantByClass(parent, className) {
-    const stack = [parent];
-    while (stack.length) {
-      const curr = stack.pop();
-      if (curr.classList && curr.classList.contains(className)) return curr;
-      for (const child of curr.children) {
-        stack.push(child);
-      }
-    }
-    return null;
-  }
-
-  // Find the hero block - optimize for variations
-  let heroBlock = findDescendantByClass(element, 'hero');
-  if (!heroBlock) heroBlock = element;
-
-  // Find the block's main content area (usually a <div> containing all)
-  let contentDiv = heroBlock;
-  // For robust extraction, use first <div> containing both an image and heading
-  const divs = heroBlock.querySelectorAll('div');
-  for (const d of divs) {
-    if (d.querySelector('img, picture') && d.querySelector('h1, h2, h3, h4, h5, h6')) {
-      contentDiv = d;
-      break;
-    }
-  }
-
-  // 1st content row: Background image (picture or img)
-  let bgImage = null;
-  // Find first <picture> or <img> in contentDiv
-  bgImage = contentDiv.querySelector('picture');
-  if (!bgImage) {
-    bgImage = contentDiv.querySelector('img');
-  }
-
-  // 2nd content row: Text content (headings, subheadings, CTA/links)
-  let contentCellParts = [];
-  // Heading
-  let heading = contentDiv.querySelector('h1, h2, h3, h4, h5, h6');
-  if (heading) contentCellParts.push(heading);
-  // Subheading: a <p> after the heading that is not just empty or whitespace
-  if (heading) {
-    let next = heading.nextElementSibling;
-    while (next) {
-      if (next.tagName.toLowerCase() === 'p' && next.textContent.trim()) {
-        contentCellParts.push(next);
-      }
-      next = next.nextElementSibling;
-    }
-  } else {
-    // Fallback: find non-empty <p>s in contentDiv
-    const allParas = [...contentDiv.querySelectorAll('p')].filter(p => p.textContent.trim());
-    contentCellParts = contentCellParts.concat(allParas);
-  }
-  // If nothing found, avoid empty cell
-  if (contentCellParts.length === 0) contentCellParts = [''];
-
-  // Compose rows
+  // Header row exactly as specified
   const headerRow = ['Hero (hero2)'];
-  const imageRow = [bgImage ? bgImage : ''];
-  const contentRow = [contentCellParts.length === 1 ? contentCellParts[0] : contentCellParts];
 
-  // Create and replace
-  const table = WebImporter.DOMUtils.createTable([
+  // Find the hero block (should be the only .hero.block inside)
+  const heroBlock = element.querySelector('.hero.block');
+
+  // Default fallbacks
+  let imageEl = '';
+  let textEls = [];
+
+  if (heroBlock) {
+    // The main content div is the first div inside heroBlock
+    const contentDiv = heroBlock.querySelector('div > div');
+    if (contentDiv) {
+      // Image: find first <picture> or <img>
+      const pic = contentDiv.querySelector('picture');
+      if (pic) {
+        imageEl = pic;
+      }
+      // Text: collect h1, subheading, CTA (if present)
+      // In this example, only h1 is present
+      const h1 = contentDiv.querySelector('h1, h2, h3, h4, h5, h6');
+      if (h1) textEls.push(h1);
+      // Look for possible subheading: next <p> with text after heading
+      if (h1) {
+        let next = h1.nextElementSibling;
+        while (next) {
+          if (next.tagName.toLowerCase() === 'p' && next.textContent.trim()) {
+            textEls.push(next);
+            break;
+          }
+          next = next.nextElementSibling;
+        }
+      }
+      // CTA: look for links in text
+      // Here, not present, but could generalize:
+      const links = contentDiv.querySelectorAll('a');
+      links.forEach(link => {
+        if (!textEls.includes(link)) textEls.push(link);
+      });
+    }
+  }
+
+  const cells = [
     headerRow,
-    imageRow,
-    contentRow,
-  ], document);
+    [imageEl],
+    [textEls.length > 1 ? textEls : (textEls[0] || '')]
+  ];
+
+  const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }

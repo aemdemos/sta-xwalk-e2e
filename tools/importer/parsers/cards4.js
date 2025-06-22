@@ -1,34 +1,37 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the <ul> containing all cards
-  const ul = element.querySelector('ul');
-  if (!ul) return;
-  const lis = ul.querySelectorAll(':scope > li');
-
-  // Prepare the table rows
+  // Find the .cards.block (cards4) inside the wrapper
+  const cardsBlock = element.querySelector('.cards.block');
+  if (!cardsBlock) return;
+  // Get all card <li> elements
+  const cards = cardsBlock.querySelectorAll('ul > li');
   const rows = [];
-  // Header row with block name and variant exactly as required
+  // Header row
   rows.push(['Cards (cards4)']);
-
-  lis.forEach((li) => {
-    // 1st cell: Image or icon
-    let imageCell = null;
-    const imageDiv = li.querySelector('.cards-card-image');
-    if (imageDiv) {
-      const picture = imageDiv.querySelector('picture');
-      if (picture) imageCell = picture;
+  cards.forEach((card) => {
+    // Image/Icon (mandatory, first cell)
+    let imageEl = null;
+    const imageContainer = card.querySelector('.cards-card-image');
+    if (imageContainer) {
+      const pic = imageContainer.querySelector('picture');
+      if (pic) {
+        imageEl = pic;
+      } else {
+        const img = imageContainer.querySelector('img');
+        if (img) imageEl = img;
+      }
     }
-    // 2nd cell: Text content (title, description, etc.)
-    let textCell = null;
-    const bodyDiv = li.querySelector('.cards-card-body');
-    if (bodyDiv) {
-      textCell = bodyDiv;
+    // Text content (mandatory, second cell)
+    let textEl = null;
+    const body = card.querySelector('.cards-card-body');
+    // Ensure all text content is included (including headings, descriptions, etc.)
+    if (body) {
+      textEl = body;
     }
-    rows.push([imageCell, textCell]);
+    rows.push([imageEl, textEl]);
   });
-
-  // Create the table using the helper
+  // Create the block table
   const table = WebImporter.DOMUtils.createTable(rows, document);
-  // Replace the original element with the new table
+  // Replace the wrapper with the table
   element.replaceWith(table);
 }
