@@ -1,23 +1,27 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // The Embed (embedVideo1) block expects: header row, then a single cell with all content (text, nav, links, brand, etc.)
-  // To maximize flexibility and semantic retention, place all immediate children of the element in a wrapper div.
-  // Reference the original elements to preserve formatting and semantic structure.
-  const children = Array.from(element.childNodes);
-  const wrapper = document.createElement('div');
-  children.forEach(child => {
-    // Only append elements or text nodes, skip script/style if present
-    if (
-      child.nodeType === Node.ELEMENT_NODE || 
-      (child.nodeType === Node.TEXT_NODE && child.textContent.trim())
-    ) {
-      wrapper.appendChild(child);
-    }
-  });
+  // Construct the header row (exact match to spec)
+  const headerRow = ['Embed (embedVideo1)'];
+
+  // For this source HTML, the requirement is to preserve all text content and semantic structure from the element.
+  // We reference all (immediate) children of the element so as not to miss any text or structure.
+  // If the element is empty (shouldn't be here), fallback to empty string.
+  const contentNodes = Array.from(element.childNodes);
+  let contentCell;
+  if (contentNodes.length > 0) {
+    // Reference all children directly (text, elements, etc)
+    contentCell = contentNodes;
+  } else {
+    // fallback (should not usually be needed)
+    contentCell = [''];
+  }
+
   const cells = [
-    ['Embed (embedVideo1)'],
-    [wrapper]
+    headerRow,
+    [contentCell]
   ];
+
+  // Create the table and replace the original element
   const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }

@@ -1,35 +1,37 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the cards block (can be wrapper or the block itself)
-  let cardsBlock = element.querySelector('div.cards.block');
-  if (!cardsBlock) {
-    // Might be called directly on the .cards.block
-    cardsBlock = element;
-  }
+  // Find cards block and the <ul> containing <li> cards
+  const cardsBlock = element.querySelector('.cards.block');
+  if (!cardsBlock) return;
   const ul = cardsBlock.querySelector('ul');
   if (!ul) return;
   const lis = Array.from(ul.children);
-  const rows = [];
-  // Header must match exactly the example
-  rows.push(['Cards (cards4)']);
-  // Each card is a row, with [image, text]
-  for (const li of lis) {
-    // Image cell
-    let imageCell = '';
-    const imageDiv = li.querySelector(':scope > .cards-card-image');
+
+  // Header exactly as specified
+  const rows = [['Cards (cards4)']];
+
+  lis.forEach((li) => {
+    // First cell: image or icon
+    let imageCell = null;
+    const imageDiv = li.querySelector('.cards-card-image');
     if (imageDiv) {
-      // Use the existing <picture> or <img> element, reference directly
-      const pictureOrImg = imageDiv.querySelector('picture, img');
-      if (pictureOrImg) imageCell = pictureOrImg;
+      // Select the <picture> or <img> element (prefer <picture> if present)
+      imageCell = imageDiv.querySelector('picture') || imageDiv.querySelector('img');
     }
-    // Text cell
-    let textCell = '';
-    const textDiv = li.querySelector(':scope > .cards-card-body');
-    if (textDiv) {
-      textCell = textDiv;
+
+    // Second cell: text content (retain all structure)
+    let textCell = null;
+    const bodyDiv = li.querySelector('.cards-card-body');
+    if (bodyDiv) {
+      // Retain all children (e.g., <p>, <strong>, etc.) preserving order and formatting
+      const nodes = Array.from(bodyDiv.childNodes).filter(n => {
+        return n.nodeType === 1 || (n.nodeType === 3 && n.textContent.trim());
+      });
+      textCell = nodes.length === 1 ? nodes[0] : nodes;
     }
     rows.push([imageCell, textCell]);
-  }
+  });
+
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
