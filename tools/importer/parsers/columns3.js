@@ -1,32 +1,20 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the main columns block
-  const columnsBlock = element.querySelector('.columns.block');
-  if (!columnsBlock) return;
+  // Header row
+  const tableRows = [['Columns (columns3)']];
 
-  // Get all direct children of the columns block (each is a row of 2 columns)
-  const rowDivs = Array.from(columnsBlock.children);
-  // Gather the actual columns (should be 4 for columns3)
-  const columnCells = [];
-  rowDivs.forEach((rowDiv) => {
-    const colDivs = Array.from(rowDiv.children);
-    colDivs.forEach((col) => {
-      const wrapper = document.createElement('div');
-      while (col.childNodes.length > 0) {
-        wrapper.appendChild(col.childNodes[0]);
-      }
-      columnCells.push(wrapper);
-    });
+  // For each direct child <div> (row) of the block
+  const rowDivs = Array.from(element.querySelectorAll(':scope > div'));
+  rowDivs.forEach(rowDiv => {
+    // For each row, get its immediate children as columns
+    const colDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
+    // If there are no colDivs, treat the rowDiv itself as a single cell (defensive, edge case)
+    const rowCells = colDivs.length > 0 ? colDivs : [rowDiv];
+    tableRows.push(rowCells);
   });
 
-  // The header row should be ONE cell
-  const headerRow = ['Columns (columns3)'];
-  // The content row should have as many columns as collected
-  const cells = [
-    headerRow,
-    columnCells
-  ];
-
-  const table = WebImporter.DOMUtils.createTable(cells, document);
-  element.replaceWith(table);
+  // Create the block table
+  const block = WebImporter.DOMUtils.createTable(tableRows, document);
+  // Replace the original element
+  element.replaceWith(block);
 }
