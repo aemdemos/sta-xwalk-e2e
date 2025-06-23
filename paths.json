@@ -1,10 +1,10 @@
 {
   "mappings": [
-    "/content/e2e-crosswalk/:/",
-    "/content/e2e-crosswalk/configuration:/.helix/config.json",
-    "/content/e2e-crosswalk/metadata:/metadata.json"
+    "/content/sta-xwalk-e2e/:/",
+    "/content/sta-xwalk-e2e/configuration:/.helix/config.json",
+    "/content/sta-xwalk-e2e/metadata:/metadata.json"
   ],
   "includes": [
-    "content/e2e-crosswalk/"
+    "content/sta-xwalk-e2e/"
   ]
 }

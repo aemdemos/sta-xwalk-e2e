@@ -54,15 +54,6 @@ jobs:
           
           # Required parameters
           missing_vars=""
-      
-          if [ -z "${{ env.XWALK_UPLOAD_TOKEN }}" ]; then
-            missing_vars+="JS_LF- XWALK_UPLOAD_TOKEN (secret) "
-          fi
-
-          if [ -n "$missing_vars" ]; then
-            errorMessage="❌ The following variables are not set in your GitHub repo: $missing_vars JS_LF"
-            echo "errorMessage=$errorMessage" >> $GITHUB_ENV
-          fi
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -144,11 +135,30 @@ jobs:
           status_type: progress
           agent_name: upload-import-xw
 
+      - name: Write service credentials to file
+        run: |
+          echo "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON }}" | base64 --decode > service-credentials.json
+
+      - name: Install Adobe JWT Auth
+        run: npm install @adobe/jwt-auth
+
+      - name: Generate JWT and exchange for access token
+        id: get-token
+        run: node ./scripts/generate-access-token.js
+        env:
+          SERVICE_CREDENTIALS_PATH: ./service-credentials.json
+
+      - name: Check if access token was generated
+        if: ${{ steps.get-token.outputs.access_token == '' }}
+        run: |
+          echo "Failed to generate access token"
+          exit 1
+
       - name: Run XWalk upload action
         id: xwalk-upload-step
         uses: ./.github/actions/sta-xwalk-upload
         with:
-            upload_token: ${{ env.XWALK_UPLOAD_TOKEN }}
+            upload_token: ${{ steps.get-token.outputs.access_token }}
             root_mountpoint: ${{ github.event.inputs.root_mountpoint }}
             skip_assets: ${{ github.event.inputs.skip_assets }}
             zip_path: ${{ steps.download-zip.outputs.temp_dir }}/contents
@@ -178,3 +188,6 @@ jobs:
         run: |
           # Delete the temp dir immediately, having system delete it eventually as a redundancy.
           rm -rf "${{ steps.download-zip.outputs.temp_dir }}"
+
+      - name: Check service credentials file size
+        run: wc -c < service-credentials.json
