@@ -1,37 +1,35 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the .cards.block (cards4) inside the wrapper
-  const cardsBlock = element.querySelector('.cards.block');
-  if (!cardsBlock) return;
-  // Get all card <li> elements
-  const cards = cardsBlock.querySelectorAll('ul > li');
+  // Find the cards block (can be wrapper or the block itself)
+  let cardsBlock = element.querySelector('div.cards.block');
+  if (!cardsBlock) {
+    // Might be called directly on the .cards.block
+    cardsBlock = element;
+  }
+  const ul = cardsBlock.querySelector('ul');
+  if (!ul) return;
+  const lis = Array.from(ul.children);
   const rows = [];
-  // Header row
+  // Header must match exactly the example
   rows.push(['Cards (cards4)']);
-  cards.forEach((card) => {
-    // Image/Icon (mandatory, first cell)
-    let imageEl = null;
-    const imageContainer = card.querySelector('.cards-card-image');
-    if (imageContainer) {
-      const pic = imageContainer.querySelector('picture');
-      if (pic) {
-        imageEl = pic;
-      } else {
-        const img = imageContainer.querySelector('img');
-        if (img) imageEl = img;
-      }
+  // Each card is a row, with [image, text]
+  for (const li of lis) {
+    // Image cell
+    let imageCell = '';
+    const imageDiv = li.querySelector(':scope > .cards-card-image');
+    if (imageDiv) {
+      // Use the existing <picture> or <img> element, reference directly
+      const pictureOrImg = imageDiv.querySelector('picture, img');
+      if (pictureOrImg) imageCell = pictureOrImg;
     }
-    // Text content (mandatory, second cell)
-    let textEl = null;
-    const body = card.querySelector('.cards-card-body');
-    // Ensure all text content is included (including headings, descriptions, etc.)
-    if (body) {
-      textEl = body;
+    // Text cell
+    let textCell = '';
+    const textDiv = li.querySelector(':scope > .cards-card-body');
+    if (textDiv) {
+      textCell = textDiv;
     }
-    rows.push([imageEl, textEl]);
-  });
-  // Create the block table
+    rows.push([imageCell, textCell]);
+  }
   const table = WebImporter.DOMUtils.createTable(rows, document);
-  // Replace the wrapper with the table
   element.replaceWith(table);
 }
