@@ -1,14 +1,50 @@
-.columns > div {
+.columns {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  box-sizing: border-box;
+  padding: 64px 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 300px;
+}
+
+.columns > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .columns img {
+  display: block;
   width: 100%;
+  height: auto;
+  border-radius: 0.5em;
+  margin-bottom: 32px;
 }
 
 .columns > div > div {
+  width: 80%;
+  max-width: 700px;
+  min-height: 120px;
+  margin: 48px 0;
+  border-radius: 32px;
+  background: #fff;
+  box-shadow: 0 0 16px 4px rgb(225 225 225 / 26%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  transition: box-shadow 0.2s;
+  flex: 1;
   order: 1;
+}
+
+.columns > div > div:hover {
+  box-shadow: 0 0 32px 8px rgb(225 225 225 / 36%);
 }
 
 .columns > div > .columns-img-col {
@@ -20,6 +56,10 @@
 }
 
 @media (width >= 900px) {
+  .columns {
+    padding: 96px 0;
+  }
+
   .columns > div {
     align-items: center;
     flex-direction: unset;
@@ -27,6 +67,11 @@
   }
 
   .columns > div > div {
+    width: 70%;
+    max-width: 900px;
+    margin: 64px 0;
+    min-height: 160px;
+    padding: 48px;
     flex: 1;
     order: unset;
   }
