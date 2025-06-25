@@ -1,12 +1,21 @@
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
 }
 
 .hero {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 380px;
+  background: linear-gradient(110deg, #0e2237 0%, #233b55 100%);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
 }
 
 .hero h1,
@@ -42,6 +51,159 @@
 
 @media (width >= 900px) {
   .hero {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 380px;
+    background: linear-gradient(110deg, #0e2237 0%, #233b55 100%);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero {
     padding: 40px 32px;
   }
+}
+
+/* ==== GENERATED CSS (unchanged except merging .hero) ==== */
+
+.hero > div:last-child {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 58px;
+  padding-top: 56px;
+  padding-bottom: 48px;
+  box-sizing: border-box;
+  z-index: 2;
+  background: none;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2.75rem;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: normal;
+  text-align: left;
+  max-width: 90%;
+}
+
+/* Right (image) column */
+.hero > div:first-child {
+  flex: 1 1 50%;
+  order: 2;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  background: none;
+}
+
+.hero > div:first-child > div,
+.hero > div:first-child picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: none;
+}
+
+.hero > div:first-child img {
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  object-fit: cover;
+  display: block;
+  background: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hero > div:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 80px;
+  background: linear-gradient(to left, rgb(14 34 55 / 0%) 0%, #0e2237 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero > div:last-child {
+  z-index: 3;
+}
+
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+  }
+
+  .hero > div:last-child {
+    padding: 32px 16px 0;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .hero > div:first-child {
+    min-height: 180px;
+    height: 180px;
+    width: 100%;
+    order: 2;
+  }
+
+  .hero > div:first-child > div,
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    min-height: 180px;
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero > div:first-child::before {
+    width: 40px;
+  }
+}
+
+/* ==== MERGED HERO SELECTOR ==== */
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 380px;
+  background: linear-gradient(110deg, #0e2237 0%, #233b55 100%);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
 }
