@@ -1,13 +1,15 @@
 
+
 /* Card grid container */
 .cards {
-  max-width: 1160px;
+  max-width: 1240px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 40px;
+  padding-right: 40px;
   background: transparent;
   box-sizing: border-box;
+  display: block;
 }
 
 .cards > ul {
@@ -214,13 +216,13 @@
 }
 
 /* Merged .cards selector */
-
 .cards {
-  max-width: 1160px;
+  max-width: 1240px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 40px;
+  padding-right: 40px;
   background: transparent;
   box-sizing: border-box;
+  display: block;
 }
