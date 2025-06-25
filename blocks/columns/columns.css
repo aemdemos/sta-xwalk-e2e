@@ -1,23 +1,25 @@
 
+
 /* Base columns layout */
 .columns {
+  background: #fff;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 72px 0 0;
+  box-sizing: border-box;
+  min-height: 220px;
   display: flex;
   flex-direction: row;
   align-items: stretch;
   justify-content: stretch;
   gap: 0;
   width: 100%;
-  background: #fff;
   border: none;
   box-shadow: none;
   border-radius: 0;
-  padding: 0;
-  margin: 0;
-  min-height: 0;
-  box-sizing: border-box;
-  max-width: 1200px;
 }
 
+/* Treat the first direct child as a flex row (mimic two columns even if only one) */
 .columns > div {
   flex: 1 1 0;
   min-width: 0;
@@ -170,3 +172,131 @@
     gap: 32px;
   }
 }
+
+/* Generated CSS */
+
+.columns > div {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 180px;
+  gap: 56px;
+
+  /* Debug (remove for production): */
+
+  /* background: #f5f5fa; border: 1px dashed #dde; */
+}
+
+/* If only one column is present, make it take up the expected width for more consistency */
+.columns > div > div {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0 32px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  text-align: left;
+  margin: 0;
+  min-width: 48%;
+
+  /* Debug (remove for production): */
+
+  /* border: 1px dotted #bcd; */
+}
+
+/* Provide a placeholder min-height for empty columns to help visualize */
+.columns > div > div:empty {
+  min-height: 120px;
+  background: #fafaff;
+  border-radius: 8px;
+
+  /* border: 1px dashed #c0c0ee; */
+}
+
+/* Remove all styling for truly empty rows */
+.columns > div:empty {
+  min-height: 0;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Images: stretch full width, flush left */
+.columns img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+}
+
+/* List styling in columns */
+.columns ul {
+  margin: 0 0 24px 1.25em;
+  padding: 0;
+  color: #222;
+  font-size: 1.08em;
+  font-family: var(--body-font-family);
+  font-weight: 400;
+}
+
+.columns li {
+  margin-bottom: 8px;
+}
+
+/* BUTTONS: handle both solid and outlined */
+.columns .button, .columns button,
+.columns a.button, .columns a.button.secondary, .columns button.secondary {
+  font-family: var(--body-font-family);
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 999px;
+  padding: 12px 32px;
+  margin-top: 24px;
+  margin-bottom: 0;
+  display: inline-block;
+  box-shadow: none;
+  text-align: center;
+  min-width: 120px;
+  line-height: 1.25;
+}
+
+.columns .button, .columns button,
+.columns a.button:not(.secondary), .columns button:not(.secondary) {
+  background: #36f;
+  color: #fff;
+  border: none;
+}
+
+.columns a.button.secondary, .columns button.secondary {
+  background: #fff;
+  color: #222;
+  border: 2px solid #222;
+}
+
+/* Responsive: stack column vertically on mobile */
+@media (width <= 900px) {
+  .columns {
+    padding: 32px 0 0;
+  }
+
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+    min-height: 0;
+  }
+
+  .columns > div > div {
+    padding: 0 0 32px;
+    min-width: 100%;
+  }
+}
+
