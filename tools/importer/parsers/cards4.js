@@ -1,33 +1,47 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Locate the direct .cards.block element (should be present)
-  const cardsBlock = element.querySelector('.cards.block');
+  // 1. Find the cards block (should be <div class="cards block"> inside <div class="cards-wrapper">)
+  // The 'element' is the wrapper, so find the immediate block inside
+  let cardsBlock = element.querySelector('.cards.block');
   if (!cardsBlock) return;
 
-  // Get all top-level card <li>s
-  const cardItems = cardsBlock.querySelectorAll('ul > li');
+  const ul = cardsBlock.querySelector('ul');
+  if (!ul) return;
 
-  // Prepare table: header, then one row per card
+  const cards = Array.from(ul.children).filter(li => li.tagName === 'LI');
+
+  // Header row has 'Cards' only (no variant)
   const rows = [['Cards']];
 
-  cardItems.forEach((li) => {
-    // Get the image/icon cell (mandatory)
+  // Each card is 2 columns: image/icon | text content
+  cards.forEach(card => {
     let imageCell = '';
-    const imageWrap = li.querySelector('.cards-card-image');
-    if (imageWrap) {
-      // Reference the actual picture/img element inside
-      const pic = imageWrap.querySelector('picture, img, svg');
-      if (pic) imageCell = pic;
+    // The image div contains a <picture>, which should be referenced
+    const imageDiv = card.querySelector('.cards-card-image');
+    if (imageDiv) {
+      const picture = imageDiv.querySelector('picture');
+      if (picture) {
+        imageCell = picture;
+      } else {
+        // fallback, try <img> directly
+        const img = imageDiv.querySelector('img');
+        if (img) imageCell = img;
+      }
     }
-
-    // Get the text content cell (mandatory)
+    // The body div contains the card's text content
+    const bodyDiv = card.querySelector('.cards-card-body');
     let textCell = '';
-    const body = li.querySelector('.cards-card-body');
-    if (body) textCell = body;
-
+    if (bodyDiv) {
+      // Use all child nodes (including text nodes) to preserve formatting (eg. <strong>)
+      // Only non-empty nodes
+      textCell = Array.from(bodyDiv.childNodes).filter(
+        n => n.nodeType === Node.ELEMENT_NODE || (n.nodeType === Node.TEXT_NODE && n.textContent.trim() !== '')
+      );
+    }
     rows.push([imageCell, textCell]);
   });
 
+  // Create the table block and replace the original cards wrapper
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
