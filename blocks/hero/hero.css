@@ -1,3 +1,4 @@
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,8 +6,14 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 380px;
+  background: linear-gradient(100deg, #0d2237 60%, #163d5c 100%);
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -43,5 +50,85 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Generated CSS - unchanged except .hero block merged above */
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.hero > div:first-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: right center;
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%);
+}
+
+.hero > div:last-child {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background: none;
+}
+
+.hero > div:last-child > div {
+  padding-left: 48px;
+  padding-top: 52px;
+  padding-bottom: 32px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: none;
+}
+
+.hero h1 {
+  color: #fff;
+  font-family: var(--heading-font-family, "roboto-condensed", Arial, sans-serif);
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1.12;
+  margin: 0;
+  letter-spacing: 0.01em;
+  text-align: left;
+  max-width: 20ch;
+  background: none;
+}
+
+@media (width >= 900px) {
+  .hero > div:last-child > div {
+    padding-left: 64px;
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
+  .hero h1 {
+    font-size: 2.75rem;
   }
 }
