@@ -1,43 +1,44 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the actual cards block (could be the wrapper or the .cards block itself)
-  let cardsBlock = element.querySelector('.cards.block');
-  if (!cardsBlock) {
-    // fallback: maybe element itself is the .cards.block
-    if (element.classList.contains('cards') && element.classList.contains('block')) {
-      cardsBlock = element;
-    } else {
-      return;
-    }
+  // Locate the cards list (ul) inside the provided element
+  let cardsList = element.querySelector('ul');
+  if (!cardsList) {
+    // fallback: sometimes .cards.block may contain cards directly (less likely, but safe fallback)
+    cardsList = element.querySelector('.cards.block');
   }
-  const ul = cardsBlock.querySelector('ul');
-  if (!ul) return;
-  const cards = ul.querySelectorAll(':scope > li');
-  const rows = [];
-  // Header row: block name as a single cell
-  rows.push(['Cards']);
-  // For each card
-  cards.forEach(card => {
-    let imgEl = null;
-    const imgDiv = card.querySelector('.cards-card-image');
-    if (imgDiv) {
-      // Reference the <picture> if present, else <img>
-      imgEl = imgDiv.querySelector('picture') || imgDiv.querySelector('img');
+  if (!cardsList) return;
+
+  // Retrieve all card <li> elements
+  const cards = Array.from(cardsList.querySelectorAll('li'));
+
+  // Prepare the table rows array: header first
+  const tableRows = [['Cards']];
+
+  // For each card, extract image and text content
+  cards.forEach((card) => {
+    // Extract image/icon from .cards-card-image
+    let imageCell = '';
+    const imageDiv = card.querySelector('.cards-card-image');
+    if (imageDiv) {
+      // If there is a <picture> inside, use it directly (as per HTML)
+      const picture = imageDiv.querySelector('picture');
+      if (picture) {
+        imageCell = picture;
+      } else {
+        imageCell = imageDiv;
+      }
     }
-    // Get the body (text content)
-    let textEl = null;
+
+    // Extract text (title/description/cta) from .cards-card-body
+    let textCell = '';
     const bodyDiv = card.querySelector('.cards-card-body');
     if (bodyDiv) {
-      textEl = bodyDiv;
+      textCell = bodyDiv;
     }
-    // Add row only if at least one of image or text exists
-    if (imgEl || textEl) {
-      rows.push([
-        imgEl,
-        textEl
-      ]);
-    }
+    tableRows.push([imageCell, textCell]);
   });
-  const table = WebImporter.DOMUtils.createTable(rows, document);
-  element.replaceWith(table);
+
+  // Create the table block and replace the original element
+  const block = WebImporter.DOMUtils.createTable(tableRows, document);
+  element.replaceWith(block);
 }
