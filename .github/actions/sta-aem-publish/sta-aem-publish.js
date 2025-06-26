@@ -46,7 +46,10 @@ async function replicateToPreview(accessToken, aemUrl, contentPaths, replicateTy
   
   const payload = {
     action: replicateType,
-    paths: contentPaths,
+    resources: contentPaths.map(path => ({
+      path: path,
+      type: "content"
+    })),
     connections: [
       {
         name: "aem",
