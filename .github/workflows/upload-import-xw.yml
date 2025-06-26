@@ -24,6 +24,11 @@ on:
       root_mountpoint:
         description: 'The target of the upload. This is the Adobe AEM Cloud URL.'
         required: true
+        default: 'https://author-p141866-e1455422.adobeaemcloud.com/bin/franklin.delivery/aemdemos/sta-xwalk-e2e/main'
+      aem_author_url:
+        description: 'The AEM Author instance root URL for API operations (replication, etc.)'
+        required: true
+        default: 'https://author-p141866-e1455422.adobeaemcloud.com'
       skip_assets:
         description: 'Whether or not the upload of assets should be skipped. Defaults to false.'
         required: false
@@ -168,11 +173,11 @@ jobs:
         id: xwalk-upload-step
         uses: ./.github/actions/sta-xwalk-upload
         with:
-            upload_token: ${{ steps.get-token.outputs.access_token }}
-            root_mountpoint: ${{ github.event.inputs.root_mountpoint }}
-            skip_assets: ${{ github.event.inputs.skip_assets }}
-            zip_path: ${{ steps.download-zip.outputs.temp_dir }}/contents
-            zip_name: ${{ steps.download-zip.outputs.xwalk_zip }}
+          upload_token: ${{ steps.get-token.outputs.access_token }}
+          root_mountpoint: ${{ github.event.inputs.root_mountpoint }}
+          skip_assets: ${{ github.event.inputs.skip_assets }}
+          zip_path: ${{ steps.download-zip.outputs.temp_dir }}/contents
+          zip_name: ${{ steps.download-zip.outputs.xwalk_zip }}
 
       - name: Report if upload failed
         if: ${{ steps.xwalk-upload-step.outputs.error_message != '' }}
@@ -207,7 +212,7 @@ jobs:
         uses: ./.github/actions/sta-aem-publish
         with:
           access_token: ${{ steps.get-token.outputs.access_token }}
-          aem_url: ${{ github.event.inputs.root_mountpoint }}
+          aem_url: ${{ github.event.inputs.aem_author_url }}
           content_paths: ${{ github.event.inputs.content_paths_to_replicate }}
           replicate_type: ${{ github.event.inputs.replicate_type }}
           is_preview: 'true'
@@ -245,7 +250,7 @@ jobs:
         uses: ./.github/actions/sta-aem-publish
         with:
           access_token: ${{ steps.get-token.outputs.access_token }}
-          aem_url: ${{ github.event.inputs.root_mountpoint }}
+          aem_url: ${{ github.event.inputs.aem_author_url }}
           content_paths: ${{ github.event.inputs.content_paths_to_replicate }}
           replicate_type: ${{ github.event.inputs.replicate_type }}
           is_preview: 'false'
@@ -269,11 +274,27 @@ jobs:
           status_type: ok
           agent_name: upload-import-xw
 
+      - name: Progress 6 - Cleaning up
+        uses: ./.github/actions/sta-status
+        with:
+          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          context: ${{ github.event.inputs.aemy_context }}
+          message: Cleaning up temporary files... (Step 6 of 7).
+          status_type: progress
+          agent_name: upload-import-xw
+
       - name: Clean up temporary files
         if: always()
         run: |
           # Delete the temp dir immediately, having system delete it eventually as a redundancy.
           rm -rf "${{ steps.download-zip.outputs.temp_dir }}"
+          rm -f service-credentials.json
 
-      - name: Check service credentials file size
-        run: wc -c < service-credentials.json
+      - name: Progress 7 - Workflow Complete
+        uses: ./.github/actions/sta-status
+        with:
+          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          context: ${{ github.event.inputs.aemy_context }}
+          message: Upload and replication workflow completed successfully! (Step 7 of 7). ${{ env.ACTION_URL }}
+          status_type: ok
+          agent_name: upload-import-xw
