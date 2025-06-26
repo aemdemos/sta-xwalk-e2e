@@ -1,4 +1,5 @@
 
+
 .cards > ul {
   list-style: none;
   margin: 0;
@@ -136,5 +137,141 @@
 }
 
 .cards {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
 }
 
+
+.cards {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Use flexbox for the card list, ensure rows are centered and vertically compact */
+.cards > ul {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px 24px; /* 12px vertical gap, 24px horizontal gap */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Card: uniform width, allow row balancing and expansion */
+.cards > ul > li {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 0;
+  min-width: 260px;
+  max-width: 320px; /* Closer to original card width */
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* Responsive: 2 per row at md, 1 per row at sm */
+@media (width <= 1023px) {
+  .cards > ul {
+    gap: 10px 16px;
+  }
+
+  .cards > ul > li {
+    min-width: 45%;
+    max-width: 100%;
+  }
+}
+
+@media (width <= 599px) {
+  .cards > ul {
+    gap: 8px 0;
+  }
+
+  .cards > ul > li {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Image container: aspect-ratio, neutral bg */
+.cards .cards-card-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #f4f4f4;
+  overflow: hidden;
+  display: block;
+}
+
+/* Image: fill container, no borders or shadow */
+.cards .cards-card-image img,
+.cards .cards-card-image picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+
+/* Remove pseudo-elements from image containers */
+.cards .cards-card-image::before,
+.cards .cards-card-image::after,
+.cards .cards-card-image img::before,
+.cards .cards-card-image img::after {
+  display: none;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Card body: padding, vertical alignment */
+.cards .cards-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: #fff;
+  text-align: left;
+}
+
+/* Headline (first p strong): bold, dark, spacing */
+.cards .cards-card-body p:first-child strong {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212121;
+  line-height: 1.25;
+  margin-bottom: 8px;
+  display: block;
+  font-family: var(--body-font-family);
+}
+
+/* Description text */
+.cards .cards-card-body p {
+  font-size: 16px;
+  color: #333;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Prevent accidental overlays */
+.cards .cards-card-image > *:not(picture, img) {
+  display: none;
+}
+
+.cards {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
