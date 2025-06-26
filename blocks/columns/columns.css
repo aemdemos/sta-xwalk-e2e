@@ -1,3 +1,4 @@
+
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -30,4 +31,142 @@
     flex: 1;
     order: unset;
   }
+}
+
+.columns {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--background-color);
+  box-sizing: border-box;
+  gap: 64px;
+  margin: 0 auto;
+  padding: 0;
+  margin-top: 48px;
+  margin-bottom: 48px;
+}
+
+/* Each row (a direct child of .columns) */
+.columns > div {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  align-items: stretch;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+/* At desktop: columns should be side by side */
+@media (width >= 900px) {
+  .columns > div {
+    flex-direction: row;
+    gap: 56px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .columns > div > div {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* Ensure column content stacks vertically and aligns left */
+.columns > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Make images fill their columns, keep aspect ratio */
+.columns img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 100%;
+}
+
+/* Left-align text and buttons, and remove left/right margins */
+.columns > div > div * {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* List and paragraph spacing */
+.columns ul,
+.columns ol {
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+  padding-left: 1.2em;
+}
+
+.columns p,
+.columns li {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+/* Pill-shaped buttons, consistent spacing */
+.columns .button,
+.columns button {
+  border-radius: 2em;
+  padding: 0.7em 2.1em;
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  margin-top: 22px;
+  margin-bottom: 0;
+  min-width: 120px;
+  line-height: 1.25;
+  box-shadow: none;
+}
+
+.columns .button.secondary,
+.columns button.secondary {
+  background: none;
+  color: var(--text-color);
+  border: 2px solid var(--text-color);
+}
+
+/* Add space above and below block if needed */
+.columns {
+  margin-top: 48px;
+  margin-bottom: 48px;
+}
+
+/* Prevent accidental shrinking on desktop */
+@media (width >= 900px) {
+  .columns > div > div {
+    min-width: 0;
+    width: 0;
+  }
+}
+
+.columns {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--background-color);
+  box-sizing: border-box;
+  gap: 64px;
+  margin: 0 auto;
+  padding: 0;
+  margin-top: 48px;
+  margin-bottom: 48px;
 }
