@@ -1,12 +1,21 @@
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
 }
 
+.hero,
 .hero {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  min-height: 380px;
+  padding: 0;
+  background: linear-gradient(120deg, #0c2840 0%, #19344a 70%, #19344a 100%);
+  box-sizing: border-box;
+  overflow: hidden;
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
 }
 
 .hero h1,
@@ -43,5 +52,97 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Text column (left) */
+.hero > div:last-child {
+  flex: 0 1 42%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  order: 1;
+  height: 100%;
+  padding-left: 56px;
+  padding-top: 68px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.hero h1 {
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-size: 2.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  max-width: 720px;
+  text-align: left;
+  letter-spacing: -0.5px;
+}
+
+/* Image column (right) */
+.hero > div:first-child {
+  flex: 1 1 58%;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  order: 2;
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: 85% 100%;
+}
+
+/* Responsive adjustments */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 220px;
+  }
+
+  .hero > div:first-child,
+  .hero > div:last-child {
+    flex: unset;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    order: unset;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+  }
+
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  .hero > div:last-child {
+    padding-left: 0;
+    padding-top: 18px;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: 1.15rem;
+    text-align: center;
+    max-width: 90vw;
   }
 }
