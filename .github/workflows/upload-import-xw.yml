@@ -31,6 +31,18 @@ on:
       action_url:
         description: 'The URL that shows state of the workflow as an aid for the user.'
         required: false
+      content_paths_to_replicate:
+        description: 'Comma-separated list of content paths to replicate after upload (e.g., /content/dam/my-assets,/content/my-page)'
+        required: false
+        default: '/content/dam/sta-xwalk-e2e,/content/sta-xwalk-e2e'
+      replicate_type:
+        description: 'Type of replication operation (activate, deactivate, delete). Defaults to activate.'
+        required: false
+        default: 'activate'
+      is_preview:
+        description: 'Whether to replicate to preview (true) or publish (false). Defaults to false (publish).'
+        required: false
+        default: 'false'
 
 permissions:
   contents: read
@@ -82,7 +94,7 @@ jobs:
         with:
           callbacks: ${{ github.event.inputs.aemy_callbacks }}
           context: ${{ github.event.inputs.aemy_context }}
-          message: Inputs look good. Now setting up the upload. (Step 1 of 5).
+          message: Inputs look good. Now setting up the upload. (Step 1 of 6).
           status_type: progress
           agent_name: upload-import-xw
 
@@ -95,7 +107,7 @@ jobs:
         with:
           callbacks: ${{ github.event.inputs.aemy_callbacks }}
           context: ${{ github.event.inputs.aemy_context }}
-          message: Downloading and extracting content from the Import zip... (Step 2 of 5).
+          message: Downloading and extracting content from the Import zip... (Step 2 of 6).
           status_type: progress
           agent_name: upload-import-xw
 
@@ -121,7 +133,7 @@ jobs:
         with:
           callbacks: ${{ github.event.inputs.aemy_callbacks }}
           context: ${{ github.event.inputs.aemy_context }}
-          message: Zip extracted with ${{ steps.download-zip.outputs.file_count }} files but the XWalk zip was not found so will assume \"xwalk-index.zip\". Initiating upload... (Step 3 of 5).
+          message: Zip extracted with ${{ steps.download-zip.outputs.file_count }} files but the XWalk zip was not found so will assume \"xwalk-index.zip\". Initiating upload... (Step 3 of 6).
           status_type: progress
           agent_name: upload-import-xw
 
@@ -131,7 +143,7 @@ jobs:
         with:
           callbacks: ${{ github.event.inputs.aemy_callbacks }}
           context: ${{ github.event.inputs.aemy_context }}
-          message: Zip extracted with ${{ steps.download-zip.outputs.file_count }} files. Initiating upload... (Step 3 of 5).
+          message: Zip extracted with ${{ steps.download-zip.outputs.file_count }} files. Initiating upload... (Step 3 of 6).
           status_type: progress
           agent_name: upload-import-xw
 
@@ -180,6 +192,47 @@ jobs:
           callbacks: ${{ github.event.inputs.aemy_callbacks }}
           context: ${{ github.event.inputs.aemy_context }}
           message: XWalk upload succeeded.
+          status_type: ok
+          agent_name: upload-import-xw
+
+      - name: Progress 4 - Replicating content
+        if: ${{ github.event.inputs.content_paths_to_replicate != '' }}
+        uses: ./.github/actions/sta-status
+        with:
+          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          context: ${{ github.event.inputs.aemy_context }}
+          message: Replicating content to AEM... (Step 4 of 6).
+          status_type: progress
+          agent_name: upload-import-xw
+
+      - name: Replicate content to AEM
+        if: ${{ github.event.inputs.content_paths_to_replicate != '' }}
+        id: replicate-step
+        uses: ./.github/actions/sta-aem-publish
+        with:
+          access_token: ${{ steps.get-token.outputs.access_token }}
+          aem_url: ${{ github.event.inputs.root_mountpoint }}
+          content_paths: ${{ github.event.inputs.content_paths_to_replicate }}
+          replicate_type: ${{ github.event.inputs.replicate_type }}
+          is_preview: ${{ github.event.inputs.is_preview }}
+
+      - name: Report if replicate failed
+        if: ${{ github.event.inputs.content_paths_to_replicate != '' && steps.replicate-step.outputs.error_message != '' }}
+        uses: ./.github/actions/sta-status
+        with:
+          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          context: ${{ github.event.inputs.aemy_context }}
+          message: ${{ steps.replicate-step.outputs.error_message }} ${{ env.ACTION_URL }}
+          status_type: error
+          agent_name: upload-import-xw
+
+      - name: Report replicate success
+        if: ${{ github.event.inputs.content_paths_to_replicate != '' }}
+        uses: ./.github/actions/sta-status
+        with:
+          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          context: ${{ github.event.inputs.aemy_context }}
+          message: Content replicated successfully.
           status_type: ok
           agent_name: upload-import-xw
 
