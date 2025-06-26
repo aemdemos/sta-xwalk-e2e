@@ -28,27 +28,30 @@ async function replicateContent(accessToken, aemUrl, contentPaths, replicateType
   core.info(`📤 Replicating ${contentPaths.length} content path(s) to ${targetType} via ${aemUrl}`);
   core.info(`🔗 Using endpoint: ${replicateUrl}`);
   
-  const payload = {
-    cmd: replicateType,
-    path: contentPaths,
-    synchronous: false,
-    ignoredeactivated: true,
-    onlymodified: false,
-    onlynewer: false,
-    target: targetType
-  };
+  // Create form data for the replicate endpoint
+  const formData = new URLSearchParams();
+  formData.append('cmd', replicateType);
+  formData.append('synchronous', 'false');
+  formData.append('ignoredeactivated', 'true');
+  formData.append('onlymodified', 'false');
+  formData.append('onlynewer', 'false');
+  
+  // Add each path as a separate parameter
+  contentPaths.forEach(path => {
+    formData.append('path', path);
+  });
 
-  core.info(`📋 Payload: ${JSON.stringify(payload, null, 2)}`);
+  core.info(`📋 Form data: ${formData.toString()}`);
 
   try {
     const response = await fetch(replicateUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'text/html,application/json'
       },
-      body: JSON.stringify(payload)
+      body: formData.toString()
     });
 
     if (!response.ok) {
@@ -56,11 +59,11 @@ async function replicateContent(accessToken, aemUrl, contentPaths, replicateType
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
-    const result = await response.json();
+    const result = await response.text();
     core.info(`✅ Replication to ${targetType} completed successfully`);
-    core.info(`📊 Response: ${JSON.stringify(result, null, 2)}`);
+    core.info(`📊 Response: ${result}`);
     
-    return result;
+    return { success: true, response: result };
   } catch (error) {
     core.error(`❌ Replication to ${targetType} failed: ${error.message}`);
     throw error;
