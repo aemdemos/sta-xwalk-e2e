@@ -13,7 +13,7 @@
 import core from '@actions/core';
 
 /**
- * Replicates content using AEM /bin/replicate endpoint
+ * Replicates content using appropriate endpoint based on target
  * @param {string} accessToken - JWT access token
  * @param {string} aemUrl - AEM instance URL
  * @param {string[]} contentPaths - Array of content paths to replicate
@@ -22,26 +22,52 @@ import core from '@actions/core';
  * @returns {Promise<Object>}
  */
 async function replicateContent(accessToken, aemUrl, contentPaths, replicateType = 'activate', isPreview = false) {
-  const replicateUrl = `${aemUrl}/bin/replicate`;
-  
   const targetType = isPreview ? 'preview' : 'publish';
-  core.info(`📤 Replicating ${contentPaths.length} content path(s) to ${targetType} via ${aemUrl}`);
-  core.info(`🔗 Using endpoint: ${replicateUrl}`);
+  core.info(`📤 Replicating ${contentPaths.length} content path(s) to ${targetType}`);
+  
+  if (isPreview) {
+    return await replicateToPreview(accessToken, aemUrl, contentPaths, replicateType);
+  } else {
+    return await replicateToPublish(accessToken, aemUrl, contentPaths, replicateType);
+  }
+}
+
+/**
+ * Replicates content to preview using Universal Editor Service
+ * @param {string} accessToken - JWT access token
+ * @param {string} aemUrl - AEM instance URL
+ * @param {string[]} contentPaths - Array of content paths to replicate
+ * @param {string} replicateType - Type of replication (activate, deactivate, delete)
+ * @returns {Promise<Object>}
+ */
+async function replicateToPreview(accessToken, aemUrl, contentPaths, replicateType) {
+  const previewUrl = 'https://universal-editor-service.adobe.io/publish';
+  core.info(`🔗 Using Universal Editor Service endpoint: ${previewUrl}`);
+  
+  const connectionName = "aemconnection";
   
   const payload = {
-    cmd: replicateType,
-    path: contentPaths,
-    synchronous: false,
-    ignoredeactivated: true,
-    onlymodified: false,
-    onlynewer: false,
-    target: targetType
+    connections: [
+      {
+        name: connectionName,
+        protocol: "xwalk",
+        uri: aemUrl
+      }
+    ],
+    resources: contentPaths.map(path => ({
+      id: `urn:${connectionName}:${path}`,
+      required: false,
+      role: path.startsWith('/content/dam/') ? "asset" : "page",
+      description: path.split('/').pop() || path,
+      status: "draft"
+    })),
+    tier: "preview"
   };
 
-  core.info(`📋 Payload: ${JSON.stringify(payload, null, 2)}`);
+  core.info(`📋 Preview payload: ${JSON.stringify(payload, null, 2)}`);
 
   try {
-    const response = await fetch(replicateUrl, {
+    const response = await fetch(previewUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -57,12 +83,66 @@ async function replicateContent(accessToken, aemUrl, contentPaths, replicateType
     }
 
     const result = await response.json();
-    core.info(`✅ Replication to ${targetType} completed successfully`);
+    core.info(`✅ Replication to preview completed successfully`);
     core.info(`📊 Response: ${JSON.stringify(result, null, 2)}`);
     
     return result;
   } catch (error) {
-    core.error(`❌ Replication to ${targetType} failed: ${error.message}`);
+    core.error(`❌ Replication to preview failed: ${error.message}`);
+    throw error;
+  }
+}
+
+/**
+ * Replicates content to publish using AEM /bin/replicate endpoint
+ * @param {string} accessToken - JWT access token
+ * @param {string} aemUrl - AEM instance URL
+ * @param {string[]} contentPaths - Array of content paths to replicate
+ * @param {string} replicateType - Type of replication (activate, deactivate, delete)
+ * @returns {Promise<Object>}
+ */
+async function replicateToPublish(accessToken, aemUrl, contentPaths, replicateType) {
+  const replicateUrl = `${aemUrl}/bin/replicate`;
+  core.info(`🔗 Using AEM replicate endpoint: ${replicateUrl}`);
+  
+  // Create form data for the replicate endpoint
+  const formData = new URLSearchParams();
+  formData.append('cmd', replicateType);
+  formData.append('synchronous', 'false');
+  formData.append('ignoredeactivated', 'true');
+  formData.append('onlymodified', 'false');
+  formData.append('onlynewer', 'false');
+  
+  // Add each path as a separate parameter
+  contentPaths.forEach(path => {
+    formData.append('path', path);
+  });
+
+  core.info(`📋 Form data: ${formData.toString()}`);
+
+  try {
+    const response = await fetch(replicateUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'text/html,application/json'
+      },
+      body: formData.toString()
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    const result = await response.text();
+    core.info(`✅ Replication to publish completed successfully`);
+    core.info(`📊 Response: ${result}`);
+    
+    return { success: true, response: result };
+  } catch (error) {
+    core.error(`❌ Replication to publish failed: ${error.message}`);
     throw error;
   }
 }

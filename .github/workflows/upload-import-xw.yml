@@ -39,7 +39,7 @@ on:
       content_paths_to_replicate:
         description: 'Comma-separated list of content paths to replicate after upload (e.g., /content/dam/my-assets,/content/my-page)'
         required: true
-        default: '/content/dam/sta-xwalk-e2e,/content/sta-xwalk-e2e'
+        default: '/content/dam/sta-xwalk-e2e,/content/sta-xwalk-e2e,/content/sta-xwalk-e2e/index,/content/sta-xwalk-e2e/nav,/content/sta-xwalk-e2e/footer'
       replicate_type:
         description: 'Type of replication operation (activate, deactivate, delete). Defaults to activate.'
         required: false
