@@ -44,19 +44,24 @@ async function replicateToPreview(accessToken, aemUrl, contentPaths, replicateTy
   const previewUrl = 'https://universal-editor-service.adobe.io/publish';
   core.info(`🔗 Using Universal Editor Service endpoint: ${previewUrl}`);
   
+  const connectionName = "aemconnection";
+  
   const payload = {
-    action: replicateType,
-    resources: contentPaths.map(path => ({
-      path: path,
-      type: "content"
-    })),
     connections: [
       {
-        name: "aem",
-        protocol: "aem",
+        name: connectionName,
+        protocol: "xwalk",
         uri: aemUrl
       }
-    ]
+    ],
+    resources: contentPaths.map(path => ({
+      id: `urn:${connectionName}:${path}`,
+      required: false,
+      role: path.startsWith('/content/dam/') ? "asset" : "page",
+      description: path.split('/').pop() || path,
+      status: "draft"
+    })),
+    tier: "preview"
   };
 
   core.info(`📋 Preview payload: ${JSON.stringify(payload, null, 2)}`);
