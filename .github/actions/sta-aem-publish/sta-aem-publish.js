@@ -26,7 +26,7 @@ async function replicateContent(accessToken, aemUrl, contentPaths, replicateType
   core.info(`📤 Replicating ${contentPaths.length} content path(s) to ${targetType}`);
   
   if (isPreview) {
-    return await replicateToPreview(accessToken, contentPaths, replicateType);
+    return await replicateToPreview(accessToken, aemUrl, contentPaths, replicateType);
   } else {
     return await replicateToPublish(accessToken, aemUrl, contentPaths, replicateType);
   }
@@ -35,17 +35,25 @@ async function replicateContent(accessToken, aemUrl, contentPaths, replicateType
 /**
  * Replicates content to preview using Universal Editor Service
  * @param {string} accessToken - JWT access token
+ * @param {string} aemUrl - AEM instance URL
  * @param {string[]} contentPaths - Array of content paths to replicate
  * @param {string} replicateType - Type of replication (activate, deactivate, delete)
  * @returns {Promise<Object>}
  */
-async function replicateToPreview(accessToken, contentPaths, replicateType) {
+async function replicateToPreview(accessToken, aemUrl, contentPaths, replicateType) {
   const previewUrl = 'https://universal-editor-service.adobe.io/publish';
   core.info(`🔗 Using Universal Editor Service endpoint: ${previewUrl}`);
   
   const payload = {
     action: replicateType,
-    paths: contentPaths
+    paths: contentPaths,
+    connections: [
+      {
+        name: "aem",
+        protocol: "aem",
+        uri: aemUrl
+      }
+    ]
   };
 
   core.info(`📋 Preview payload: ${JSON.stringify(payload, null, 2)}`);
