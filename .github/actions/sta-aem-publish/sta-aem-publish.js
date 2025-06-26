@@ -13,7 +13,7 @@
 import core from '@actions/core';
 
 /**
- * Replicates content using AEM /bin/replicate endpoint
+ * Replicates content using appropriate endpoint based on target
  * @param {string} accessToken - JWT access token
  * @param {string} aemUrl - AEM instance URL
  * @param {string[]} contentPaths - Array of content paths to replicate
@@ -22,11 +22,72 @@ import core from '@actions/core';
  * @returns {Promise<Object>}
  */
 async function replicateContent(accessToken, aemUrl, contentPaths, replicateType = 'activate', isPreview = false) {
-  const replicateUrl = `${aemUrl}/bin/replicate`;
-  
   const targetType = isPreview ? 'preview' : 'publish';
-  core.info(`📤 Replicating ${contentPaths.length} content path(s) to ${targetType} via ${aemUrl}`);
-  core.info(`🔗 Using endpoint: ${replicateUrl}`);
+  core.info(`📤 Replicating ${contentPaths.length} content path(s) to ${targetType}`);
+  
+  if (isPreview) {
+    return await replicateToPreview(accessToken, contentPaths, replicateType);
+  } else {
+    return await replicateToPublish(accessToken, aemUrl, contentPaths, replicateType);
+  }
+}
+
+/**
+ * Replicates content to preview using Universal Editor Service
+ * @param {string} accessToken - JWT access token
+ * @param {string[]} contentPaths - Array of content paths to replicate
+ * @param {string} replicateType - Type of replication (activate, deactivate, delete)
+ * @returns {Promise<Object>}
+ */
+async function replicateToPreview(accessToken, contentPaths, replicateType) {
+  const previewUrl = 'https://universal-editor-service.adobe.io/publish';
+  core.info(`🔗 Using Universal Editor Service endpoint: ${previewUrl}`);
+  
+  const payload = {
+    action: replicateType,
+    paths: contentPaths
+  };
+
+  core.info(`📋 Preview payload: ${JSON.stringify(payload, null, 2)}`);
+
+  try {
+    const response = await fetch(previewUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    const result = await response.json();
+    core.info(`✅ Replication to preview completed successfully`);
+    core.info(`📊 Response: ${JSON.stringify(result, null, 2)}`);
+    
+    return result;
+  } catch (error) {
+    core.error(`❌ Replication to preview failed: ${error.message}`);
+    throw error;
+  }
+}
+
+/**
+ * Replicates content to publish using AEM /bin/replicate endpoint
+ * @param {string} accessToken - JWT access token
+ * @param {string} aemUrl - AEM instance URL
+ * @param {string[]} contentPaths - Array of content paths to replicate
+ * @param {string} replicateType - Type of replication (activate, deactivate, delete)
+ * @returns {Promise<Object>}
+ */
+async function replicateToPublish(accessToken, aemUrl, contentPaths, replicateType) {
+  const replicateUrl = `${aemUrl}/bin/replicate`;
+  core.info(`🔗 Using AEM replicate endpoint: ${replicateUrl}`);
   
   // Create form data for the replicate endpoint
   const formData = new URLSearchParams();
@@ -60,12 +121,12 @@ async function replicateContent(accessToken, aemUrl, contentPaths, replicateType
     }
 
     const result = await response.text();
-    core.info(`✅ Replication to ${targetType} completed successfully`);
+    core.info(`✅ Replication to publish completed successfully`);
     core.info(`📊 Response: ${result}`);
     
     return { success: true, response: result };
   } catch (error) {
-    core.error(`❌ Replication to ${targetType} failed: ${error.message}`);
+    core.error(`❌ Replication to publish failed: ${error.message}`);
     throw error;
   }
 }
