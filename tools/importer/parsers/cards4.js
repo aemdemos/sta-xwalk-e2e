@@ -1,38 +1,30 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the inner cards block
-  const cardsBlock = element.querySelector('.cards.block');
+  // Find the .cards block
+  let cardsBlock = element;
+  if (!element.classList.contains('cards')) {
+    cardsBlock = element.querySelector(':scope > .cards');
+  }
   if (!cardsBlock) return;
 
-  // Build rows array
-  const rows = [];
-  // Header row: two columns as required
-  rows.push(['Cards', '']);
+  const list = cardsBlock.querySelector('ul');
+  if (!list) return;
 
-  // Gather all card items
-  const cardItems = cardsBlock.querySelectorAll('ul > li');
+  const cardItems = Array.from(list.children);
+  const rows = [['Cards']]; // Header row matches example exactly
+
   cardItems.forEach((li) => {
-    // First cell: image/icon
-    let imageCell = null;
-    const imageDiv = li.querySelector('.cards-card-image');
-    if (imageDiv) {
-      const pic = imageDiv.querySelector('picture');
-      if (pic) imageCell = pic;
-      else {
-        const img = imageDiv.querySelector('img');
-        if (img) imageCell = img;
-      }
-    }
-    // Second cell: text content
-    let textCell = null;
-    const bodyDiv = li.querySelector('.cards-card-body');
-    if (bodyDiv) textCell = bodyDiv;
-    if (imageCell && textCell) {
-      rows.push([imageCell, textCell]);
-    }
+    // image/icon (first cell)
+    let imageCell = '';
+    const imageWrapper = li.querySelector('.cards-card-image');
+    if (imageWrapper) imageCell = imageWrapper;
+    // text content (second cell)
+    let textCell = '';
+    const bodyWrapper = li.querySelector('.cards-card-body');
+    if (bodyWrapper) textCell = bodyWrapper;
+    rows.push([imageCell, textCell]);
   });
 
-  // Create table and replace the element
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
