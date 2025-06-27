@@ -1,9 +1,11 @@
 
+
 .columns {
   background: #fff;
-  color: #212121;
-  padding-top: 56px;
+  padding-top: 64px;
   padding-bottom: 0;
+  width: 100%;
+  color: #212121;
   box-sizing: border-box;
 }
 
@@ -173,3 +175,153 @@
 .columns > div + div {
   margin-top: 64px;
 }
+
+.columns > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 92vw;
+  box-sizing: border-box;
+  min-height: 540px;
+}
+
+/* Each direct child div is a column: stack vertically and left-align */
+.columns > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: left;
+  flex: 1 1 0;
+  gap: 0;
+}
+
+/* Left column: narrower (text, list, button) */
+.columns > div > div:first-child {
+  flex: 0 0 340px;
+  max-width: 370px;
+  padding-right: 40px;
+}
+
+/* Right column: expands, holds images/buttons */
+.columns > div > div:last-child {
+  flex: 2 1 0;
+  min-width: 0;
+}
+
+/* Vertical spacing between stacked elements inside columns */
+.columns > div > div > * + * {
+  margin-top: 28px;
+}
+
+/* Headings and lists: spacing and left alignment */
+.columns h2, .columns h3, .columns h4, .columns h5, .columns h6 {
+  margin: 0 0 12px;
+  color: #212121;
+  font-weight: 600;
+  text-align: left;
+  letter-spacing: 0.01em;
+}
+
+.columns ul {
+  margin: 0 0 16px;
+  padding-left: 28px;
+  color: #222;
+  font-size: 1.05rem;
+  text-align: left;
+}
+
+.columns li {
+  margin-bottom: 7px;
+}
+
+/* Images: edge-to-edge, no border radius */
+.columns img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Buttons: style overrides for .columns block only */
+.columns > div > div .button,
+.columns > div > div button,
+.columns > div > div a.button {
+  background: #3861fa;
+  color: #fff;
+  border-radius: 2em;
+  border: none;
+  font-size: 1.08rem;
+  padding: 16px 36px;
+  font-weight: 600;
+  min-width: 96px;
+  margin-top: 14px;
+  margin-bottom: 0;
+  display: inline-block;
+  line-height: 1.2;
+  text-align: center;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: none;
+}
+
+/* Outlined button variant */
+.columns > div > div .button.outline,
+.columns > div > div button.outline,
+.columns > div > div a.button.outline {
+  background: #fff;
+  color: #212121;
+  border: 2px solid #212121;
+  border-radius: 2em;
+  font-size: 1.08rem;
+  padding: 16px 36px;
+  font-weight: 600;
+  margin-top: 14px;
+  margin-bottom: 0;
+  display: inline-block;
+  line-height: 1.2;
+  text-align: center;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.columns > div > div .button.outline:hover,
+.columns > div > div button.outline:hover,
+.columns > div > div a.button.outline:hover {
+  background: #212121;
+  color: #fff;
+}
+
+/* Responsive: stack columns on mobile, adjust gaps/padding */
+@media (width <= 900px) {
+  .columns {
+    padding-top: 28px;
+  }
+
+  .columns > div {
+    flex-direction: column;
+    gap: 36px;
+    width: 100vw;
+    max-width: 100%;
+    padding: 0 8px;
+    min-height: unset;
+  }
+
+  .columns > div > div:first-child,
+  .columns > div > div:last-child {
+    max-width: 100%;
+    padding-right: 0;
+    flex: 1 1 0;
+  }
+
+  .columns > div > div > * + * {
+    margin-top: 16px;
+  }
+}
+
