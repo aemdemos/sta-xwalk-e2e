@@ -1,3 +1,12 @@
+
+.columns {
+  background: #fff;
+  color: #212121;
+  padding-top: 56px;
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -30,4 +39,137 @@
     flex: 1;
     order: unset;
   }
+}
+
+/* Flex row for columns layout on desktop, stack on mobile */
+.columns > div {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  align-items: stretch;
+}
+
+@media (width >= 900px) {
+  .columns > div {
+    flex-direction: row;
+    gap: 64px;
+    align-items: flex-start;
+  }
+}
+
+/* Each column flexes equally, stacks items vertically */
+.columns > div > div {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* Space between stacked items inside columns, but not images */
+.columns > div > div > * + * {
+  margin-top: 24px;
+}
+
+/* Headings, paragraphs, lists: left-aligned and with spacing */
+.columns h1, .columns h2, .columns h3, .columns h4, .columns h5, .columns h6 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #212121;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  text-align: left;
+}
+
+.columns p {
+  margin: 0 0 14px;
+  color: #212121;
+  text-align: left;
+}
+
+.columns ul,
+.columns ol {
+  margin: 0 0 12px;
+  padding-left: 28px;
+  color: #212121;
+  font-size: 20px;
+  text-align: left;
+}
+
+/* Images: fill column width, no border radius, flush edges */
+.columns img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0;
+  margin: 0;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+/* Button styles: rounded, color-matched, and spacing */
+.columns .button,
+.columns button,
+.columns a.button {
+  border-radius: 24px;
+  font-size: 20px;
+  padding: 12px 32px;
+  margin-top: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+  border: none;
+  background: #3861fb;
+  color: #fff;
+  line-height: 1.2;
+  display: inline-block;
+  min-width: 88px;
+  text-align: center;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.columns .button.secondary,
+.columns .button.outline,
+.columns button.secondary,
+.columns button.outline,
+.columns a.button.secondary,
+.columns a.button.outline {
+  background: #fff;
+  color: #212121;
+  border: 2px solid #212121;
+}
+
+.columns .button.secondary:hover,
+.columns .button.outline:hover,
+.columns button.secondary:hover,
+.columns button.outline:hover,
+.columns a.button.secondary:hover,
+.columns a.button.outline:hover {
+  background: #212121;
+  color: #fff;
+}
+
+/* Responsive: reduce gap and spacing on mobile */
+@media (width <= 899px) {
+  .columns {
+    padding-top: 32px;
+    padding-bottom: 0;
+  }
+
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .columns > div > div > * + * {
+    margin-top: 16px;
+  }
+}
+
+/* If multiple rows, add extra margin between them */
+.columns > div + div {
+  margin-top: 64px;
 }
