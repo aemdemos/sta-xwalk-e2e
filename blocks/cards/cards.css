@@ -1,4 +1,5 @@
 
+
 .cards > ul {
   list-style: none;
   margin: 0;
@@ -28,8 +29,8 @@
 }
 
 .cards {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1192px;
+  margin: 48px auto 0;
   box-sizing: border-box;
 }
 
@@ -120,7 +121,117 @@
 }
 
 .cards {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1192px;
+  margin: 48px auto 0;
   box-sizing: border-box;
 }
+
+/* Use flexbox for horizontal card layout, prevent vertical alignment issues */
+.cards > ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  width: 100%;
+  box-sizing: border-box;
+
+  /* Remove any height/flex-fill issues */
+  min-height: 0;
+}
+
+/* Cards: horizontal rows of 4, equal width */
+.cards > ul > li {
+  flex: 0 1 calc((100% - 72px) / 4); /* 3 gaps of 24px in a 4-column layout */
+  max-width: calc((100% - 72px) / 4);
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  height: auto;
+  margin: 0;
+}
+
+/* Card image: fixed height, visible content below */
+.cards .cards-card-image {
+  width: 100%;
+  height: 210px;
+  min-height: 210px;
+  background: #eee;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+/* Image fit and fill */
+.cards .cards-card-image picture,
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card body: ensure always visible, no clipping */
+.cards .cards-card-body {
+  flex: 1 1 auto;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: visible;
+}
+
+/* Headline */
+.cards .cards-card-body p:first-child strong {
+  display: block;
+  color: #212121;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  font-family: var(--body-font-family);
+}
+
+/* Description text */
+.cards .cards-card-body p:not(:first-child) {
+  color: #616161;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.4;
+  font-family: var(--body-font-family);
+}
+
+/* Responsive: 2 columns for medium, 1 for small screens */
+@media (width <= 1100px) {
+  .cards > ul > li {
+    flex: 0 1 calc((100% - 24px) / 2);
+    max-width: calc((100% - 24px) / 2);
+  }
+}
+
+@media (width <= 700px) {
+  .cards > ul {
+    gap: 16px;
+  }
+
+  .cards > ul > li {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .cards .cards-card-image {
+    height: 140px;
+    min-height: 140px;
+  }
+}
+
