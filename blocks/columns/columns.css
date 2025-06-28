@@ -1,20 +1,24 @@
 /* Columns container */
 .columns {
-  width: 1200px;
-  max-width: 100vw;
+  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
-  padding-top: 48px;
+  padding-top: 10px;
   padding-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
 }
 
+/* Merge all .columns > div rules together, no duplicates */
 .columns > div {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  column-gap: 24px;
   width: 100%;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 34px 24px;
 }
 
 @media (width >= 900px) {
@@ -23,6 +27,7 @@
     flex-direction: row;
     gap: 24px;
   }
+
   .columns > div > div {
     flex: 1;
     order: unset;
@@ -39,18 +44,40 @@
   gap: 0;
   padding: 0;
   order: 1;
+  width: 100%;
 }
 
 .columns > div > .columns-img-col {
   order: 0;
 }
 
+/* Image rules: .columns img before .columns > div > .columns-img-col img (fix specificity order) */
 .columns img {
   width: 100%;
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 0 24px;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: 300px;
+  object-fit: cover;
 }
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+.columns picture {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 0 24px;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: 300px;
+  object-fit: cover;
 }
 
 /* Deal with excessive margins between stacked items */
@@ -66,25 +93,47 @@
   margin-bottom: 24px;
 }
 
-/* Ensure picture/img fills column width, but never grows too tall */
-.columns picture,
-.columns img {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 0 24px;
-  border-radius: 0;
-  box-shadow: none;
+/* Remove all left margin/padding so column starts flush */
+.columns > div > div:first-child > div {
+  margin-left: 0;
+  padding-left: 0;
+  max-width: 340px;
+}
+
+/* Reduce space below last element in each column (moved up to resolve specificity order) */
+.columns > div > div > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Tighter vertical spacing for content group */
+.columns > div > div:first-child > div > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.columns > div > div:first-child ul {
+  margin-bottom: 10px;
+  padding-left: 20px;
+}
+
+/* Fix image order for top/bottom rows */
+.columns > div:first-child > div:nth-child(2) {
+  order: 2; /* Top right: blue DNA image (should be second column in markup) */
+}
+
+.columns > div:last-child > div:nth-child(1) {
+  order: 1; /* Bottom left: yellow DNA image */
 }
 
 /* Style the first button ("Live") with extra top margin and space below */
 .columns .button-container .button {
-  margin-top: 20px;
-  margin-bottom: 32px;
-  padding: 0.75em 2em;
-  font-size: 1.1em;
-  border-radius: 2.4em;
+  font-size: 20px;
+  padding: 0.8em 2em;
+  border-radius: 999px;
+  min-width: 110px;
+  min-height: 44px;
+  margin-top: 12px;
+  margin-bottom: 18px;
+  box-sizing: border-box;
 }
 
 /* Style secondary (outline) button */
@@ -92,38 +141,74 @@
   background: #fff;
   color: #222;
   border: 2px solid #222;
-  border-radius: 2.4em;
-  padding: 0.75em 2em;
-  font-size: 1.1em;
   box-shadow: none;
-  margin-top: 16px;
   display: inline-block;
   text-decoration: none;
+  font-size: 20px;
+  padding: 0.8em 2em;
+  border-radius: 999px;
+  min-width: 110px;
+  min-height: 44px;
+  margin-top: 12px;
+  margin-bottom: 18px;
+  box-sizing: border-box;
 }
 
-/* Reduce space below last element in each column */
-.columns > div > div > *:last-child {
-  margin-bottom: 0;
+/* Vertically center the bottom right preview section relative to its row */
+.columns > div:last-child > div:last-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Preview section spacing */
+.columns > div:last-child > div:last-child > p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.columns > div:last-child > div:last-child > .button-container {
+  margin-top: 10px;
 }
 
 /* Responsive: stack columns on small screens */
 @media (width <= 900px) {
   .columns {
+    max-width: 100vw;
     width: 100%;
-    padding: 0 12px;
+    padding: 10px 0;
+    gap: 18px;
   }
+
   .columns > div {
     flex-direction: column;
-    gap: 32px;
+    gap: 18px 0;
     width: 100%;
   }
+
   .columns > div > div {
     width: 100%;
+  }
+
+  .columns > div > div:first-child > div {
+    margin-left: 0;
+    max-width: none;
+  }
+
+  .columns picture,
+  .columns img {
+    max-height: 140px;
   }
 }
 
 /* Optional: Tighter spacing for headings inside .columns if needed */
-.columns h1, .columns h2, .columns h3, .columns h4, .columns h5, .columns h6 {
+.columns h1,
+.columns h2,
+.columns h3,
+.columns h4,
+.columns h5,
+.columns h6 {
   margin-top: 0;
   margin-bottom: 16px;
 }
