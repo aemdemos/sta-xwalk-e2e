@@ -1,13 +1,43 @@
-.columns > div {
-  display: flex;
-  flex-direction: column;
+/* Columns container */
+.columns {
+  width: 1200px;
+  max-width: 100vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-top: 48px;
+  padding-bottom: 32px;
 }
 
-.columns img {
+.columns > div {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: 24px;
   width: 100%;
 }
 
+@media (width >= 900px) {
+  .columns > div {
+    align-items: center;
+    flex-direction: row;
+    gap: 24px;
+  }
+  .columns > div > div {
+    flex: 1;
+    order: unset;
+  }
+}
+
+/* Each main column stacks its children vertically, but keeps items tight */
 .columns > div > div {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  padding: 0;
   order: 1;
 }
 
@@ -15,19 +45,85 @@
   order: 0;
 }
 
+.columns img {
+  width: 100%;
+}
+
 .columns > div > .columns-img-col img {
   display: block;
 }
 
-@media (width >= 900px) {
-  .columns > div {
-    align-items: center;
-    flex-direction: unset;
-    gap: 24px;
-  }
+/* Deal with excessive margins between stacked items */
+.columns p,
+.columns ul {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
 
-  .columns > div > div {
-    flex: 1;
-    order: unset;
+/* Tighter spacing for lists */
+.columns ul {
+  padding-left: 24px;
+  margin-bottom: 24px;
+}
+
+/* Ensure picture/img fills column width, but never grows too tall */
+.columns picture,
+.columns img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 0 24px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Style the first button ("Live") with extra top margin and space below */
+.columns .button-container .button {
+  margin-top: 20px;
+  margin-bottom: 32px;
+  padding: 0.75em 2em;
+  font-size: 1.1em;
+  border-radius: 2.4em;
+}
+
+/* Style secondary (outline) button */
+.columns .button.secondary {
+  background: #fff;
+  color: #222;
+  border: 2px solid #222;
+  border-radius: 2.4em;
+  padding: 0.75em 2em;
+  font-size: 1.1em;
+  box-shadow: none;
+  margin-top: 16px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* Reduce space below last element in each column */
+.columns > div > div > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive: stack columns on small screens */
+@media (width <= 900px) {
+  .columns {
+    width: 100%;
+    padding: 0 12px;
   }
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+  }
+  .columns > div > div {
+    width: 100%;
+  }
+}
+
+/* Optional: Tighter spacing for headings inside .columns if needed */
+.columns h1, .columns h2, .columns h3, .columns h4, .columns h5, .columns h6 {
+  margin-top: 0;
+  margin-bottom: 16px;
 }
