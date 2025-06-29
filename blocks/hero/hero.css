@@ -1,3 +1,4 @@
+/* Empty line before rule */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -6,14 +7,16 @@
 .hero {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: stretch;
-  min-height: 410px;
-  padding: 0 0 0 64px;
-  background: radial-gradient(ellipse at right 40%, #16334a 50%, #092033 100%);
-  box-sizing: border-box;
+  align-items: flex-start;
+  min-height: 380px;
+  height: 380px;
   width: 100%;
+  background: radial-gradient(ellipse at 80% 50%, #16334a 45%, #092033 100%);
   position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0;
+  justify-content: stretch;
   gap: 0;
 }
 
@@ -56,68 +59,82 @@
 
 /* Text (headline) column - left */
 .hero > div:last-child {
-  flex: 1 1 50%;
+  flex: 1 1 52%;
+  max-width: 54%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   order: 1;
   min-width: 0;
   height: 100%;
+  padding-left: 48px;
+  padding-top: 40px;
+  box-sizing: border-box;
+  background: none;
   z-index: 2;
 }
 
-.hero h1 {
-  color: #fff;
-  font-size: 2.75rem;
-  font-weight: bold;
-  margin: 0;
-  text-align: left;
-  line-height: 1.1;
-  font-family: var(--heading-font-family, roboto-condensed, Arial, sans-serif);
-  max-width: 90%;
-  letter-spacing: 0;
+.hero > div:last-child > div {
+  width: 100%;
 }
 
 /* Image column - right */
 .hero > div:first-child {
-  flex: 1 1 50%;
+  flex: 1 1 48%;
+  max-width: 48%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   order: 2;
   min-width: 0;
   height: 100%;
   z-index: 1;
-
-  /* Remove any restrictions so the image can fill the space */
 }
 
-.hero > div:first-child picture {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+.hero > div:first-child > div {
   width: 100%;
   height: 100%;
-  max-width: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
+.hero > div:first-child picture,
 .hero > div:first-child img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
-  background: transparent;
   max-width: none;
   max-height: none;
+  min-width: 480px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+  background: none;
 }
 
-/* Responsive adjustments */
+.hero h1 {
+  color: #fff;
+  font-size: 44px;
+  font-weight: 700;
+  margin: 0;
+  text-align: left;
+  line-height: 1.05;
+  font-family: var(--heading-font-family, roboto-condensed, Arial, sans-serif);
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+  letter-spacing: 0;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+  max-width: 100%;
+}
+
 @media (width <= 900px) {
   .hero {
     flex-direction: column;
     align-items: stretch;
-    padding: 32px 16px;
+    height: auto;
     min-height: unset;
+    padding: 32px 0 0;
   }
 
   .hero > div {
@@ -125,16 +142,45 @@
     justify-content: center;
     min-width: 0;
     height: auto;
+    padding-left: 0;
+    padding-top: 0;
   }
 
-  .hero > div:first-child picture {
-    max-width: 340px;
+  .hero > div:first-child,
+  .hero > div:first-child > div {
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+    min-height: 180px;
     height: 180px;
+    max-width: 100%;
+  }
+
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    max-width: 340px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0 auto;
+    min-width: 0;
+  }
+
+  .hero > div:last-child {
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px;
+    max-width: 100%;
   }
 
   .hero h1 {
-    font-size: 2rem;
+    font-size: 32px;
     text-align: center;
-    max-width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1.15;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
 }
