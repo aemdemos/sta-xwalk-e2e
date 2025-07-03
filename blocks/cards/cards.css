@@ -1,27 +1,109 @@
+.cards {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 40px;
+  box-sizing: border-box;
+}
+
 .cards > ul {
   list-style: none;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  grid-gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 100%;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
-}
-
-.cards .cards-card-body {
-  margin: 16px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(60 60 60 / 6%);
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  max-width: unset;
+  flex: unset;
+  min-width: 0;
 }
 
 .cards .cards-card-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #eee;
   line-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cards > ul > li img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
+  border-radius: 0;
+  display: block;
+  aspect-ratio: 4 / 3;
+}
+
+.cards .cards-card-body {
+  padding: 20px;
+  margin: 0;
+  background: #fff;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.cards .cards-card-body p:first-child {
+  font-weight: 700;
+  font-size: 17px;
+  color: #000;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.cards .cards-card-body p:not(:first-child) {
+  font-weight: 400;
+  font-size: 14px;
+  color: #222;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (width <= 1000px) {
+  .cards {
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 32px;
+  }
+
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (width <= 600px) {
+  .cards {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 24px;
+  }
+
+  .cards > ul {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cards .cards-card-body {
+    padding: 16px;
+  }
 }
