@@ -1,18 +1,47 @@
+.columns {
+  /* From base CSS: none */
+
+  /* From generated CSS: none */
+}
+
+/* Base CSS */
 .columns > div {
   display: flex;
   flex-direction: column;
 }
 
-.columns img {
-  width: 100%;
+.columns .columns-img-col {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 100%;
+}
+
+.columns > div > .columns-img-col {
+  order: 0;
 }
 
 .columns > div > div {
   order: 1;
 }
 
-.columns > div > .columns-img-col {
-  order: 0;
+.columns img {
+  width: 100%;
+}
+
+.columns .columns-img-col picture,
+.columns .columns-img-col img {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .columns > div > .columns-img-col img {
@@ -29,5 +58,103 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+/* Generated CSS */
+.columns > .block.columns-2-cols > div {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.columns > .block.columns-2-cols > div > div {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.columns > .block.columns-2-cols > div > div > * {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.columns > .block.columns-2-cols p,
+.columns > .block.columns-2-cols ul {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #000;
+  font-size: 15px;
+  font-family: var(--body-font-family, sans-serif);
+  font-weight: 400;
+  text-align: left;
+  line-height: 1.25;
+}
+
+.columns > .block.columns-2-cols ul {
+  padding-left: 18px;
+}
+
+.columns > .block.columns-2-cols .button-container {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.columns > .block.columns-2-cols .button {
+  background: #36F;
+  color: #fff;
+  padding: 6px 18px;
+  border: none;
+  border-radius: 999px;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  margin: 0;
+  min-width: 0;
+  line-height: 1.25;
+  box-shadow: none;
+  transition: background 0.2s;
+  vertical-align: top;
+}
+
+.columns > .block.columns-2-cols .button.secondary {
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+.columns > .block.columns-2-cols .button:hover,
+.columns > .block.columns-2-cols .button:focus {
+  background: #2554cc;
+}
+
+.columns > .block.columns-2-cols .button.secondary:hover,
+.columns > .block.columns-2-cols .button.secondary:focus {
+  background: #f6f6f6;
+}
+
+@media (width <= 900px) {
+  .columns > .block.columns-2-cols > div {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .columns .columns-img-col {
+    margin-bottom: 10px;
   }
 }
