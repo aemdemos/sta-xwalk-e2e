@@ -1,13 +1,21 @@
-.columns > div {
-  display: flex;
-  flex-direction: column;
+.columns {
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.columns img {
-  width: 100%;
+.columns > div {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
 }
 
 .columns > div > div {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
   order: 1;
 }
 
@@ -15,8 +23,103 @@
   order: 0;
 }
 
-.columns > div > .columns-img-col img {
+.columns img {
+  width: 100%;
   display: block;
+  height: auto;
+  object-fit: cover;
+  margin: 0;
+}
+
+.columns picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0;
+}
+
+/* --- Reduce vertical spacing between block sections --- */
+
+/* Stack: Text/List/Button group above image in left column */
+.columns > div > div:first-child > *:first-child {
+  margin-bottom: 18px;
+}
+
+/* Stack: Image above text/button group in right column */
+.columns > div > div:last-child > *:first-child {
+  margin-bottom: 18px;
+}
+
+/* --- Typography and Spacing Tweaks --- */
+.columns p,
+.columns ul,
+.columns li {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.columns ul {
+  padding-left: 1.3em;
+}
+
+.columns li {
+  font-size: 16px;
+}
+
+.columns p {
+  font-size: 15px;
+  color: #000;
+}
+
+/* Keep buttons close to text above, and close to image below */
+.columns .button-container {
+  margin: 0 0 0.5em;
+}
+
+/* --- Button styling (override if needed for specificity) --- */
+.columns .button {
+  min-width: 90px;
+  border-radius: 2.4em;
+  padding: 0.7em 2em;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  box-shadow: none;
+  background: #3f51b5;
+  color: #fff;
+  border: none;
+}
+
+.columns .button.secondary {
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+/* --- Right column: Tighten spacing above "Preview" button --- */
+.columns > div > div:last-child > *:last-child {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.columns > div > div:last-child > *:last-child p {
+  margin-bottom: 8px;
+}
+
+/* Responsive: Stack columns on narrow screens */
+@media (width <= 900px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .columns > div > div {
+    width: 100%;
+  }
 }
 
 @media (width >= 900px) {
