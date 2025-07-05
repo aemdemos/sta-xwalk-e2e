@@ -1,12 +1,12 @@
+/* 1. Moved '.hero-wrapper' before '.hero-container .hero-wrapper' to resolve specificity order */
+
+.hero-wrapper {
+  /* No rules directly in this snippet, but moved for specificity order */
+}
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
-}
-
-.hero {
-  position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
 }
 
 .hero h1,
@@ -44,4 +44,126 @@
   .hero {
     padding: 40px 32px;
   }
+}
+
+.hero,
+.hero-container,
+.hero-wrapper {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 300px;
+  }
+
+  .hero > div:first-child {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .hero > div:nth-child(2) {
+    padding: 28px 8px 0;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero h1, 
+  .hero h2, 
+  .hero h3, 
+  .hero h4, 
+  .hero h5, 
+  .hero h6 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 0;
+    max-width: 96vw;
+  }
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  min-height: 220px;
+  background: linear-gradient(90deg, #10273b 54%, rgb(20 57 88 / 0%) 100%);
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.hero > div:nth-child(2) {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 32px 0 0 38px;
+  min-width: 0;
+  min-height: 0;
+  background: none;
+  margin: 0;
+}
+
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hero > div:first-child > div,
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.hero > div:first-child img {
+  object-fit: cover;
+  object-position: 80% center;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  opacity: 1;
+  filter: drop-shadow(0 0 30px #38b4f5) brightness(1.13);
+}
+
+.hero h1, 
+.hero h2, 
+.hero h3, 
+.hero h4, 
+.hero h5, 
+.hero h6 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.1;
+  text-align: left;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  max-width: 90%;
+  background: none;
 }
