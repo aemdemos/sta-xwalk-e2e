@@ -1,12 +1,7 @@
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
-}
-
-.hero {
-  position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
 }
 
 .hero h1,
@@ -45,3 +40,148 @@
     padding: 40px 32px;
   }
 }
+
+/* --- GENERATED CSS --- */
+
+/* The merged .hero selector: */
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 350px;
+  width: 100%;
+  background: linear-gradient(90deg, #07213a 0%, #113251 100%);
+  box-sizing: border-box;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ensure hero is full width */
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+/* --- IMAGE COLUMN (DNA overlay style, visually blends as bg) --- */
+.hero > div:first-child {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 56vw;
+  min-width: 380px;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+/* Image fills container right and bottom, looks like bg */
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 380px;
+  max-width: none;
+  object-fit: cover;
+  object-position: right bottom;
+  background: transparent;
+  user-select: none;
+  pointer-events: none;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- TEXT COLUMN (on top of image) --- */
+.hero > div:last-child {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 0;
+  order: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+  padding: 48px 32px 32px 48px;
+  box-sizing: border-box;
+  max-width: 46vw;
+  height: 100%;
+  background: none;
+}
+
+.hero > div:last-child > div {
+  display: flex;
+  align-items: flex-start;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  max-width: 700px;
+  font-family: var(--heading-font-family);
+  text-align: left;
+  letter-spacing: 0.01em;
+  box-sizing: border-box;
+}
+
+/* --- Responsive: Stack and fill on small screens --- */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .hero > div:first-child {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    z-index: 1;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    max-width: 100%;
+    height: auto;
+    min-width: 0;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .hero > div:last-child {
+    position: relative;
+    z-index: 2;
+    padding: 24px 0 0;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .hero > div:last-child > div {
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+    text-align: center;
+    max-width: 100%;
+    padding: 0;
+  }
+}
+
+/* --- GENERATED CSS END --- */
