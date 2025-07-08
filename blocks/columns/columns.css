@@ -1,3 +1,9 @@
+.columns {
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +35,153 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+/* Desktop/tablet: columns side by side; compress vertical spacing in left column for tighter grouping */
+@media (width >= 900px) {
+  .columns > div {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 36px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .columns > div > div {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+    min-width: 0;
+    padding-top: 0;
+  }
+
+  /* Remove all extra margin between left list/button and image for tightest grouping */
+  /* Reorder: .columns > div > div:last-child > * comes before .columns > div > div:first-child > *:last-child */
+  .columns > div > div:last-child > * {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .columns > div > div:last-child > *:first-child {
+    margin-top: 0;
+  }
+
+  .columns > div > div:last-child > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .columns > div > div:first-child > * {
+    margin-bottom: 0.5em;
+  }
+
+  .columns > div > div:first-child > *:last-child {
+    margin-bottom: 0;
+    margin-top: 0.2em;
+  }
+
+  .columns > div > div:first-child > .button-container {
+    margin-bottom: 0.2em;
+    margin-top: 0.5em;
+  }
+
+  /* Both images: keep them visually similar in size and flush to top grouping */
+  .columns > div > div > p > picture,
+  .columns > div > div > p > img {
+    max-width: 420px;
+    margin: 0;
+    display: block;
+  }
+}
+
+/* Mobile: stack columns, looser vertical gap for readability */
+@media (width <= 899.98px) {
+  .columns > div {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .columns > div > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .columns > div > div:first-child > p:last-child,
+  .columns > div > div:last-child > p:first-child {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+  }
+}
+
+/* Make button spacing uniform and visually balanced */
+.columns .button,
+.columns a.button {
+  min-width: 96px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.7em 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  box-shadow: none;
+}
+
+/* Primary button (Live) */
+.columns .button:not(.secondary) {
+  background: #3b49fa;
+  color: #fff;
+  border: none;
+}
+
+/* Secondary button (Preview) */
+.columns .button.secondary {
+  background: #fff;
+  color: #222;
+  border: 1.8px solid #222;
+  transition: background 0.2s, color 0.2s;
+}
+
+.columns .button.secondary:hover {
+  background: #f3f3f3;
+  color: #111;
+}
+
+/* Text and list styles: slight margin reduction for tightness */
+.columns ul,
+.columns li,
+.columns p {
+  color: #222;
+  font-size: 1rem;
+  font-family: roboto, roboto Fallback, roboto-fallback, sans-serif;
+  margin-bottom: 0.25em;
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+.columns ul {
+  margin-left: 1.1em;
+  margin-bottom: 0.7em;
+}
+
+.columns li {
+  margin-bottom: 0.15em;
+}
+
+.columns .button-container {
+  margin: 0.2em 0;
+}
+
+/* Responsive image sizing for smaller screens */
+@media (width <= 599.98px) {
+  .columns picture,
+  .columns img {
+    max-width: 100%;
   }
 }
