@@ -4,9 +4,16 @@
 }
 
 .hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-start;
+  min-height: 220px;
+  background: linear-gradient(90deg, #0e253f 0%, #184168 100%);
+  padding: 0;
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -40,8 +47,111 @@
   height: 100%;
 }
 
+/* ---- Generated CSS ---- */
+.hero > div {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.hero > div:first-child {
+  grid-column: 2 / 3;
+  justify-content: flex-end;
+  align-items: flex-end;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero > div:last-child {
+  grid-column: 1 / 2;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 48px 0 0 48px;
+  z-index: 2;
+}
+
+.hero > div:first-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-weight: 700;
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.1;
+  max-width: 90%;
+  text-align: left;
+  letter-spacing: normal;
+  font-family: var(--heading-font-family);
+}
+
 @media (width >= 900px) {
+  /* merged duplicate .hero selector properties here, only unique/deviating rules shown if any (none in this case) */
+}
+
+@media (width <= 900px) {
   .hero {
-    padding: 40px 32px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    min-height: 140px;
+  }
+
+  .hero > div:first-child {
+    grid-column: 1 / 2;
+    grid-row: 2;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 16px;
+  }
+
+  .hero > div:last-child {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    padding: 32px 16px 0;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 1.4rem;
+    max-width: 100%;
+  }
+}
+
+@media (width <= 600px) {
+  .hero > div:last-child {
+    padding: 24px 8px 0;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 1.1rem;
   }
 }
