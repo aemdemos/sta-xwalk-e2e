@@ -1,22 +1,118 @@
+/* Grid container styling */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 32px;
+  place-items: stretch stretch;
+  margin: 40px 0;
+}
+
+/* Use contents so the next level children are grid items */
 .columns > div {
+  display: contents;
+}
+
+/* Image sizing - moved up for correct specificity order */
+.columns .columns-img-col {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+}
+
+.columns .columns-img-col picture,
+.columns .columns-img-col img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Target the four cells and map them to the grid */
+.columns > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0 0 0 16px;
+  min-height: 260px;
 }
 
-.columns img {
-  width: 100%;
+.columns > div:first-child > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-height: 260px;
 }
 
-.columns > div > div {
-  order: 1;
+.columns > div:last-child > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-height: 260px;
 }
 
-.columns > div > .columns-img-col {
-  order: 0;
+.columns > div:last-child > div:last-child {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 0 0 16px;
+  min-height: 260px;
 }
 
-.columns > div > .columns-img-col img {
-  display: block;
+/* Button container spacing */
+.columns .button-container {
+  margin-top: 24px;
+}
+
+/* Fine-tune list and spacing for text block */
+.columns > div:first-child > div:first-child ul {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-left: 22px;
+}
+
+.columns > div:first-child > div:first-child p {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+/* Keep preview button closer to preview text */
+.columns > div:last-child > div:last-child .button-container {
+  margin-top: 16px;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (width <= 899px) {
+  .columns {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .columns > div {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .columns > div > div,
+  .columns > div > .columns-img-col {
+    width: 100%;
+    min-height: unset;
+    padding: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 }
 
 @media (width >= 900px) {
