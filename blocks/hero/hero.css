@@ -1,3 +1,4 @@
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,8 +6,20 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100vw;
+  max-width: unset;
+  min-height: 240px;
+  padding: 0;
+  background-color: #0a1424;
+  background-image: url('./media_1061934561e8a4f01907e616a0ce0e4b74d63b92e.jpg?width=2000&format=jpg&optimize=medium');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right center;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -43,5 +56,105 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+.hero > div:first-child {
+  display: none;
+}
+
+.hero > div:last-child {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 56px 24px 16px 44px;
+  max-width: 700px;
+  width: 100%;
+  z-index: 1;
+  min-height: 0;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  margin: 0;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.13;
+  font-family: var(--heading-font-family), sans-serif;
+  max-width: 100%;
+  text-align: left;
+  letter-spacing: 0.005em;
+}
+
+@media (width >= 1200px) {
+  .hero {
+    min-height: 280px;
+  }
+
+  .hero > div:last-child {
+    padding-top: 70px;
+    padding-left: 54px;
+    max-width: 720px;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 2.7rem;
+    max-width: 860px;
+  }
+}
+
+@media (width <= 900px) {
+  .hero {
+    min-height: 150px;
+    background-position: 80% center;
+  }
+
+  .hero > div:last-child {
+    padding: 32px 10px 12px 18px;
+    max-width: 98vw;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 1.45rem;
+    max-width: 96vw;
+  }
+}
+
+@media (width <= 600px) {
+  .hero {
+    min-height: 90px;
+    background-position: 94% center;
+  }
+
+  .hero > div:last-child {
+    padding: 12px 6px 7px;
+    max-width: 99vw;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 0.95rem;
+    max-width: 98vw;
   }
 }
