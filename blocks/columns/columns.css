@@ -1,10 +1,29 @@
-.columns > div {
+/* ---- GENERATED CSS ---- */
+
+.columns {
   display: flex;
   flex-direction: column;
+  gap: 32px;
 }
 
 .columns img {
   width: 100%;
+}
+
+.columns .columns-img-col {
+  width: 100%;
+}
+
+.columns .columns-img-col img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.columns > div {
+  display: flex;
+  flex-direction: column;
 }
 
 .columns > div > div {
@@ -19,8 +38,42 @@
   display: block;
 }
 
+.columns .button-container {
+  margin-top: 20px;
+}
+
+.columns .button,
+.columns .button.secondary {
+  font-size: 1rem;
+  padding: 12px 28px;
+  border-radius: 999px;
+  margin: 0;
+  min-width: 96px;
+  text-align: center;
+}
+
+.columns p,
+.columns ul,
+.columns li {
+  text-align: left;
+}
+
+.columns > div > div,
+.columns > div > .columns-img-col {
+  place-self: flex-start flex-start;
+}
+
 @media (width >= 900px) {
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 32px;
+    align-items: start;
+  }
+
   .columns > div {
+    display: contents;
     align-items: center;
     flex-direction: unset;
     gap: 24px;
@@ -29,5 +82,41 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+
+  /* Top left: text/list/button */
+  .columns > div:first-child > div:first-child {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    place-self: flex-start flex-start;
+    margin-top: 0;
+  }
+
+  /* Top right: preview text/button */
+  .columns > div:last-child > div:last-child {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    place-self: flex-start flex-start;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  /* Bottom left: blue DNA image */
+  .columns > div:first-child > .columns-img-col {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    place-self: flex-end flex-start;
+    margin-bottom: 0;
+  }
+
+  /* Bottom right: yellow DNA image */
+  .columns > div:last-child > .columns-img-col {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    place-self: flex-end flex-start;
+    margin-bottom: 0;
   }
 }
