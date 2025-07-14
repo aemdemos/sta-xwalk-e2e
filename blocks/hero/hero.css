@@ -5,8 +5,14 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  min-height: 230px;
+  background: #0e2740;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -43,5 +49,112 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* DNA image as background using absolute positioning */
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero > div:last-child {
+  position: relative;
+  z-index: 2;
+  flex: 0 1 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 0 32px 54px;
+  min-height: 180px;
+  background: transparent;
+}
+
+.hero > div:last-child > div {
+  width: 100%;
+}
+
+.hero > div:first-child > div,
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: right center;
+  max-width: none;
+  max-height: none;
+}
+
+.hero h1, .hero h2, .hero h3, .hero h4, .hero h5, .hero h6 {
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-xl);
+  font-weight: 700;
+  margin: 0;
+  text-align: left;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgb(14 39 64 / 50%);
+  max-width: 640px;
+}
+
+/* Soft gradient overlay for smooth image fade */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    #0e2740 0%,
+    #0e2740 48%,
+    rgb(14 39 64 / 70%) 65%,
+    rgb(14 39 64 / 12%) 80%,
+    rgb(14 39 64 / 0%) 92%
+  );
+}
+
+/* Responsive: stack vertically on small screens and adjust fade */
+@media (width <= 800px) {
+  .hero {
+    flex-direction: column;
+    min-height: unset;
+    align-items: stretch;
+  }
+
+  .hero > div:first-child {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero > div:last-child {
+    padding: 24px 16px;
+    width: 100%;
+    min-height: 120px;
+  }
+
+  .hero::before {
+    background: linear-gradient(
+      to bottom,
+      #0e2740 0%,
+      #0e2740 70%,
+      rgb(14 39 64 / 50%) 90%,
+      rgb(14 39 64 / 0%) 100%
+    );
+  }
+
+  .hero h1, .hero h2, .hero h3, .hero h4, .hero h5, .hero h6 {
+    font-size: var(--heading-font-size-l);
+    max-width: 100%;
   }
 }
