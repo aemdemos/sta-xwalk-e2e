@@ -1,3 +1,4 @@
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,8 +6,11 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  width: 100%;
+  min-height: 120px;
+  padding: 0;
+  overflow: hidden;
+  background: #08213c;
 }
 
 .hero h1,
@@ -43,5 +47,79 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Ensure hero spans the full width if inside .hero-wrapper */
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  display: block;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay the text container above the image */
+.hero > div:last-child {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Fine-tuned top & left padding for improved visual match */
+.hero > div:last-child > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 32px 0 0 32px;
+  box-sizing: border-box;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  margin: 0;
+  color: #fff;
+  font-weight: 700;
+  text-align: left;
+  font-size: var(--heading-font-size-xxl);
+  line-height: 1.15;
+  text-shadow: none;
+}
+
+/* Responsive adjustments for mobile/tablet */
+@media (width <= 900px) {
+  .hero > div:last-child > div {
+    padding: 20px 0 0 14px;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: var(--heading-font-size-l);
   }
 }
