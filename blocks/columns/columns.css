@@ -1,24 +1,140 @@
+/* --- Layout and Columns --- */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
 .columns > div {
-  display: flex;
-  flex-direction: column;
+  display: contents;
+}
+
+/* --- Image Columns --- */
+.columns .columns-img-col {
+  width: 100%;
+  max-width: 100%;
 }
 
 .columns img {
   width: 100%;
 }
 
-.columns > div > div {
-  order: 1;
-}
-
-.columns > div > .columns-img-col {
-  order: 0;
-}
-
-.columns > div > .columns-img-col img {
+.columns .columns-img-col picture,
+.columns .columns-img-col img {
   display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  height: auto;
 }
 
+/* --- Top left: text + Live button --- */
+.columns > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+  place-self: start start;
+}
+
+/* --- Top right: blue DNA image --- */
+.columns > div:first-child > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+  place-self: start start;
+}
+
+/* --- Bottom left: yellow DNA image --- */
+.columns > div:last-child > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+  place-self: start start;
+}
+
+/* --- Bottom right: preview and preview button --- */
+.columns > div:last-child > div:last-child {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+  place-self: start start;
+}
+
+/* --- List and Typography --- */
+.columns ul {
+  margin: 0 0 1em 1.1em;
+  padding: 0;
+  color: #000;
+  font-size: 1rem;
+}
+
+.columns p,
+.columns li {
+  color: #000;
+  font-size: 1rem;
+  margin-bottom: 0.8em;
+  line-height: 1.6;
+}
+
+/* --- Buttons --- */
+.columns .button-container {
+  margin-top: 1.1em;
+}
+
+.columns .button {
+  min-width: 92px;
+  padding: 0.5em 1.7em;
+  font-size: 1rem;
+  border-radius: 2em;
+  box-shadow: none;
+}
+
+.columns .button.secondary {
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+/* --- Responsive: stack grid items vertically on small screens --- */
+@media (width <= 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    grid-template-rows: unset;
+    gap: 2rem 0;
+  }
+
+  .columns > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .columns > div:first-child > div:first-child,
+  .columns > div:first-child > .columns-img-col,
+  .columns > div:last-child > .columns-img-col,
+  .columns > div:last-child > div:last-child {
+    grid-column: unset;
+    grid-row: unset;
+    align-self: unset;
+    justify-self: unset;
+  }
+
+  .columns .columns-img-col picture,
+  .columns .columns-img-col img {
+    max-height: 220px;
+  }
+}
+
+/* --- Desktop: align items and reset flex in grid --- */
 @media (width >= 900px) {
   .columns > div {
     align-items: center;
