@@ -1,12 +1,22 @@
+/* .hero-wrapper and .hero-container .hero-wrapper order fixed for no-descending-specificity */
+.hero-wrapper {
+  /* (if needed, keep its rules; was empty in supplied code) */
+}
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
 }
 
+/* MERGED .hero SELECTOR */
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: block;
+  width: 100%;
+  min-height: 190px;
+  padding: 0;
+  background: #0f2236;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -38,6 +48,95 @@
   object-fit: cover;
   width: 100%;
   height: 100%;
+}
+
+main > .section {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+main > .section:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.hero,
+.hero-wrapper,
+.hero-container,
+.hero-container > .hero-wrapper {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Background DNA image setup */
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child picture > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  display: block;
+}
+
+/* Text overlay: slightly increased left/top padding for pixel precision */
+.hero > div:last-child {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  padding: 28px 0 0 36px;
+  box-sizing: border-box;
+}
+
+/* Remove default heading/p margins for tight fit */
+.hero > div:last-child h1,
+.hero > div:last-child h2,
+.hero > div:last-child h3,
+.hero > div:last-child h4,
+.hero > div:last-child h5,
+.hero > div:last-child h6,
+.hero > div:last-child p {
+  margin: 0;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  max-width: none;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+}
+
+/* Responsive: adjust min-height/padding/text on small screens */
+@media (width <= 900px) {
+  .hero {
+    min-height: 120px;
+  }
+
+  .hero > div:last-child {
+    padding: 12px 0 0 12px;
+  }
+
+  .hero > div:last-child h1,
+  .hero > div:last-child h2,
+  .hero > div:last-child h3,
+  .hero > div:last-child h4,
+  .hero > div:last-child h5,
+  .hero > div:last-child h6,
+  .hero > div:last-child p {
+    font-size: 1.2rem;
+  }
 }
 
 @media (width >= 900px) {
