@@ -1,13 +1,41 @@
-.columns > div {
-  display: flex;
-  flex-direction: column;
-}
-
 .columns img {
   width: 100%;
 }
 
+.columns > div > div > p > img,
+.columns > div > div > p > picture > img,
+.columns > div > div > p > picture {
+  width: 100%;
+  max-width: 100%;
+  height: 325px;
+  max-height: 34vw;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.columns > div > .columns-img-col img {
+  display: block;
+}
+
+.columns {
+}
+
+.columns > div {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 48px;
+  width: 100%;
+}
+
 .columns > div > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1 1 0;
+  min-width: 0;
   order: 1;
 }
 
@@ -15,8 +43,12 @@
   order: 0;
 }
 
-.columns > div > .columns-img-col img {
-  display: block;
+/* Responsive: stack columns on small screens */
+@media (width <= 900px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
 }
 
 @media (width >= 900px) {
@@ -25,9 +57,88 @@
     flex-direction: unset;
     gap: 24px;
   }
-
   .columns > div > div {
     flex: 1;
     order: unset;
   }
+}
+
+/* Reduce spacing above the left image: minimize gap after .button-container */
+.columns .button-container {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.columns > div > div:first-child .button-container {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.columns > div > div:last-child p,
+.columns > div > div:last-child p:not(.button-container) {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #000;
+  align-self: flex-start;
+}
+
+.columns > div > div:first-child > p:last-of-type {
+  margin-top: 4px;
+}
+
+/* Make lists compact and aligned with text */
+.columns ul {
+  margin: 0 0 0 1.2em;
+  padding: 0;
+}
+
+.columns li {
+  margin-bottom: 0.4em;
+  font-size: 16px;
+  color: #000;
+}
+
+/* Remove extra margin from last child in each column */
+.columns > div > div > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Button styles: increase specificity and match original */
+.columns .button {
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 16px;
+  min-width: 90px;
+  box-shadow: none;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+  margin: 0;
+  display: inline-block;
+  text-align: center;
+  outline: none;
+}
+
+.columns .button.secondary {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+
+.columns .button:hover,
+.columns .button:focus {
+  background-color: #2563eb;
+}
+
+.columns .button.secondary:hover,
+.columns .button.secondary:focus {
+  background-color: #f5f5f5;
+  color: #000;
+}
+
+.columns > div > div:last-child .button-container {
+  align-self: flex-start;
 }
