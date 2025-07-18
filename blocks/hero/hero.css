@@ -4,9 +4,17 @@
 }
 
 .hero {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: #0a2237;
+  min-height: 200px;
+  height: 200px;
+  width: 100%;
+  padding: 0;
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -40,8 +48,127 @@
   height: 100%;
 }
 
-@media (width >= 900px) {
+/* LEFT: Text column */
+.hero > div:last-child {
+  flex: 0 0 44%;
+  order: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+  min-width: 260px;
+  padding-left: 48px;
+  padding-top: 36px;
+  z-index: 1;
+}
+
+.hero > div:last-child > div {
+  width: 100%;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0;
+  font-family: var(--heading-font-family);
+  line-height: 1.2;
+  max-width: none;
+  text-align: left;
+}
+
+/* RIGHT: Image column and descendants - force all parents and image to stretch */
+.hero > div:first-child {
+  flex: 1 1 56%;
+  order: 2;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  height: 100%;
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+}
+
+.hero > div:first-child > div {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+.hero > div:first-child > div > picture {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+.hero > div:first-child > div > picture > img {
+  display: block;
+  height: 100%;
+  width: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: none;
+  object-fit: cover;
+  max-height: 200px;
+  /* For debugging image display, uncomment the next line: */
+  /* border: 2px solid yellow; */
+}
+
+@media (width <= 900px) {
   .hero {
-    padding: 40px 32px;
+    flex-direction: column;
+    min-height: 180px;
+    height: auto;
+  }
+
+  .hero > div:first-child,
+  .hero > div:first-child > div,
+  .hero > div:first-child > div > picture {
+    order: 2;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    min-width: 0;
+    margin-top: 12px;
+  }
+
+  .hero > div:last-child {
+    order: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px 0;
+    min-width: 0;
+    text-align: center;
+    padding-top: 24px;
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 1.2rem;
+  }
+
+  .hero > div:first-child > div > picture > img {
+    max-height: 160px;
+    width: auto;
+    height: auto;
   }
 }
