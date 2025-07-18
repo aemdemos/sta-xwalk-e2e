@@ -1,33 +1,137 @@
-.columns > div {
-  display: flex;
-  flex-direction: column;
+/* --- 2-COLUMN RESPONSIVE GRID FOR MAIN BLOCK --- */
+.columns {
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .columns img {
   width: 100%;
 }
 
+.columns > div > .columns-img-col img {
+  display: block;
+}
+
+.columns > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 40px;
+  align-items: start;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* --- MAKE EACH COLUMN A FLEX CONTAINER TO STACK SECTIONS --- */
 .columns > div > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2em;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
   order: 1;
+  align-items: flex-start;
 }
 
 .columns > div > .columns-img-col {
   order: 0;
 }
 
-.columns > div > .columns-img-col img {
-  display: block;
-}
-
 @media (width >= 900px) {
   .columns > div {
-    align-items: center;
     flex-direction: unset;
-    gap: 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 40px;
+    align-items: start;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .columns > div > div {
     flex: 1;
     order: unset;
+    padding-left: 16px;
+    padding-right: 16px;
+    align-items: flex-start;
   }
+
+  /* LEFT COLUMN: show image second (default order in HTML) -> show image first (order: 0) */
+  .columns > div > div:first-child > picture,
+  .columns > div > div:first-child > img {
+    order: 0;
+    margin-bottom: 2em;
+    margin-top: 0;
+  }
+
+  .columns > div > div:first-child > *:not(picture, img) {
+    order: 1;
+    margin-top: 0;
+  }
+
+  /* RIGHT COLUMN: show image first (default order in HTML) -> show image second (order: 1) */
+  .columns > div > div:last-child > picture,
+  .columns > div > div:last-child > img {
+    order: 1;
+    margin-top: 2em;
+    margin-bottom: 0;
+  }
+
+  .columns > div > div:last-child > *:not(picture, img) {
+    order: 0;
+    margin-bottom: 0.8em;
+  }
+}
+
+@media (width <= 900px) {
+  .columns > div {
+    grid-template-columns: 1fr;
+    gap: 32px 0;
+  }
+
+  .columns > div > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* --- IMAGE SIZING --- */
+.columns picture,
+.columns img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  align-self: flex-start;
+  padding: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+
+/* --- TEXT, BUTTON, BULLET ALIGNMENTS --- */
+.columns p,
+.columns ul,
+.columns li,
+.columns a.button,
+.columns .button-container {
+  text-align: left;
+  align-self: flex-start;
+}
+
+.columns .button-container {
+  margin: 0.7em 0 0.2em;
+}
+
+.columns ul {
+  margin: 0.4em 0 0.7em 1.2em;
+  padding: 0;
+}
+
+/* --- BUTTONS: reinforce style if needed --- */
+.columns .button.secondary {
+  background-color: unset;
+  border: 2px solid var(--text-color);
+  color: var(--text-color);
 }
