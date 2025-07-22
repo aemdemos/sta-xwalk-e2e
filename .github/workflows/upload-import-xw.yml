@@ -5,7 +5,8 @@ description: |
   The action is triggered by a workflow dispatch event with inputs as follows.
 
 env:
-  XWALK_UPLOAD_TOKEN: ${{ secrets.XWALK_UPLOAD_TOKEN }}
+  # Coordinator callback api key (set for the sta-status action)
+  AEMY_API_KEY: ${{ secrets.AEMY_API_KEY }}
 on:
   workflow_dispatch:
     inputs:
@@ -14,21 +15,15 @@ on:
         description: 'The URL of the zip file to download.'
         required: true
         type: password
-      aemy_callbacks:
-        description: 'The AEMY context as a string.'
+      aemy_callback_urls:
+        description: 'The AEMY status callback URLs.'
         required: true
-        type: password
       aemy_context:
         description: 'The AEMY context as a string.'
         required: true
       root_mountpoint:
-        description: 'The target of the upload. This is the Adobe AEM Cloud URL.'
-        required: true
-        default: 'https://author-p141866-e1455422.adobeaemcloud.com/bin/franklin.delivery/aemdemos/sta-xwalk-e2e/main'
-      aem_author_url:
         description: 'The AEM Author instance root URL for API operations (replication, etc.)'
         required: true
-        default: 'https://author-p141866-e1455422.adobeaemcloud.com'
       skip_assets:
         description: 'Whether or not the upload of assets should be skipped. Defaults to false.'
         required: false
@@ -36,14 +31,6 @@ on:
       action_url:
         description: 'The URL that shows state of the workflow as an aid for the user.'
         required: false
-      content_paths_to_replicate:
-        description: 'Comma-separated list of content paths to replicate after upload (e.g., /content/dam/my-assets,/content/my-page)'
-        required: true
-        default: '/content/dam/sta-xwalk-e2e,/content/sta-xwalk-e2e,/content/sta-xwalk-e2e/index,/content/sta-xwalk-e2e/nav,/content/sta-xwalk-e2e/footer'
-      replicate_type:
-        description: 'Type of replication operation (activate, deactivate, delete). Defaults to activate.'
-        required: false
-        default: 'activate'
 
 permissions:
   contents: read
@@ -64,16 +51,21 @@ jobs:
             ACTION_URL="JS_LFJS_LF🕵 See the Action URL to check the progress/results of the workflow: ${{ github.event.inputs.action_url }}"
             echo "ACTION_URL=$ACTION_URL" >> $GITHUB_ENV
           fi
-          
-          # Required parameters
-          missing_vars=""
+      
+          # Ensure the secret was set, and was set in the env variable properly.
+          if [ -z "${{ env.AEMY_API_KEY }}" ]; then
+            errorMessage="❌ The following secret is not set in your GitHub repo: JS_LF- AEMY_API_KEY JS_LF"
+            echo "errorMessage=$errorMessage" >> $GITHUB_ENV
+          fi
 
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up actions
         run: |
-          cd .github/actions/sta-status
+          cd .github/actions/sta-aem-helper
+          npm install
+          cd ../sta-status
           npm install
           cd ../sta-import-zip
           npm install
@@ -86,7 +78,7 @@ jobs:
         if: ${{ env.errorMessage != '' }}
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: ${{ env.errorMessage }}
           status_type: error
@@ -95,7 +87,7 @@ jobs:
       - name: Progress 1 - Setup
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Inputs look good. Now setting up the upload. (Step 1 of 7).
           status_type: progress
@@ -108,7 +100,7 @@ jobs:
       - name: Progress 2 - Extracting zip
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Downloading and extracting content from the Import zip... (Step 2 of 7).
           status_type: progress
@@ -124,7 +116,7 @@ jobs:
         if: ${{ steps.download-zip.outputs.error_message != '' }}
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: ${{ steps.download-zip.outputs.error_message }} ${{ env.ACTION_URL }}
           status_type: error
@@ -134,7 +126,7 @@ jobs:
         if: ${{ steps.download-zip.outputs.xwalk_zip == '' }}
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Zip extracted with ${{ steps.download-zip.outputs.file_count }} files but the XWalk zip was not found so will assume "xwalk-index.zip". Initiating upload... (Step 3 of 7).
           status_type: progress
@@ -144,7 +136,7 @@ jobs:
         if: ${{ steps.download-zip.outputs.xwalk_zip != '' }}
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Zip extracted with ${{ steps.download-zip.outputs.file_count }} files. Initiating upload... (Step 3 of 7).
           status_type: progress
@@ -154,27 +146,25 @@ jobs:
         run: |
           echo "${{ secrets.AEM_SERVICE_CREDENTIALS_JSON }}" | base64 --decode > service-credentials.json
 
-      - name: Install Adobe JWT Auth
-        run: npm install @adobe/jwt-auth
-
-      - name: Generate JWT and exchange for access token
-        id: get-token
-        run: node ./scripts/generate-access-token.js
-        env:
-          SERVICE_CREDENTIALS_PATH: ./service-credentials.json
+      - name: Get access token for AEM
+        id: get-access-token-for-aem
+        uses: ./.github/actions/sta-aem-helper
+        with:
+          operation: fetch-access-token
+          credentials_path: ./service-credentials.json
 
       - name: Check if access token was generated
-        if: ${{ steps.get-token.outputs.access_token == '' }}
+        if: ${{ steps.get-access-token-for-aem.outputs.access_token == '' }}
         run: |
-          echo "Failed to generate access token"
+          echo "Failed to obtain the access token"
           exit 1
 
       - name: Run XWalk upload action
         id: xwalk-upload-step
         uses: ./.github/actions/sta-xwalk-upload
         with:
-          upload_token: ${{ steps.get-token.outputs.access_token }}
-          root_mountpoint: ${{ github.event.inputs.root_mountpoint }}
+          access_token: ${{ steps.get-access-token-for-aem.outputs.access_token }}
+          aem_author_url: ${{ github.event.inputs.root_mountpoint }}
           skip_assets: ${{ github.event.inputs.skip_assets }}
           zip_path: ${{ steps.download-zip.outputs.temp_dir }}/contents
           zip_name: ${{ steps.download-zip.outputs.xwalk_zip }}
@@ -183,7 +173,7 @@ jobs:
         if: ${{ steps.xwalk-upload-step.outputs.error_message != '' }}
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: ${{ steps.xwalk-upload-step.outputs.error_message }} ${{ env.ACTION_URL }}
           status_type: error
@@ -192,7 +182,7 @@ jobs:
       - name: Report upload success
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: XWalk upload succeeded.
           status_type: ok
@@ -201,7 +191,7 @@ jobs:
       - name: Progress 4 - Replicating content to Preview
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Replicating content to AEM Preview... (Step 4 of 7).
           status_type: progress
@@ -211,17 +201,16 @@ jobs:
         id: replicate-preview-step
         uses: ./.github/actions/sta-aem-publish
         with:
-          access_token: ${{ steps.get-token.outputs.access_token }}
-          aem_url: ${{ github.event.inputs.aem_author_url }}
-          content_paths: ${{ github.event.inputs.content_paths_to_replicate }}
-          replicate_type: ${{ github.event.inputs.replicate_type }}
+          access_token: ${{ steps.get-access-token-for-aem.outputs.access_token }}
+          aem_url: ${{ github.event.inputs.root_mountpoint }}
+          content_paths: ${{ steps.download-zip.outputs.content_paths }}
           is_preview: 'true'
 
       - name: Report if replicate to preview failed
         if: ${{ steps.replicate-preview-step.outputs.error_message != '' }}
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: ${{ steps.replicate-preview-step.outputs.error_message }} ${{ env.ACTION_URL }}
           status_type: error
@@ -230,7 +219,7 @@ jobs:
       - name: Report replicate to preview success
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Content replicated to preview successfully.
           status_type: ok
@@ -239,7 +228,7 @@ jobs:
       - name: Progress 5 - Replicating content to Publish
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Replicating content to AEM Publish... (Step 5 of 7).
           status_type: progress
@@ -249,17 +238,16 @@ jobs:
         id: replicate-publish-step
         uses: ./.github/actions/sta-aem-publish
         with:
-          access_token: ${{ steps.get-token.outputs.access_token }}
-          aem_url: ${{ github.event.inputs.aem_author_url }}
-          content_paths: ${{ github.event.inputs.content_paths_to_replicate }}
-          replicate_type: ${{ github.event.inputs.replicate_type }}
+          access_token: ${{ steps.get-access-token-for-aem.outputs.access_token }}
+          aem_url: ${{ github.event.inputs.root_mountpoint }}
+          content_paths: ${{ steps.download-zip.outputs.content_paths }}
           is_preview: 'false'
 
       - name: Report if replicate to publish failed
         if: ${{ steps.replicate-publish-step.outputs.error_message != '' }}
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: ${{ steps.replicate-publish-step.outputs.error_message }} ${{ env.ACTION_URL }}
           status_type: error
@@ -268,7 +256,7 @@ jobs:
       - name: Report replicate to publish success
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Content replicated to publish successfully.
           status_type: ok
@@ -277,7 +265,7 @@ jobs:
       - name: Progress 6 - Cleaning up
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Cleaning up temporary files... (Step 6 of 7).
           status_type: progress
@@ -293,7 +281,7 @@ jobs:
       - name: Progress 7 - Workflow Complete
         uses: ./.github/actions/sta-status
         with:
-          callbacks: ${{ github.event.inputs.aemy_callbacks }}
+          callback_urls: ${{ github.event.inputs.aemy_callback_urls }}
           context: ${{ github.event.inputs.aemy_context }}
           message: Upload and replication workflow completed successfully! (Step 7 of 7). ${{ env.ACTION_URL }}
           status_type: ok

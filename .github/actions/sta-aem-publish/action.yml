@@ -11,10 +11,6 @@ inputs:
   content_paths:
     description: 'Comma-separated list of content paths to replicate (e.g., /content/dam/my-assets,/content/my-page)'
     required: true
-  replicate_type:
-    description: 'Type of replication operation (activate, deactivate, delete)'
-    required: false
-    default: 'activate'
   is_preview:
     description: 'Whether to replicate to preview (true) or publish (false)'
     required: false
