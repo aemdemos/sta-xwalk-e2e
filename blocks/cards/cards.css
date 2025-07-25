@@ -25,3 +25,131 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+
+.cards {
+  background: #f5f5f5;
+  padding: 40px 0;
+}
+
+/* 4-column strict grid, slightly more compact and centered for closer match */
+.cards > ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  place-items: stretch stretch;
+}
+
+/* Responsive breakpoints for 2 columns at tablet and 1 at mobile */
+@media (width <= 1020px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 550px;
+    gap: 16px;
+  }
+}
+
+@media (width <= 600px) {
+  .cards > ul {
+    grid-template-columns: 1fr;
+    max-width: none;
+    gap: 10px;
+    padding: 0 4px;
+  }
+}
+
+/* Card styling */
+.cards > ul > li {
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(60 60 60 / 7%), 0 0.5px 1.5px rgb(60 60 60 / 3%);
+  border-radius: 4px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  min-width: 0;
+}
+
+/* Card hover effect */
+.cards > ul > li:hover {
+  box-shadow: 0 4px 16px rgb(60 60 60 / 12%), 0 1px 3px rgb(60 60 60 / 8%);
+}
+
+/* Image area */
+.cards .cards-card-image {
+  width: 100%;
+  height: 152px;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card body styling */
+.cards .cards-card-body {
+  padding: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  background: #fff;
+}
+
+/* Tighter spacing for text within card */
+.cards .cards-card-body p {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.cards .cards-card-body p:last-child {
+  margin-bottom: 0;
+}
+
+.cards .cards-card-body p:first-child {
+  margin-bottom: 8px;
+}
+
+.cards .cards-card-body p:first-child strong {
+  font-size: 17px;
+  color: #111;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+/* Responsive adjustments for image height and card body padding */
+@media (width <= 1020px) {
+  .cards .cards-card-image {
+    height: 110px;
+  }
+
+  .cards .cards-card-body {
+    padding: 15px;
+  }
+}
+
+@media (width <= 600px) {
+  .cards .cards-card-image {
+    height: 80px;
+  }
+
+  .cards .cards-card-body {
+    padding: 10px 9px 12px;
+  }
+}
