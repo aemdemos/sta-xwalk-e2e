@@ -45,3 +45,115 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 180px;
+  background: #0a2742;
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* DNA image container: ensure the DNA is visible and blends with a mask, and is wide enough to show the full DNA */
+.hero > div:first-child {
+  flex: 1 1 65%;
+  order: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+  position: relative;
+
+  /* Let the image overflow left so the DNA is fully visible and more of it is shown */
+  margin-right: -15vw;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Make sure the picture and img are rendered, and blend with a mask for a smooth transition */
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  display: block;
+  width: 150%;               /* show more of the DNA, allow for overflow */
+  min-width: 500px;
+  max-width: unset;
+  height: 180px;
+  object-fit: cover;
+  object-position: right center;
+  border: none;
+  background: transparent;
+
+  /* Soft left fade using mask for blending */
+  mask-image: linear-gradient(to left, black 70%, transparent 100%);
+}
+
+/* If global styles try to absolutely position the hero image, undo it */
+.hero picture {
+  position: static;
+  inset: unset;
+  z-index: auto;
+}
+
+/* Text container: force text to the left and vertically centered */
+.hero > div:last-child {
+  flex: 0 1 35%;
+  order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  padding-left: 40px;
+  min-width: 0;
+  box-sizing: border-box;
+  z-index: 1;
+  background: transparent;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.15;
+  max-width: none;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive: stack on small screens, DNA image above text */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: unset;
+  }
+
+  .hero > div:first-child,
+  .hero > div:last-child {
+    flex: unset;
+    order: unset;
+    width: 100%;
+    padding-left: 0;
+    justify-content: center;
+    margin-right: 0;
+  }
+
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    width: 100vw;
+    min-width: 0;
+    max-width: none;
+    height: 120px;
+    mask-image: none;
+  }
+
+  .hero h1 {
+    text-align: center;
+    padding: 20px 0 0;
+    font-size: 1.3rem;
+  }
+}
