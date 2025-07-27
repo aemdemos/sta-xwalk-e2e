@@ -31,3 +31,110 @@
     order: unset;
   }
 }
+
+
+.columns .block.columns-2-cols {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Layout rows: side-by-side columns, slightly increased gap */
+.columns .block.columns-2-cols > div {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Responsive: stack columns vertically on small screens */
+@media (width <= 900px) {
+  .columns .block.columns-2-cols > div {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* Left text columns: slightly wider, minimal left padding, top margin for vertical alignment */
+.columns .block.columns-2-cols > div:first-child > div:first-child,
+.columns .block.columns-2-cols > div:last-child > div:last-child {
+  flex: 0 0 42%;
+  max-width: 42%;
+  padding: 0 0 0 2px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Responsive: full width and minimal padding for mobile */
+@media (width <= 900px) {
+  .columns .block.columns-2-cols > div:first-child > div:first-child,
+  .columns .block.columns-2-cols > div:last-child > div:last-child {
+    max-width: 100%;
+    flex: 1 1 100%;
+    padding: 0 0 0 4px;
+    margin-top: 6px;
+  }
+}
+
+/* Image columns: 58%, flush right */
+.columns .block.columns-2-cols > div:first-child > .columns-img-col,
+.columns .block.columns-2-cols > div:last-child > .columns-img-col {
+  flex: 0 0 58%;
+  max-width: 58%;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+@media (width <= 900px) {
+  .columns .block.columns-2-cols > div:first-child > .columns-img-col,
+  .columns .block.columns-2-cols > div:last-child > .columns-img-col {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+}
+
+.columns .block.columns-2-cols .columns-img-col picture,
+.columns .block.columns-2-cols .columns-img-col img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.columns .block.columns-2-cols ul {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding-left: 20px;
+}
+
+.columns .block.columns-2-cols p {
+  margin-top: 0;
+  margin-bottom: 7px;
+  font-size: 1rem;
+}
+
+.columns .block.columns-2-cols .button-container {
+  margin-top: 3px;
+  margin-bottom: 0;
+}
+
+/* Remove bottom margin from last element in text column */
+.columns .block.columns-2-cols > div:first-child > div:first-child > *:last-child,
+.columns .block.columns-2-cols > div:last-child > div:last-child > *:last-child {
+  margin-bottom: 0;
+}
+
+@media (width <= 600px) {
+  .columns .block.columns-2-cols {
+    gap: 14px;
+  }
+
+  .columns .block.columns-2-cols > div {
+    gap: 6px;
+  }
+}
