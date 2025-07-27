@@ -5,8 +5,16 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background: radial-gradient(ellipse at top left, #15304d 60%, #04203b 100%);
+  box-sizing: border-box;
+  width: 100%;
+  gap: 0;
+  padding: 0 2vw;
+  min-height: 220px;
 }
 
 .hero h1,
@@ -43,5 +51,121 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Image on the right, text on the left.
+   In the provided HTML, the first child is the image, the second is the text.
+   Use order to move image right and text left. */
+.hero > div:first-of-type {
+  order: 2;
+  flex: 0 1 55%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  z-index: 1;
+  height: 100%;
+
+  /* Let the image overflow a bit to the left for a natural blend */
+  margin-left: -6vw;
+  pointer-events: none; /* image is decorative */
+}
+
+.hero > div:first-of-type picture {
+  display: block;
+  width: 100%;
+  max-width: 580px;
+  min-width: 340px;
+}
+
+.hero > div:first-of-type img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  max-width: 580px;
+  min-width: 340px;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+
+  /* Optional: fade left edge of image for a softer transition */
+  mask-image: linear-gradient(to left, transparent 0%, black 15%, black 100%);
+  mask-image: linear-gradient(to left, transparent 0%, black 15%, black 100%);
+}
+
+/* Text on the left */
+.hero > div:last-of-type {
+  order: 1;
+  flex: 0 1 40%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  z-index: 2;
+  padding-left: 2vw;
+  padding-right: 2vw;
+}
+
+.hero > div:last-of-type > div {
+  width: 100%;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-weight: bold;
+  line-height: 1.15;
+  margin: 0;
+  font-size: var(--heading-font-size-xl);
+  overflow-wrap: break-word;
+  text-align: left;
+}
+
+/* Responsive: stack on small screens */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 4vw;
+    min-height: 0;
+  }
+
+  .hero > div:first-of-type,
+  .hero > div:last-of-type {
+    order: unset;
+    flex: none;
+    min-width: 0;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hero > div:first-of-type picture,
+  .hero > div:first-of-type img {
+    max-width: 320px;
+    min-width: 0;
+    margin: 0 auto;
+    mask-image: none;
+    mask-image: none;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: var(--heading-font-size-l);
+    text-align: center;
+    margin-top: 1em;
   }
 }
