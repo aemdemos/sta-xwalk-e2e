@@ -1,10 +1,35 @@
-.columns > div {
-  display: flex;
-  flex-direction: column;
+/* Ensure grid container comes first for specificity order */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px 20px;
+  width: 100%;
+  align-items: stretch;
 }
 
 .columns img {
   width: 100%;
+}
+
+.columns .columns-img-col {
+  width: 100%;
+  height: 100%;
+  align-self: stretch;
+  display: flex;
+}
+
+.columns .columns-img-col img,
+.columns .columns-img-col picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Lowest specificity: all direct children, then direct children > div, then direct children > .columns-img-col, etc. */
+.columns > div {
+  display: contents;
 }
 
 .columns > div > div {
@@ -17,6 +42,103 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+/* Explicit grid positioning for each cell */
+.columns > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  height: 100%;
+  max-width: 340px;
+  /* Make content fill the cell vertically */
+  flex: 1 1 auto;
+}
+
+.columns > div:first-child > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  align-self: stretch;
+  height: 100%;
+}
+
+.columns > div:last-child > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  align-self: stretch;
+  height: 100%;
+}
+
+.columns > div:last-child > div:last-child {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  height: 100%;
+  max-width: 340px;
+  flex: 1 1 auto;
+}
+
+/* Consistent spacing for buttons */
+.columns .button-container {
+  margin-top: 20px;
+}
+
+.columns .button {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Responsive stacking */
+@media (width <= 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 16px 0;
+    align-items: stretch;
+  }
+
+  .columns .columns-img-col {
+    width: 100%;
+    height: 100%;
+    align-self: stretch;
+    display: flex;
+  }
+
+  .columns > div:first-child > div:first-child,
+  .columns > div:first-child > .columns-img-col,
+  .columns > div:last-child > .columns-img-col,
+  .columns > div:last-child > div:last-child {
+    grid-column: 1;
+    max-width: 100%;
+    height: auto;
+    align-self: stretch;
+  }
+  .columns > div:first-child > div:first-child { grid-row: 1; }
+  .columns > div:first-child > .columns-img-col { grid-row: 2; }
+  .columns > div:last-child > .columns-img-col { grid-row: 3; }
+  .columns > div:last-child > div:last-child { grid-row: 4; }
+
+  .columns .columns-img-col,
+  .columns .columns-img-col img,
+  .columns .columns-img-col picture {
+    height: auto;
+    min-height: 160px;
+    max-height: 220px;
+  }
 }
 
 @media (width >= 900px) {
