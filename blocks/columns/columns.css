@@ -31,3 +31,100 @@
     order: unset;
   }
 }
+
+
+.columns {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px; /* slightly reduce central gap for more balance */
+  max-width: 1200px; /* match the original image's likely width */
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.columns > div {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px; /* compact vertical stacking */
+  min-width: 0;
+}
+
+.columns .columns-img-col {
+  width: 100%;
+  /* Ensures images in both columns will size equally */
+  display: flex;
+  flex-direction: column;
+}
+
+.columns .columns-img-col img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.columns p,
+.columns ul,
+.columns li {
+  text-align: left;
+}
+
+.columns ul {
+  margin: 10px 0 0 22px;
+  padding: 0;
+}
+
+.columns li {
+  margin-bottom: 0;
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+.columns p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+.columns .button-container {
+  width: 100%;
+  text-align: left;
+  margin-top: 16px;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.columns .button {
+  min-width: 92px;
+  font-size: 16px;
+  padding: 12px 32px;
+  border-radius: 999px;
+  margin-left: 0;
+}
+
+.columns .button.secondary {
+  background: unset;
+  color: var(--text-color);
+  border: 2px solid var(--text-color);
+}
+
+@media (max-width: 900px) {
+  .columns {
+    flex-direction: column;
+    gap: 24px;
+    max-width: 100%;
+  }
+  .columns > div {
+    gap: 20px;
+    align-items: flex-start;
+  }
+}
