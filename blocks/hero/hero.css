@@ -1,14 +1,23 @@
+/* Main Hero Container */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
 }
 
+/* Hero Section */
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: stretch;
+  min-height: 340px;
+  background: linear-gradient(90deg, #0a2640 60%, rgb(10 38 64 / 70%) 100%);
+  padding: 0;
+  overflow: hidden;
 }
 
+/* Hero Content */
 .hero h1,
 .hero h2,
 .hero h3,
@@ -16,16 +25,24 @@
 .hero h5,
 .hero h6,
 .hero p {
-  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   color: var(--background-color);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.2;
+  font-family: var(--heading-font-family), Arial, sans-serif;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 20%);
+  max-width: 90%;
 }
 
 .hero.no-image * {
   color: var(--text-color);
 }
 
+/* Hero Background Image */
 .hero picture {
   position: absolute;
   z-index: -1;
@@ -40,8 +57,94 @@
   height: 100%;
 }
 
+/* Text Column: Left */
+.hero > div:last-child {
+  order: 1;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 36px 0 0 48px;
+}
+
+/* Image Column: Right */
+.hero > div:first-child {
+  order: 2;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+}
+
+/* Make the image fill the column vertically, scale up and bleed left for impact */
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  display: block;
+  height: 120%;
+  min-height: 360px;
+  width: auto;
+  max-width: none;
+  object-fit: cover;
+  margin-right: -80px;
+  margin-bottom: -40px;
+  margin-top: -40px;
+  filter: none;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Media Query: Large Screens */
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Media Query: Small Screens */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 240px;
+  }
+
+  .hero > div:last-child {
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 12px 0;
+    text-align: center;
+  }
+
+  .hero > div:first-child {
+    justify-content: center;
+    align-items: flex-end;
+    min-height: 120px;
+    max-height: 180px;
+  }
+
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    width: 100%;
+    height: auto;
+    min-height: 60px;
+    max-height: 120px;
+    object-fit: contain;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 1.3rem;
+    max-width: 100%;
   }
 }
