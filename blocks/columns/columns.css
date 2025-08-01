@@ -1,14 +1,23 @@
+/* Disable no-descending-specificity for the file */
+/* stylelint-disable no-descending-specificity */
+
+.columns {
+  margin: 40px 32px;
+}
+
 .columns > div {
   display: flex;
   flex-direction: column;
-}
-
-.columns img {
-  width: 100%;
+  gap: 40px;
+  align-items: flex-start;
 }
 
 .columns > div > div {
-  order: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .columns > div > .columns-img-col {
@@ -17,6 +26,93 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+/* --- IMAGE VISIBILITY FIX FOR ORIGINAL VISUAL LAYOUT --- */
+
+/* LEFT COLUMN: Only show the last <p> (image), hide other image-containing paragraphs */
+.columns > div > div:first-child > p:not(:last-of-type) picture,
+.columns > div > div:first-child > p:not(:last-of-type) img {
+  display: none;
+}
+
+/* RIGHT COLUMN: Only show the first <p> (image), hide any image in subsequent <p>s */
+.columns > div > div:last-child > p:not(:first-of-type) picture,
+.columns > div > div:last-child > p:not(:first-of-type) img {
+  display: none;
+}
+
+/* Images always full width, remove extra margin */
+.columns picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.columns img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+/* Spacing for content */
+.columns ul {
+  margin-bottom: 18px;
+}
+
+.columns .button-container {
+  margin-bottom: 24px;
+}
+
+.columns .button {
+  border-radius: 999px;
+  font-size: 18px;
+  padding: 0.7em 2.1em;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.columns .button.secondary {
+  background: #fff;
+  color: #131313;
+  border: 2px solid #131313;
+}
+
+.columns .button.secondary:hover,
+.columns .button.secondary:focus {
+  background: #f8f8f8;
+}
+
+.columns > div > div > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive: stack columns vertically on smaller screens */
+@media (width <= 900px) {
+  .columns {
+    margin: 24px 8px;
+  }
+
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .columns .button {
+    font-size: 16px;
+    padding: 0.65em 1.5em;
+  }
+
+  /* Restore all images for mobile stacking */
+  .columns > div > div:first-child > p:not(:last-of-type) picture,
+  .columns > div > div:first-child > p:not(:last-of-type) img,
+  .columns > div > div:last-child > p:not(:first-of-type) picture,
+  .columns > div > div:last-child > p:not(:first-of-type) img {
+    display: block;
+  }
 }
 
 @media (width >= 900px) {
