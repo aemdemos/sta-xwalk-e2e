@@ -45,3 +45,146 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 220px;
+  background: #0e253f;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Make text area wider and image area slightly narrower */
+.hero > div:last-child {
+  flex: 1 1 54%;
+  order: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 56px;
+  padding-top: 38px;
+  min-width: 0;
+  z-index: 2;
+}
+
+.hero > div:last-child > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.1;
+  margin: 0;
+  text-align: left;
+  text-shadow: 0 1px 10px #000a;
+  max-width: 100%;
+  letter-spacing: 0;
+  padding: 0;
+}
+
+/* Make image column narrower and remove negative offset/glow */
+.hero > div:first-child {
+  flex: 1 1 46%;
+  order: 2;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-width: 0;
+  height: 100%;
+  z-index: 1;
+  overflow: visible;
+  position: relative;
+}
+
+.hero > div:first-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  position: relative;
+  left: 0; /* Remove negative offset */
+}
+
+.hero picture,
+.hero img {
+  display: block;
+  width: 100%;
+  min-width: 400px;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  position: relative;
+  right: 0;
+  top: 0;
+  filter: none; /* Remove drop-shadow/glow for seamless blend */
+  pointer-events: none;
+  background: transparent;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column-reverse;
+    min-height: 380px;
+  }
+
+  .hero > div:first-child,
+  .hero > div:last-child {
+    width: 100%;
+    min-width: 0;
+    padding-left: 0;
+    padding-top: 0;
+  }
+
+  .hero > div:last-child {
+    padding: 26px 12px 0 12px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .hero > div:first-child {
+    height: auto;
+  }
+
+  .hero > div:first-child > div {
+    left: 0;
+  }
+
+  .hero picture,
+  .hero img {
+    width: 100vw;
+    min-width: 0;
+    max-width: 100vw;
+    height: auto;
+    right: 0;
+    top: 0;
+    object-fit: cover;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 1.2rem;
+    text-align: left;
+    margin: 0;
+  }
+}
