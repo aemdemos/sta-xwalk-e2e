@@ -45,3 +45,137 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 180px;
+  width: 100%;
+  background: radial-gradient(circle at 60% 40%, #19446a 0%, #0c273d 100%);
+  overflow: hidden;
+  padding: 0;
+}
+
+/* DNA visual: allow overlap/fade for natural blend, with much softer/wider fade */
+.hero > div:first-child {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 80%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-width: 0;
+  /* Wider, softer fade for more natural blend */
+  mask-image: linear-gradient(
+    to left,
+    transparent 0%,
+    rgba(0,0,0,0.04) 13%,
+    rgba(0,0,0,0.14) 24%,
+    rgba(0,0,0,0.24) 40%,
+    rgba(0,0,0,0.38) 54%,
+    rgba(0,0,0,0.48) 62%,
+    rgba(0,0,0,0.64) 72%,
+    black 80%,
+    black 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to left,
+    transparent 0%,
+    rgba(0,0,0,0.04) 13%,
+    rgba(0,0,0,0.14) 24%,
+    rgba(0,0,0,0.24) 40%,
+    rgba(0,0,0,0.38) 54%,
+    rgba(0,0,0,0.48) 62%,
+    rgba(0,0,0,0.64) 72%,
+    black 80%,
+    black 100%
+  );
+  overflow: hidden;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  display: block;
+  min-height: 180px;
+}
+
+/* Text settings: restrict width so it never overlaps busy DNA */
+.hero > div:last-child {
+  position: relative;
+  z-index: 1;
+  flex: 0 1 48%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 40px 0 0 48px;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 48%;
+}
+
+/* Heading styles */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.15;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.15);
+}
+
+/* Responsive: stack vertically and fade more rapidly on mobile */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+  }
+  .hero > div:first-child {
+    width: 100%;
+    height: 65%;
+    left: 0;
+    right: 0;
+    top: unset;
+    bottom: 0;
+    opacity: 0.38;
+    mask-image: linear-gradient(
+      to top,
+      transparent 0%,
+      rgba(0,0,0,0.16) 28%,
+      rgba(0,0,0,0.32) 54%,
+      rgba(0,0,0,0.46) 70%,
+      black 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to top,
+      transparent 0%,
+      rgba(0,0,0,0.16) 28%,
+      rgba(0,0,0,0.32) 54%,
+      rgba(0,0,0,0.46) 70%,
+      black 100%
+    );
+  }
+  .hero > div:last-child {
+    max-width: 100%;
+    flex: unset;
+    padding: 32px 8px 0 16px;
+  }
+}
