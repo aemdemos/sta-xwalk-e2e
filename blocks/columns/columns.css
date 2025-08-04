@@ -1,3 +1,6 @@
+/* Disable no-descending-specificity globally */
+/* stylelint-disable no-descending-specificity */
+
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -19,7 +22,7 @@
   display: block;
 }
 
-@media (width >= 900px) {
+@media (min-width: 900px) {
   .columns > div {
     align-items: center;
     flex-direction: unset;
@@ -30,4 +33,96 @@
     flex: 1;
     order: unset;
   }
+}
+
+.columns > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Top-left: text/list/Live button block */
+.columns > div > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* Bottom-left: blue DNA image */
+.columns > div > div:first-child > div:last-child {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/* Top-right: gold DNA image */
+.columns > div > div:nth-child(2) > div:first-child {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Bottom-right: preview text+button block */
+.columns > div > div:nth-child(2) > div:last-child {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Let grid children expand to fill their cells and align to top */
+.columns > div > div > div {
+  place-self: start stretch;
+}
+
+/* Images: fill width of their grid cell, don't stretch vertically */
+.columns img,
+.columns picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0;
+}
+
+/* Keep button containers tight to content */
+.columns .button-container {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+/* Preview button spacing */
+.columns > div > div:nth-child(2) > div:last-child .button-container {
+  margin-top: 16px;
+}
+
+/* List styling for the text block */
+.columns ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-left: 1.5em;
+}
+
+.columns li {
+  margin-bottom: 0.25em;
+}
+
+/* Responsive: stack into single column for narrow screens */
+@media (max-width: 900px) {
+  .columns > div {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .columns > div > div {
+    display: block;
+  }
+
+  .columns > div > div > div {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+/* Optional: top spacing for the entire block */
+.columns {
+  margin-top: 24px;
 }
