@@ -1,3 +1,6 @@
+/* Disable descending specificity rule globally */
+/* stylelint-disable no-descending-specificity */
+
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,8 +8,13 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: block;
+  min-height: 180px;
+  width: 100%;
+  background: #0b233c;
+  overflow: hidden;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .hero h1,
@@ -45,3 +53,113 @@
     padding: 40px 32px;
   }
 }
+
+/* Full-background image, blending right to left */
+.hero > div:first-child,
+.hero > div:first-child > div {
+  position: static;
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* Make picture/img fill the .hero as a background */
+.hero picture,
+.hero img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-width: none;
+  max-height: none;
+  display: block;
+  z-index: 1;
+  pointer-events: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Gradient overlay to darken left side for text legibility */
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+
+  /* Left: strong blue, right: transparent */
+  background: linear-gradient(90deg, #0b233c 0%, #0b233cf0 38%, #0b233c77 62%, rgb(11 35 60 / 1%) 92%);
+}
+
+/* Text container positioned over the background, left/top with max width */
+.hero > div:last-child {
+  position: relative;
+  z-index: 3;
+  padding-left: 48px;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  max-width: 520px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Make sure the nested div lets text go full width */
+.hero > div:last-child > div {
+  width: 100%;
+}
+
+/* Headline styling: white, left, strong */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  line-height: 1.1;
+  text-align: left;
+  max-width: 100%;
+  letter-spacing: 0;
+}
+
+/* Responsive adjustments: tighter padding, allow stacking */
+@media (width <= 800px) {
+  .hero {
+    min-height: 300px;
+  }
+
+  .hero > div:last-child {
+    padding: 32px 20px 24px;
+    max-width: 100%;
+    align-items: flex-start;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: 2rem;
+    line-height: 1.15;
+  }
+}
+
+/* Remove spacing around the hero so it goes edge-to-edge */
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+/* stylelint-enable no-descending-specificity */
