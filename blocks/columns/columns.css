@@ -1,6 +1,12 @@
+/* Disable no-descending-specificity globally */
+/* stylelint-disable no-descending-specificity */
+
 .columns > div {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 48px;
+  width: 100%;
 }
 
 .columns img {
@@ -8,6 +14,12 @@
 }
 
 .columns > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  flex: 1 1 0;
+  min-width: 0;
   order: 1;
 }
 
@@ -30,4 +42,75 @@
     flex: 1;
     order: unset;
   }
+}
+
+/* Ensure side-by-side columns on desktop, stack on mobile */
+@media (width <= 899px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
+}
+
+/* Image sizing and margin tweaks */
+.columns picture,
+.columns img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* General styling for text, lists, and buttons */
+.columns ul,
+.columns ol {
+  margin-top: 0.2em;
+  margin-bottom: 0.6em;
+  padding-left: 1.2em;
+}
+
+.columns p {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: var(--text-color);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.columns .button-container {
+  margin-top: 8px;
+  margin-bottom: 0;
+  width: auto;
+}
+
+.columns .button,
+.columns .button.secondary {
+  margin: 0;
+  min-width: 92px;
+  min-height: 40px;
+  font-size: 18px;
+  border-radius: 9999px;
+  padding: 10px 28px;
+}
+
+.columns .button.secondary {
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+.columns ul li {
+  margin-bottom: 0.3em;
+  font-size: 18px;
+  color: var(--text-color);
+}
+
+.columns {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  width: 100%;
 }
