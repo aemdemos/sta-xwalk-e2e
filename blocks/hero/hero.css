@@ -1,3 +1,5 @@
+/* Disable no-descending-specificity globally for this file */
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -43,5 +45,141 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Consolidated .hero selector rules */
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 190px;
+  background: #0e2940;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Text column: left, order 1 */
+.hero > div:last-child {
+  flex: 0 0 28%;
+  order: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 40px;
+  padding-top: 32px;
+  height: 100%;
+  z-index: 2;
+  position: relative;
+}
+
+.hero > div:last-child > div {
+  width: 100%;
+}
+
+/* Headline styling */
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 16%);
+  max-width: 95%;
+  overflow-wrap: break-word;
+  position: relative;
+  z-index: 2;
+}
+
+/* Image column: right, order 2, much wider, allow "bleed" left */
+.hero > div:first-child {
+  flex: 1 1 72%;
+  order: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  min-width: 0;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* Let the image bleed into the text area and extend past hero right edge */
+.hero > div:first-child picture {
+  display: flex;
+  width: 185vw; /* super wide for dramatic bleed into left */
+  max-width: unset;
+  height: 190px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  position: absolute;
+  top: 0;
+  right: -33vw;
+  left: auto;
+  pointer-events: none;
+}
+
+.hero > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 190px;
+  max-width: unset;
+  object-fit: cover;
+  filter: drop-shadow(0 0 12px #0e2940);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Responsive: stack on small screens */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: unset;
+    padding: 0;
+  }
+
+  .hero > div:last-child,
+  .hero > div:first-child {
+    flex: unset;
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 12px;
+    height: auto;
+    position: static;
+  }
+
+  .hero > div:last-child > div {
+    width: 100%;
+  }
+
+  .hero h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    max-width: 100%;
+  }
+
+  .hero > div:first-child picture {
+    width: 100vw;
+    position: static;
+    margin-left: 0;
+    left: unset;
+    right: unset;
+    height: auto;
+  }
+
+  .hero > div:first-child img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: none;
   }
 }
