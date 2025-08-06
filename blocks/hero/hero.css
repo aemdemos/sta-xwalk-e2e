@@ -5,8 +5,16 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  min-height: 190px;
+  background: linear-gradient(90deg, #0a2237 60%, #164060 100%);
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 40px 24px; /* Merged padding from duplicate selector */
 }
 
 .hero h1,
@@ -43,5 +51,146 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Make image overlay start further left and "bleed" more under text */
+.hero > div:first-child {
+  position: absolute;
+  inset: 0 0 0 25vw;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 1;
+  min-width: 0;
+}
+
+/* Make image fill more space and focus on right, under text */
+.hero picture,
+.hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: right center;
+  margin: 0;
+}
+
+/* Text column: restrict width, ensure above image, allow image underlap */
+.hero > div:last-child {
+  position: relative;
+  z-index: 2;
+  flex: 0 1 32vw;
+  max-width: 32vw;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-left: 40px;
+  padding-top: 36px;
+  padding-bottom: 36px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* Headline styling and improved contrast */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.15;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 22%), 0 0 6px rgb(10 34 55 / 65%);
+  max-width: 95%;
+}
+
+/* Subtle blend for image left edge for seamless transition under text */
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 32vw;
+  pointer-events: none;
+  background: linear-gradient(90deg, #0a2237 80%, transparent 100%);
+  z-index: 1;
+}
+
+@media (width <= 900px) {
+  .hero > div:last-child {
+    padding-left: 18px;
+    padding-top: 18px;
+    padding-bottom: 14px;
+    max-width: 52vw;
+    flex-basis: 52vw;
+  }
+
+  .hero > div:first-child {
+    left: 48vw;
+  }
+
+  .hero::after {
+    width: 50vw;
+  }
+}
+
+@media (width <= 600px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 0;
+  }
+
+  .hero > div:first-child {
+    position: static;
+    left: unset;
+    width: 100vw;
+    height: auto;
+    min-width: 0;
+    max-width: 100vw;
+    order: 2;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero > div:last-child {
+    order: 1;
+    width: 100%;
+    max-width: 100vw;
+    padding: 18px 12px 10px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    max-width: 100%;
+    font-size: 1.3rem;
+  }
+
+  .hero picture,
+  .hero img {
+    max-width: 100vw;
+    max-height: 180px;
+    width: 100%;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+
+  .hero::after {
+    width: 100vw;
+    background: linear-gradient(90deg, #0a2237 75%, transparent 100%);
   }
 }
