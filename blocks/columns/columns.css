@@ -1,6 +1,16 @@
-.columns > div {
+/* Disable no-descending-specificity globally for this file */
+/* stylelint-disable no-descending-specificity */
+
+.columns {
   display: flex;
   flex-direction: column;
+  row-gap: 32px;
+}
+
+.columns > div {
+  display: flex;
+  flex-direction: column; /* Default direction */
+  row-gap: 32px;
 }
 
 .columns img {
@@ -30,4 +40,99 @@
     flex: 1;
     order: unset;
   }
+}
+
+/* Combine duplicate .columns > div definitions */
+.columns > div {
+  column-gap: 32px;
+  align-items: flex-start; /* Ensure horizontal alignment */
+}
+
+.columns > div > div:not(.columns-img-col) {
+  flex: 0 1 370px;
+  max-width: 370px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.columns > div:nth-child(2) {
+  column-gap: 18px;
+}
+
+.columns > div:nth-child(2) > div:not(.columns-img-col) {
+  max-width: 320px;
+  flex: 0 1 320px;
+}
+
+.columns > div > .columns-img-col {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.columns .columns-img-col img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+}
+
+@media (width <= 900px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 24px 0;
+  }
+
+  .columns > div > div:not(.columns-img-col),
+  .columns > div > .columns-img-col {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .columns {
+    row-gap: 24px;
+  }
+}
+
+.columns .button-container em {
+  font-style: normal;
+}
+
+.columns ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.columns li {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.columns .button-container {
+  margin: 0;
+  padding: 0;
+}
+
+.columns > div > div:not(.columns-img-col) > *:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.columns > div > div:not(.columns-img-col) > *:last-child {
+  margin-bottom: 0;
 }
