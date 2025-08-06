@@ -5,6 +5,6 @@
     "/content/sta-xwalk-e2e/metadata:/metadata.json"
   ],
   "includes": [
-    "content/sta-xwalk-e2e/"
+    "/content/sta-xwalk-e2e/"
   ]
 }
