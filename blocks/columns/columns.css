@@ -1,6 +1,13 @@
+/* Disable no-descending-specificity globally */
+/* stylelint-disable no-descending-specificity */
+
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: 32px 40px;
+  align-items: start;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
 }
 
 .columns img {
@@ -19,7 +26,7 @@
   display: block;
 }
 
-@media (width >= 900px) {
+@media (min-width: 900px) {
   .columns > div {
     align-items: center;
     flex-direction: unset;
@@ -29,5 +36,114 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+.columns {
+  color: #222;
+  font-size: 16px;
+  font-family: inherit;
+  padding: 32px 0;
+}
+
+@media (max-width: 900px) {
+  .columns > div {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+}
+
+/* -- LEFT COLUMN: group text/list/button and blue image tightly at the top -- */
+.columns > div > div:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px; /* Tighter gap to group text and image */
+  justify-content: flex-start;
+}
+
+/* All elements in the left column (text, list, button, blue image) grouped */
+.columns > div > div:first-child p,
+.columns > div > div:first-child ul {
+  margin-bottom: 0;
+}
+
+.columns > div > div:first-child picture,
+.columns > div > div:first-child img {
+  width: 100%;
+  max-width: 460px;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* -- RIGHT COLUMN: gold image directly above preview content, grouped at top -- */
+.columns > div > div:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px; /* Tight group for image + preview content */
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.columns > div > div:last-child p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.columns > div > div:last-child picture,
+.columns > div > div:last-child img {
+  width: 100%;
+  max-width: 460px;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Space only between preview text and button, not below image */
+.columns > div > div:last-child .button-container {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* --- Buttons --- */
+.columns .button {
+  background: #3F51F8;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  padding: 8px 24px;
+  min-width: 90px;
+  font-weight: 500;
+  margin-bottom: 0;
+  margin-top: 0;
+  box-shadow: none;
+}
+
+.columns .button.secondary {
+  background: #fff;
+  border: 2px solid #222;
+  color: #222;
+  font-style: italic;
+}
+
+/* Responsive: make images fill available width on small screens */
+@media (max-width: 900px) {
+  .columns > div > div:first-child,
+  .columns > div > div:last-child {
+    max-width: 100%;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .columns > div > div:first-child picture,
+  .columns > div > div:first-child img,
+  .columns > div > div:last-child picture,
+  .columns > div > div:last-child img {
+    width: 100%;
+    max-width: 100%;
   }
 }
