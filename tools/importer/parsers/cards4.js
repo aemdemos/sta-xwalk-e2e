@@ -1,44 +1,43 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the .cards.block > ul representing the cards list
-  const cardsBlock = element.querySelector('.cards.block');
-  if (!cardsBlock) return;
-  const ul = cardsBlock.querySelector('ul');
-  if (!ul) return;
+  // Find the cards block either by data-block-name or class
+  let cardsBlock = element.querySelector('.cards.block[data-block-name="cards"]');
+  if (!cardsBlock) cardsBlock = element.querySelector('.cards.block');
+  if (!cardsBlock) cardsBlock = element;
 
-  const cards = Array.from(ul.children).filter(li => li.tagName === 'LI');
+  // Find the <ul> containing all <li> cards
+  const list = cardsBlock.querySelector('ul');
+  const cards = list ? Array.from(list.children) : [];
 
-  // Build header row
-  const rows = [['Cards']];
+  const rows = [['Cards']]; // Header row, matches example
 
-  // Iterate through each card <li>
-  for (const li of cards) {
-    // Image cell
+  cards.forEach((li) => {
+    // Image/Icon cell (mandatory)
     let imageCell = null;
-    const imageDiv = li.querySelector('.cards-card-image');
-    if (imageDiv) {
-      // Prefer <picture>, otherwise <img>
-      const pic = imageDiv.querySelector('picture');
-      if (pic) {
-        imageCell = pic;
-      } else {
-        const img = imageDiv.querySelector('img');
-        if (img) imageCell = img;
-      }
+    const imgWrap = li.querySelector('.cards-card-image');
+    if (imgWrap) {
+      // Only reference the <picture> element if present, else <img>
+      const pic = imgWrap.querySelector('picture');
+      imageCell = pic || imgWrap.querySelector('img') || '';
+    } else {
+      imageCell = '';
     }
 
-    // Text cell
+    // Text content cell (mandatory)
     let textCell = null;
-    const bodyDiv = li.querySelector('.cards-card-body');
-    if (bodyDiv) {
-      textCell = bodyDiv;
+    const body = li.querySelector('.cards-card-body');
+    if (body) {
+      // Reference the existing body element for semantic formatting
+      textCell = body;
+    } else {
+      textCell = '';
     }
 
-    // Always push a row for each card, even if image or text is missing
     rows.push([imageCell, textCell]);
-  }
+  });
 
-  // Create the cards block table and replace the original element
+  // Create the table block
   const table = WebImporter.DOMUtils.createTable(rows, document);
+  // Replace the original element with the new block table
   element.replaceWith(table);
 }
