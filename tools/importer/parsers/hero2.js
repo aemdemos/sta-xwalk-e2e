@@ -1,80 +1,66 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // 1. Find the deepest hero block content
-  // This usually is: .section.hero-container > .hero-wrapper > .hero.block > div > div
-  let contentRoot = element;
-  const heroWrapper = element.querySelector(':scope > .hero-wrapper');
-  if (heroWrapper) {
-    const heroBlock = heroWrapper.querySelector(':scope > .hero.block');
-    if (heroBlock) {
-      // The inner block may have two divs: take the inner-most div
-      const innerDivs = heroBlock.querySelectorAll(':scope > div > div');
-      if (innerDivs.length > 0) {
-        contentRoot = innerDivs[0];
-      } else {
-        // fallback: maybe just one div
-        const firstDiv = heroBlock.querySelector(':scope > div');
-        if (firstDiv) {
-          contentRoot = firstDiv;
-        } else {
-          contentRoot = heroBlock;
-        }
-      }
-    } else {
-      contentRoot = heroWrapper;
-    }
+  // Find the hero image and hero text
+  // The structure is:
+  // .section.hero-container > .hero-wrapper > .hero.block > div > div
+  // That inner div contains the block content
+  const heroWrapper = element.querySelector('.hero-wrapper');
+  const heroBlock = heroWrapper && heroWrapper.querySelector('.hero.block');
+  let blockContentDiv = null;
+  if (heroBlock) {
+    // Find deepest div (usually 2 levels)
+    const divs = heroBlock.querySelectorAll('div');
+    blockContentDiv = divs.length ? divs[divs.length - 1] : heroBlock;
   }
+  // Defensive: fallback to element if not found
+  const contentRoot = blockContentDiv || element;
 
-  // 2. Extract picture or img for background image (row 2)
-  let pictureEl = contentRoot.querySelector('picture');
-  let imgEl = null;
-  if (pictureEl) {
-    imgEl = pictureEl.querySelector('img');
-  } else {
-    imgEl = contentRoot.querySelector('img');
-  }
+  // Get immediate children of contentRoot
+  const children = Array.from(contentRoot.children);
 
-  // 3. Extract heading, subheading, and CTA for content (row 3)
-  // We'll take all heading elements (h1-h6), all paragraphs except those containing only an image, and links.
-  const contentCells = [];
-
-  // First, headings
-  const headings = contentRoot.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => contentCells.push(h));
-  // Then, paragraphs that do NOT only contain an image/picture
-  const paragraphs = contentRoot.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    // Exclude paragraphs that ONLY have an image or picture (used for background image)
+  // Extract picture/img for row 2 (Background Image)
+  let imageEl = null;
+  for (const child of children) {
+    // If <p> contains <picture> or <img>
     if (
-      !(p.childNodes.length === 1 && (p.firstElementChild && (p.firstElementChild.tagName === 'PICTURE' || p.firstElementChild.tagName === 'IMG')))
+      child.tagName === 'P' &&
+      (child.querySelector('picture') || child.querySelector('img'))
     ) {
-      // Also skip empty paragraphs
-      if (p.textContent.trim().length > 0) {
-        contentCells.push(p);
-      }
+      imageEl = child.querySelector('picture') || child.querySelector('img');
+      break;
+    } else if (child.tagName === 'PICTURE' || child.tagName === 'IMG') {
+      imageEl = child;
+      break;
     }
-  });
-  // Any other content? (Could include CTA links, but in this case, not present)
-
-  // If no headings or paragraphs found, put an empty string
-  if (contentCells.length === 0) {
-    contentCells.push('');
   }
 
-  // Compose table rows as per Hero block spec
-  const rows = [];
-  rows.push(['Hero']); // header EXACTLY matches block name
-  // 2nd row: background image (picture or img or empty)
-  if (pictureEl) {
-    rows.push([pictureEl]);
-  } else if (imgEl) {
-    rows.push([imgEl]);
-  } else {
-    rows.push(['']);
+  // Extract all text (header, subheader, paragraph, cta) for row 3
+  // We'll include all children that are not picture/img, skipping empty <p> as well
+  let textEls = [];
+  for (const child of children) {
+    // skip if image
+    if (imageEl && (child.contains(imageEl) || child === imageEl)) continue;
+    // skip if empty paragraph
+    if (child.tagName === 'P' && child.textContent.trim() === '') continue;
+    if (child.textContent.trim()) textEls.push(child);
   }
-  // 3rd row: content (title, subheading, CTA)
-  rows.push([contentCells]);
-  // Create the table and replace the element
-  const table = WebImporter.DOMUtils.createTable(rows, document);
-  element.replaceWith(table);
+
+  // Fallback: if no text found and imageEl is not first child, try all headings in contentRoot
+  if (textEls.length === 0) {
+    const headings = contentRoot.querySelectorAll('h1, h2, h3, h4, h5, h6, p');
+    for (const h of headings) {
+      if (h.textContent.trim()) textEls.push(h);
+    }
+  }
+
+  // Compose table
+  const cells = [
+    ['Hero'],
+    [imageEl ? imageEl : ''],
+    [textEls.length ? textEls : '']
+  ];
+
+  // Create and replace
+  const block = WebImporter.DOMUtils.createTable(cells, document);
+  element.replaceWith(block);
 }
