@@ -1,29 +1,29 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Header row must be exactly one column with the block name
-  const cells = [['Columns']];
-  // Gather the rows (each child of .columns.block)
-  const rows = Array.from(element.querySelectorAll(':scope > div'));
-  // For each row, create an array of columns (one cell per column)
-  rows.forEach((row) => {
-    const columns = Array.from(row.children);
-    // For each column, gather ALL child nodes as content
-    const rowCells = columns.map((col) => {
-      // If there's only one direct child, use it; otherwise, group all child nodes
-      if (col.childNodes.length === 1 && col.firstChild.nodeType === 1) {
-        return col.firstChild;
-      } else {
-        // Create a fragment containing all child nodes
-        const frag = document.createDocumentFragment();
-        Array.from(col.childNodes).forEach((node) => {
-          frag.appendChild(node);
-        });
-        return frag;
-      }
-    });
-    // Each rowCells array becomes a row in the table
-    cells.push(rowCells);
+  // Find all row divs (each is a group of columns)
+  const rowDivs = Array.from(element.querySelectorAll(':scope > div'));
+  // Determine max number of columns in any row
+  let maxCols = 0;
+  const rows = rowDivs.map(rowDiv => {
+    const columnDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
+    if (columnDivs.length > maxCols) maxCols = columnDivs.length;
+    return columnDivs;
   });
-  const table = WebImporter.DOMUtils.createTable(cells, document);
-  element.replaceWith(table);
+  // Header row: must be single cell: ['Columns']
+  const headerRow = ['Columns'];
+  // Each row is a flat array of columns; push as table row
+  // Ensure each row has the same number of columns
+  const tableRows = rows.map(cols => {
+    // If number of columns is less than maxCols, fill with empty string
+    if (cols.length < maxCols) {
+      return [...cols, ...Array(maxCols - cols.length).fill('')];
+    }
+    return cols;
+  });
+  // Compose table cell array
+  const tableData = [headerRow, ...tableRows];
+  // Create the table block
+  const blockTable = WebImporter.DOMUtils.createTable(tableData, document);
+  // Replace old element
+  element.replaceWith(blockTable);
 }
