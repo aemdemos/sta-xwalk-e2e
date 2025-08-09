@@ -1,10 +1,8 @@
-/* Disable no-descending-specificity globally */
 /* stylelint-disable no-descending-specificity */
-
 .columns > div {
-  display: flex;
+  display: grid;
   flex-direction: column;
-  gap: 32px 40px;
+  gap: 56px 48px;
   align-items: start;
   width: 100%;
   grid-template-columns: 1fr 1fr;
@@ -16,6 +14,10 @@
 
 .columns > div > div {
   order: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 }
 
 .columns > div > .columns-img-col {
@@ -26,7 +28,7 @@
   display: block;
 }
 
-@media (min-width: 900px) {
+@media (width >= 900px) {
   .columns > div {
     align-items: center;
     flex-direction: unset;
@@ -46,7 +48,7 @@
   padding: 32px 0;
 }
 
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .columns > div {
     display: flex;
     flex-direction: column;
@@ -54,16 +56,14 @@
   }
 }
 
-/* -- LEFT COLUMN: group text/list/button and blue image tightly at the top -- */
 .columns > div > div:first-child {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 24px; /* Tighter gap to group text and image */
+  gap: 24px;
   justify-content: flex-start;
 }
 
-/* All elements in the left column (text, list, button, blue image) grouped */
 .columns > div > div:first-child p,
 .columns > div > div:first-child ul {
   margin-bottom: 0;
@@ -78,12 +78,11 @@
   border-radius: 0;
 }
 
-/* -- RIGHT COLUMN: gold image directly above preview content, grouped at top -- */
 .columns > div > div:last-child {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 24px; /* Tight group for image + preview content */
+  gap: 24px;
   justify-content: flex-start;
   min-width: 0;
 }
@@ -100,17 +99,17 @@
   display: block;
   margin: 0;
   border-radius: 0;
+  margin-bottom: 8px;
+  margin-top: 0;
 }
 
-/* Space only between preview text and button, not below image */
 .columns > div > div:last-child .button-container {
   margin-top: 8px;
   margin-bottom: 0;
 }
 
-/* --- Buttons --- */
 .columns .button {
-  background: #3F51F8;
+  background: #3F51B5;
   color: #fff;
   border: none;
   border-radius: 999px;
@@ -118,20 +117,19 @@
   padding: 8px 24px;
   min-width: 90px;
   font-weight: 500;
-  margin-bottom: 0;
-  margin-top: 0;
+  margin: 0;
   box-shadow: none;
+  font-style: normal;
 }
 
 .columns .button.secondary {
   background: #fff;
-  border: 2px solid #222;
-  color: #222;
-  font-style: italic;
+  border: 2px solid #000;
+  color: #000;
+  font-style: normal;
 }
 
-/* Responsive: make images fill available width on small screens */
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .columns > div > div:first-child,
   .columns > div > div:last-child {
     max-width: 100%;
@@ -147,3 +145,94 @@
     max-width: 100%;
   }
 }
+
+
+/* 2-column grid layout for desktop, 1-column for mobile */
+
+@media (width <= 900px) {
+  .columns > div {
+    grid-template-columns: 1fr;
+    gap: 32px 0;
+  }
+}
+
+/* Stack content vertically inside each column, minimal gap */
+
+/* Remove unnecessary margin on all children in the left column for tight stacking */
+.columns > div > div:first-child > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* List: almost no space after list above the button */
+.columns > div > div:first-child > ul {
+  margin-bottom: 4px;
+}
+
+/* Remove margin after button and its container */
+.columns > div > div:first-child .button-container {
+  margin-bottom: 0;
+}
+
+.columns > div > div:first-child .button {
+  margin-bottom: 0;
+}
+
+/* CRITICAL ALIGNMENT FIX: Nudge left image up to align with right image */
+@media (width >= 900px) {
+  .columns > div > div:first-child picture,
+  .columns > div > div:first-child img {
+    margin-top: -18px;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Right column: slightly tighter space below image */
+
+/* Tighter spacing below right preview text */
+.columns > div > div:last-child > p:not(.button-container) {
+  margin-bottom: 8px;
+}
+
+/* Button styles: specificity to override base, match screenshot */
+
+.columns .button.secondary:hover,
+.columns .button.secondary:focus {
+  background: #f3f3f3;
+  border-color: #3F51B5;
+  color: #3F51B5;
+}
+
+/* Typography: black text, consistent font */
+.columns,
+.columns * {
+  color: #000;
+  font-family: roboto, "roboto Fallback", roboto-fallback, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.columns ul {
+  padding-left: 20px;
+  margin: 0 0 4px;
+}
+
+.columns li {
+  margin-bottom: 4px;
+}
+
+/* Responsive: ensure no gap on stacked columns for mobile */
+@media (width <= 900px) {
+  .columns picture,
+  .columns img {
+    max-width: 100%;
+  }
+
+  .columns > div > div {
+    gap: 0;
+  }
+}
+
+/* Ensure grid columns always align to the top */
