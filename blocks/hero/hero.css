@@ -58,8 +58,6 @@
   overflow: hidden;
   box-sizing: border-box;
 }
-
-/* Text container: left side, narrower */
 .hero > div:last-child {
   order: 1;
   flex: 0 1 22%;
@@ -71,8 +69,6 @@
   height: 100%;
   z-index: 2;
 }
-
-/* Heading: left-aligned with padding */
 .hero h1 {
   color: #fff;
   font-size: 28px;
@@ -87,8 +83,6 @@
   box-sizing: border-box;
   z-index: 2;
 }
-
-/* Image container: right side, much wider */
 .hero > div:first-child {
   order: 2;
   flex: 1 1 78%;
@@ -98,12 +92,9 @@
   min-width: 0;
   height: 100%;
   z-index: 1;
-  /* Allow overflow for dramatic DNA overlap if needed */
   overflow: visible;
   position: relative;
 }
-
-/* Make picture and image fill the right side and overflow left if needed */
 .hero picture {
   display: flex;
   align-items: center;
@@ -113,17 +104,15 @@
 }
 
 .hero img {
-  width: 105%; /* Slightly overflows to the left */
+  width: 105%;
   height: 100%;
   object-fit: cover;
   display: block;
   position: relative;
   left: -5%;
-  min-width: 400px; /* Prevent excessive cropping for wide screens */
+  min-width: 400px;
   max-width: none;
 }
-
-/* Responsive stacking: text below image on mobile */
 @media (max-width: 700px) {
   .hero {
     flex-direction: column-reverse;
@@ -151,4 +140,143 @@
     min-width: 0;
     max-width: 95vw;
   }
+}
+
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100vw;
+  min-height: 190px;
+  background: #0f2941;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Stronger gradient blend, starts earlier and ends later for a softer, more immersive transition */
+.hero::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100%;
+  background: linear-gradient(90deg, #0f2941 28%, rgba(15,41,65,0.00) 68%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* DNA image is large, shifted left for drama, and fades earlier */
+.hero > div:first-child {
+  flex: 1 1 0;
+  order: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  height: 100%;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 0;
+}
+
+/* Ensure image fills and is shifted left for dramatic effect */
+.hero picture,
+.hero > div:first-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.hero img {
+  display: block;
+  width: 175vw;  /* Dramatically overflow right, bring DNA spiral closer to center */
+  min-width: 1000px; /* For ultra-wide displays */
+  height: 100%;
+  object-fit: cover;
+  object-position: 38% center; /* Shift image further left so spiral dominates */
+  max-width: none;
+  z-index: 0;
+  background: transparent;
+}
+
+/* Text block: align top, with comfortable left and top padding */
+.hero > div:last-child {
+  flex: 0 1 auto;
+  order: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+  height: 100%;
+  padding-left: 40px;
+  padding-top: 24px;
+  z-index: 2;
+  background: transparent;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 28px;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  text-align: left;
+  max-width: 80vw;
+  word-break: break-word;
+  z-index: 2;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 700px) {
+  .hero {
+    flex-direction: column;
+    height: auto;
+    min-height: 180px;
+    padding: 0;
+  }
+  .hero::before {
+    width: 100vw;
+    background: linear-gradient(180deg, #0f2941 65%, rgba(15,41,65,0.00) 100%);
+  }
+  .hero > div:first-child,
+  .hero > div:last-child {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .hero h1 {
+    padding: 24px 16px 0 16px;
+    font-size: 20px;
+    max-width: 95vw;
+    text-align: center;
+  }
+  .hero img {
+    width: 100vw;
+    min-width: 0;
+    max-width: 100vw;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+/* Ensure hero can span full page width */
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
 }
