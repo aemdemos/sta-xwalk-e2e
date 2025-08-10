@@ -9,7 +9,13 @@
 }
 
 .columns img {
-  width: 100%;
+  width: 95%;
+  max-width: 540px;
+  height: auto;
+  display: block;
+  border-radius: 0;
+  margin: 0;
+  box-shadow: none;
 }
 
 .columns > div > div {
@@ -109,24 +115,31 @@
 }
 
 .columns .button {
-  background: #3F51B5;
+  background: #3B4FE4;
   color: #fff;
   border: none;
   border-radius: 999px;
-  font-size: 16px;
+  font-size: 15px;
   padding: 8px 24px;
-  min-width: 90px;
+  min-width: 80px;
   font-weight: 500;
   margin: 0;
   box-shadow: none;
   font-style: normal;
+  line-height: 1.2;
 }
 
 .columns .button.secondary {
   background: #fff;
-  border: 2px solid #000;
+  border: 1px solid #000;
   color: #000;
   font-style: normal;
+  font-size: 15px;
+  border-radius: 999px;
+  font-weight: 500;
+  padding: 8px 24px;
+  min-width: 80px;
+  box-shadow: none;
 }
 
 @media (width <= 900px) {
@@ -146,9 +159,6 @@
   }
 }
 
-
-/* 2-column grid layout for desktop, 1-column for mobile */
-
 @media (width <= 900px) {
   .columns > div {
     grid-template-columns: 1fr;
@@ -156,20 +166,15 @@
   }
 }
 
-/* Stack content vertically inside each column, minimal gap */
-
-/* Remove unnecessary margin on all children in the left column for tight stacking */
 .columns > div > div:first-child > * {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* List: almost no space after list above the button */
 .columns > div > div:first-child > ul {
   margin-bottom: 4px;
 }
 
-/* Remove margin after button and its container */
 .columns > div > div:first-child .button-container {
   margin-bottom: 0;
 }
@@ -178,7 +183,6 @@
   margin-bottom: 0;
 }
 
-/* CRITICAL ALIGNMENT FIX: Nudge left image up to align with right image */
 @media (width >= 900px) {
   .columns > div > div:first-child picture,
   .columns > div > div:first-child img {
@@ -189,14 +193,9 @@
   }
 }
 
-/* Right column: slightly tighter space below image */
-
-/* Tighter spacing below right preview text */
 .columns > div > div:last-child > p:not(.button-container) {
   margin-bottom: 8px;
 }
-
-/* Button styles: specificity to override base, match screenshot */
 
 .columns .button.secondary:hover,
 .columns .button.secondary:focus {
@@ -205,7 +204,6 @@
   color: #3F51B5;
 }
 
-/* Typography: black text, consistent font */
 .columns,
 .columns * {
   color: #000;
@@ -215,15 +213,14 @@
 }
 
 .columns ul {
-  padding-left: 20px;
-  margin: 0 0 4px;
+  padding-left: 16px;
+  margin: 0 0 8px 16px;
 }
 
 .columns li {
   margin-bottom: 4px;
 }
 
-/* Responsive: ensure no gap on stacked columns for mobile */
 @media (width <= 900px) {
   .columns picture,
   .columns img {
@@ -235,4 +232,88 @@
   }
 }
 
-/* Ensure grid columns always align to the top */
+
+.columns > .block.columns-2-cols > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.columns > .block.columns-2-cols > div > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  /* Prevent flattening, required for grid children */
+}
+
+.columns > .block.columns-2-cols > div > div:first-child {
+  justify-content: space-between
+}
+
+.columns > .block.columns-2-cols > div > div:last-child {
+  justify-content: space-between
+}
+
+/* --- Checkerboard: align groups vertically in columns --- */
+
+/* --- Text group (top-left) --- */
+.columns > .block.columns-2-cols > div > div:first-child > div:first-child {
+  margin-bottom: 36px;
+
+  /* visually center block compared to right image */
+}
+
+.columns > .block.columns-2-cols > div > div:last-child > div:first-child {
+  margin-bottom: 36px;
+}
+
+/* --- Image scaling for visual balance --- */
+
+/* --- Preview (bottom-right) vertical alignment --- */
+.columns > .block.columns-2-cols > div > div:last-child > div:last-child {
+  justify-content: center;
+  margin-top: 50px;
+}
+
+/* --- Typography tweaks --- */
+.columns p,
+.columns ul,
+.columns li {
+  color: #000;
+  font-size: 15px;
+  font-family: inherit;
+  margin: 0 0 8px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* --- Button styles --- */
+
+.columns .button-container {
+  margin: 0;
+  padding: 0;
+}
+
+.columns em {
+  font-style: normal;
+}
+
+/* --- Responsive: stack columns vertically on small screens --- */
+@media (width <= 900px) {
+  .columns > .block.columns-2-cols > div {
+    grid-template-columns: 1fr;
+    gap: 32px 0;
+  }
+
+  .columns img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .columns > .block.columns-2-cols > div > div {
+    margin-bottom: 24px;
+  }
+}
