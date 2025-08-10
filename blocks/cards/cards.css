@@ -13,7 +13,7 @@
 }
 
 .cards .cards-card-body {
-  padding: 10px 16px 14px;
+  padding: 20px 20px 14px;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -21,6 +21,7 @@
   flex: 1 1 auto;
   min-height: 0;
   gap: 0;
+  align-items: flex-start;
 }
 
 .cards .cards-card-image {
@@ -30,10 +31,12 @@
   display: flex;
   line-height: 0;
   flex: 0 0 auto;
-  height: 148px;
-  background: #e0e0e0;
+  height: 175px;
+  background: #fafafa;
   align-items: center;
   justify-content: center;
+  border-radius: 0;
+  flex-shrink: 0;
 }
 
 .cards > ul > li img {
@@ -114,14 +117,14 @@
 }
 
 .cards .cards-card-body p:first-child strong {
-  color: #000;
+  color: #111;
   font-size: 19px;
   font-weight: 800;
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-family: inherit;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
+  line-height: 1.15;
+  letter-spacing: 0;
 }
 
 .cards .cards-card-body p {
@@ -133,11 +136,10 @@
 
 
 .cards {
-  background: #f5f5f5;
+  background: #fff;
   padding: 40px 0;
 }
 
-/* Center and contain the block */
 .cards > .cards-wrapper > .cards.block {
   max-width: 1140px;
   margin-left: auto;
@@ -148,11 +150,10 @@
   background: none;
 }
 
-/* Cards grid layout */
 .cards .cards.block > ul {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px 24px; /* 20px column, 24px row */
+  gap: 20px 24px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -170,7 +171,6 @@
   }
 }
 
-/* Individual card style */
 .cards .cards.block > ul > li {
   background: #fff;
   border: none;
@@ -186,33 +186,105 @@
   height: 100%;
 }
 
-/* Card image area */
-
 .cards .cards-card-image img,
 .cards .cards-card-image picture {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 0;
 }
-
-/* Card body/text area */
 
 .cards .cards-card-body p:not(:first-child) {
-  color: #333;
+  color: #222;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.3;
   margin: 0;
   font-family: inherit;
+  font-weight: 400;
 }
-
-/* Remove extra margin from ul > li to maintain grid spacing */
-
-/* Ensure card height balance and responsiveness */
 
 @media (width <= 900px) {
   .cards > .cards-wrapper > .cards.block {
     padding-left: 12px;
     padding-right: 12px;
   }
+}
+
+/* Center and constrain the card grid, add left/right gutters */
+.cards .cards-wrapper > .cards.block {
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+  box-sizing: border-box;
+  background: none;
+}
+
+/* Grid: 3 columns, tighter gap */
+.cards .cards-wrapper > .cards.block > ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  place-items: stretch stretch;
+}
+
+@media (width <= 1024px) {
+  .cards .cards-wrapper > .cards.block > ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .cards .cards-wrapper > .cards.block {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (width <= 600px) {
+  .cards .cards-wrapper > .cards.block > ul {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cards .cards-wrapper > .cards.block {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Card styling: consistent height, border, square corners, no shadow */
+.cards .cards-wrapper > .cards.block > ul > li {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 0;
+  margin: 0;
+  min-height: 340px;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Image section: slightly reduced height for balance */
+
+/* Card text: tighter vertical padding */
+
+/* Title: bold and tight to description */
+
+/* Description: slightly darker, tighter line-height */
+
+/* Remove extra default margins */
+.cards .cards-wrapper > .cards.block ul,
+.cards .cards-wrapper > .cards.block ul > li,
+.cards .cards-card-body {
+  margin: 0;
 }
