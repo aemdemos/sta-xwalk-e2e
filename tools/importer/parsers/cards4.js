@@ -1,25 +1,45 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Locate the cards list
-  const ul = element.querySelector('ul');
+  // Find the block containing the cards
+  let cardsBlock = element;
+  if (!cardsBlock.classList.contains('cards')) {
+    cardsBlock = element.querySelector('.cards');
+  }
+  if (!cardsBlock) return;
+
+  // Find the underlying <ul> list and all <li> cards
+  const ul = cardsBlock.querySelector('ul');
   if (!ul) return;
-  const lis = Array.from(ul.children).filter(li => li.tagName === 'LI');
+  const cardElements = Array.from(ul.children);
 
-  const rows = [['Cards']]; // Block header matches the example
+  // Create table header
+  const cells = [['Cards']];
 
-  lis.forEach(li => {
-    // Find the image/icon div (first child)
-    const imgDiv = li.querySelector('.cards-card-image');
-    // Find the text content/body div (second child)
-    const bodyDiv = li.querySelector('.cards-card-body');
-
-    // Fallback: if either element is missing, use empty string for that cell
-    rows.push([
-      imgDiv || '',
-      bodyDiv || ''
-    ]);
+  // For each card, create a row: [image, text]
+  cardElements.forEach(card => {
+    // Image cell
+    let imageCell = null;
+    const imageDiv = card.querySelector('.cards-card-image');
+    if (imageDiv) {
+      const picture = imageDiv.querySelector('picture');
+      if (picture) {
+        imageCell = picture;
+      } else if (imageDiv.firstElementChild) {
+        imageCell = imageDiv.firstElementChild;
+      } else {
+        imageCell = imageDiv;
+      }
+    }
+    // Text cell
+    let textCell = null;
+    const textDiv = card.querySelector('.cards-card-body');
+    if (textDiv) {
+      textCell = textDiv;
+    }
+    cells.push([imageCell, textCell]);
   });
 
-  const table = WebImporter.DOMUtils.createTable(rows, document);
+  // Create and replace table
+  const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }
