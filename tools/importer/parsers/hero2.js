@@ -1,99 +1,60 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Header row: block name
-  const headerRow = ['Hero'];
+  // 1. Get the main content container inside the hero block
+  const wrapper = element.querySelector('.hero-wrapper') || element;
+  const heroBlock = wrapper.querySelector('.hero.block') || wrapper;
+  let contentDiv = heroBlock.querySelector(':scope > div > div') || heroBlock.querySelector(':scope > div') || heroBlock;
 
-  // Image row: find the background image (img inside picture)
-  let heroImg = '';
-  const picture = element.querySelector('picture');
-  if (picture) {
-    const img = picture.querySelector('img');
-    if (img) {
-      heroImg = img;
-    }
-  }
-  const imageRow = [heroImg ? heroImg : ''];
-
-  // Text row: title (h1), subheading (h2/h3), call-to-action, and other content after image
-  const textContent = [];
-  // Find <h1>, <h2>, <h3> that are not in the image area
-  // Only include those after the image, or all in practice since this block is simple
-  const mainBlock = element.querySelector('.hero.block, .hero-block, .hero');
-  let mainContentParent = mainBlock ? mainBlock : element;
-  // After picture and image
-  // Get the container div with the content (after image)
-  // In provided HTML, after <picture> <img>, the following <h1> and <p> is the content
-  // But for resilience, grab all headings and paragraphs except <p> containing <picture>
-  // Look for direct descendants of first inner <div>
-  let contentDiv = null;
-  const innerDivs = mainContentParent.querySelectorAll('div');
-  if (innerDivs.length > 0) {
-    contentDiv = innerDivs[0];
+  // 2. Find the image (picture or img inside first <p>)
+  let imageEl = null;
+  // Try to find picture inside a paragraph
+  const pWithPicture = contentDiv.querySelector('p picture');
+  if (pWithPicture) {
+    imageEl = pWithPicture;
   } else {
-    contentDiv = mainContentParent;
+    // Look for img directly
+    imageEl = contentDiv.querySelector('img');
   }
 
-  // Find all children after image
-  let foundImage = false;
-  for (const child of contentDiv.children) {
-    // Skip the <p><picture>...</picture></p> for image
-    if (!foundImage && child.querySelector && child.querySelector('picture')) {
-      foundImage = true;
-      continue;
-    }
-    if (!foundImage) continue;
-    // Collect <h1>, <h2>, <h3>, <h4>, <p>, <a> (if present)
-    if (
-      child.tagName &&
-      (/^H[1-4]$/.test(child.tagName) || child.tagName === 'P' || child.tagName === 'A')
-    ) {
-      if (child.textContent.trim().length > 0) {
-        textContent.push(child);
-      }
-    }
-  }
-
-  // Edge case: if textContent is empty (image and all text are within same parent, as in provided HTML), search after <picture> in the parent
-  if (textContent.length === 0 && contentDiv.children.length > 0) {
-    let afterImage = false;
-    for (const child of contentDiv.children) {
-      if (child.querySelector && child.querySelector('picture')) {
-        afterImage = true;
+  // 3. Find the title (first h1 or h2 inside content)
+  const titleEl = contentDiv.querySelector('h1, h2');
+  // 4. Find subheading, paragraph(s), or CTA after the heading
+  let textEls = [];
+  if (titleEl) {
+    textEls.push(titleEl);
+    let next = titleEl.nextElementSibling;
+    while (next) {
+      // Don't include empty paragraphs
+      if (next.tagName === 'P' && !next.textContent.trim()) {
+        next = next.nextElementSibling;
         continue;
       }
-      if (!afterImage) continue;
-      if (
-        child.tagName &&
-        (/^H[1-4]$/.test(child.tagName) || child.tagName === 'P' || child.tagName === 'A')
-      ) {
-        if (child.textContent.trim().length > 0) {
-          textContent.push(child);
-        }
+      // Don't include the image again if it's in a <p>
+      if (next.querySelector && imageEl && next.contains(imageEl)) {
+        next = next.nextElementSibling;
+        continue;
       }
+      textEls.push(next);
+      next = next.nextElementSibling;
     }
   }
 
-  // Final fallback: if textContent is still empty, get all h1-h4, p, a under contentDiv, except paragraphs with picture/img
-  if (textContent.length === 0) {
-    const allContent = contentDiv.querySelectorAll('h1, h2, h3, h4, p, a');
-    allContent.forEach(el => {
-      if (
-        el.tagName === 'P' && el.querySelector('picture')
-      ) return;
-      if (el.textContent.trim().length > 0) textContent.push(el);
+  // Edge case: if there is no heading, try to gather all children that are not the image
+  if (textEls.length === 0) {
+    textEls = Array.from(contentDiv.children).filter(child => {
+      if (imageEl && (child === imageEl || child.contains(imageEl))) return false;
+      if (child.tagName === 'P' && !child.textContent.trim()) return false;
+      return true;
     });
   }
 
-  const textRow = [textContent.length ? textContent : ''];
-
-  // Compose the rows
-  const cells = [
-    headerRow,
-    imageRow,
-    textRow
+  // 5. Compose table rows: header, image, then text
+  const blockRows = [
+    ['Hero'],
+    [imageEl ? imageEl : ''],
+    [textEls.length === 1 ? textEls[0] : textEls]
   ];
-  // Create the table block
-  const block = WebImporter.DOMUtils.createTable(cells, document);
-  // Replace the original element
-  element.replaceWith(block);
+
+  const table = WebImporter.DOMUtils.createTable(blockRows, document);
+  element.replaceWith(table);
 }

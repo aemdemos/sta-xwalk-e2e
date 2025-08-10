@@ -1,29 +1,22 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find all row divs (each is a group of columns)
-  const rowDivs = Array.from(element.querySelectorAll(':scope > div'));
-  // Determine max number of columns in any row
-  let maxCols = 0;
-  const rows = rowDivs.map(rowDiv => {
-    const columnDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
-    if (columnDivs.length > maxCols) maxCols = columnDivs.length;
-    return columnDivs;
-  });
-  // Header row: must be single cell: ['Columns']
+  // Set up header row (must be a single cell)
   const headerRow = ['Columns'];
-  // Each row is a flat array of columns; push as table row
-  // Ensure each row has the same number of columns
-  const tableRows = rows.map(cols => {
-    // If number of columns is less than maxCols, fill with empty string
-    if (cols.length < maxCols) {
-      return [...cols, ...Array(maxCols - cols.length).fill('')];
-    }
-    return cols;
-  });
-  // Compose table cell array
-  const tableData = [headerRow, ...tableRows];
-  // Create the table block
-  const blockTable = WebImporter.DOMUtils.createTable(tableData, document);
-  // Replace old element
-  element.replaceWith(blockTable);
+
+  // Find all top-level column group rows (immediate children of .columns.block)
+  const rowDivs = Array.from(element.querySelectorAll(':scope > div'));
+  // Each rowDiv contains columns (its direct children)
+  // For each row, collect its direct children (columns)
+  const rows = rowDivs.map(rowDiv => Array.from(rowDiv.children));
+
+  // The final table should have:
+  // - The first row (header) is a single cell: ['Columns']
+  // - The second row is a single row with all column elements for all rows concatenated
+  //   (since the markdown shows one content row with two columns)
+  //   For multi-row columns blocks, you would flatten/merge columns into a single row after the header
+  const allColumns = rows.flat();
+  const cells = [headerRow, allColumns];
+
+  const table = WebImporter.DOMUtils.createTable(cells, document);
+  element.replaceWith(table);
 }
