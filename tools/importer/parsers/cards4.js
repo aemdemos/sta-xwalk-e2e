@@ -1,45 +1,47 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the block containing the cards
-  let cardsBlock = element;
-  if (!cardsBlock.classList.contains('cards')) {
-    cardsBlock = element.querySelector('.cards');
-  }
-  if (!cardsBlock) return;
-
-  // Find the underlying <ul> list and all <li> cards
-  const ul = cardsBlock.querySelector('ul');
+  // Find the <ul> inside the cards block
+  const ul = element.querySelector('ul');
   if (!ul) return;
-  const cardElements = Array.from(ul.children);
+  const cards = Array.from(ul.children); // <li> elements
 
-  // Create table header
-  const cells = [['Cards']];
+  // Prepare the rows for the table
+  const rows = [];
+  // The header row must be exactly 'Cards' as per requirements
+  rows.push(['Cards']);
 
-  // For each card, create a row: [image, text]
-  cardElements.forEach(card => {
-    // Image cell
-    let imageCell = null;
+  // Each card: image or icon in the first cell, rich text in the second
+  cards.forEach(card => {
+    // Find image: prefer <picture>, fallback to <img>
+    let imageEl = null;
     const imageDiv = card.querySelector('.cards-card-image');
     if (imageDiv) {
-      const picture = imageDiv.querySelector('picture');
-      if (picture) {
-        imageCell = picture;
-      } else if (imageDiv.firstElementChild) {
-        imageCell = imageDiv.firstElementChild;
+      const pic = imageDiv.querySelector('picture');
+      if (pic) {
+        imageEl = pic;
       } else {
-        imageCell = imageDiv;
+        const img = imageDiv.querySelector('img');
+        if (img) imageEl = img;
       }
     }
-    // Text cell
-    let textCell = null;
-    const textDiv = card.querySelector('.cards-card-body');
-    if (textDiv) {
-      textCell = textDiv;
+
+    // Find text content (card body)
+    let textEl = null;
+    const bodyDiv = card.querySelector('.cards-card-body');
+    if (bodyDiv) {
+      textEl = bodyDiv;
     }
-    cells.push([imageCell, textCell]);
+
+    // Only add rows where there is text (should always be, but for resilience)
+    if (imageEl || textEl) {
+      rows.push([
+        imageEl,
+        textEl
+      ]);
+    }
   });
 
-  // Create and replace table
-  const table = WebImporter.DOMUtils.createTable(cells, document);
+  // Create the cards block table
+  const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
