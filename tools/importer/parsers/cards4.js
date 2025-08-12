@@ -1,47 +1,39 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the <ul> inside the cards block
-  const ul = element.querySelector('ul');
+  // Find the direct .cards.block inside the element
+  const cardsBlock = element.querySelector('.cards.block');
+  if (!cardsBlock) return;
+
+  // The cards are inside a <ul>, each <li> is a card
+  const ul = cardsBlock.querySelector('ul');
   if (!ul) return;
-  const cards = Array.from(ul.children); // <li> elements
+  const cardItems = Array.from(ul.children);
 
-  // Prepare the rows for the table
-  const rows = [];
-  // The header row must be exactly 'Cards' as per requirements
-  rows.push(['Cards']);
+  // Prepare table rows: first row is the header
+  const rows = [['Cards']];
 
-  // Each card: image or icon in the first cell, rich text in the second
-  cards.forEach(card => {
-    // Find image: prefer <picture>, fallback to <img>
-    let imageEl = null;
-    const imageDiv = card.querySelector('.cards-card-image');
+  // For each card, extract the image and text content
+  cardItems.forEach(li => {
+    // Image cell: .cards-card-image (should contain a <picture> or <img>)
+    const imageDiv = li.querySelector('.cards-card-image');
+    let imageContent = null;
     if (imageDiv) {
-      const pic = imageDiv.querySelector('picture');
-      if (pic) {
-        imageEl = pic;
-      } else {
-        const img = imageDiv.querySelector('img');
-        if (img) imageEl = img;
-      }
+      // Reference the <picture> if present, otherwise the <img>
+      imageContent = imageDiv.querySelector('picture') || imageDiv.querySelector('img');
     }
 
-    // Find text content (card body)
-    let textEl = null;
-    const bodyDiv = card.querySelector('.cards-card-body');
-    if (bodyDiv) {
-      textEl = bodyDiv;
-    }
-
-    // Only add rows where there is text (should always be, but for resilience)
-    if (imageEl || textEl) {
-      rows.push([
-        imageEl,
-        textEl
-      ]);
+    // Text cell: .cards-card-body
+    const textDiv = li.querySelector('.cards-card-body');
+    // Reference the whole textDiv (contains heading, description, etc)
+    // Only add the row if at least image or text is present
+    if (imageContent || textDiv) {
+      rows.push([imageContent, textDiv]);
     }
   });
 
-  // Create the cards block table
-  const table = WebImporter.DOMUtils.createTable(rows, document);
-  element.replaceWith(table);
+  if (rows.length > 1) {
+    // Create the block table only if there is at least one card
+    const table = WebImporter.DOMUtils.createTable(rows, document);
+    element.replaceWith(table);
+  }
 }
