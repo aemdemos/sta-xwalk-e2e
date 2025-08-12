@@ -1,24 +1,20 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Header row: single cell with block name
+  // The block header row, must be a single cell array
   const headerRow = ['Columns'];
 
-  // Gather all columns (should be 4 for this HTML)
-  // The structure: two top-level rows, each containing two columns
-  // We need to flatten all direct child <div> of each row
-  const rows = Array.from(element.querySelectorAll(':scope > div'));
-  const columnDivs = [];
-  rows.forEach(row => {
-    columnDivs.push(...row.querySelectorAll(':scope > div'));
-  });
+  // Find the columns block (could be the element itself or its child)
+  let columnsBlock = element.querySelector('.columns.block');
+  if (!columnsBlock) columnsBlock = element;
 
-  // Defensive: only add non-empty columns
-  const contentRow = columnDivs.filter(col => col && col.textContent.trim() !== '' || col.querySelector('img,picture,a,ul'));
+  // Find immediate child divs of the columns block (these are the columns)
+  const columnDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
 
-  // Build the cells array: header + content row (each column is a separate cell)
+  // For each column, produce a single cell containing its direct children
+  const contentRow = columnDivs.map(col => Array.from(col.children));
+
+  // Compose the table: headerRow (single column), contentRow (N columns)
   const cells = [headerRow, contentRow];
-
-  // Create table and replace original element
   const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }
