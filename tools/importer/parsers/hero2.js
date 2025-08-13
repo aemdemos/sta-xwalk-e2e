@@ -1,51 +1,80 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the .hero.block inside wrappers
+  // Setup rows array for table
+  const rows = [];
+  // Header row
+  rows.push(['Hero']);
+
+  // Try to find the hero block
   const heroBlock = element.querySelector('.hero.block');
-  if (!heroBlock) return;
 
-  // Find the main hero content div
-  const contentWrapper = heroBlock.querySelector('div > div');
-  if (!contentWrapper) return;
+  let imageEl = null;
+  let headlineEl = null;
+  let descriptionEls = [];
 
-  // Find the first <picture> or <img> for the background image (optional)
-  let imageElem = null;
-  let imgOrPicture = null;
-  // Look for <picture> containing <img>
-  const picture = contentWrapper.querySelector('picture');
-  if (picture && picture.querySelector('img')) {
-    imgOrPicture = picture;
-    imageElem = picture;
-  } else {
-    // Or just an <img>
-    const img = contentWrapper.querySelector('img');
-    if (img) {
-      imgOrPicture = img;
-      imageElem = img;
+  // Extract content from the hero block if present
+  if (heroBlock) {
+    // The image is typically the first <picture> (or <img>) inside the block
+    imageEl = heroBlock.querySelector('picture') || heroBlock.querySelector('img');
+
+    // Find the content wrapper (usually the inner-most <div>)
+    // This will contain the heading and any other content
+    // We'll treat all direct children as content
+    let contentDiv = null;
+    // Try to find a nested div with p/h tags
+    const innerDivs = heroBlock.querySelectorAll('div > div');
+    if (innerDivs.length) {
+      // Use the first inner div
+      contentDiv = innerDivs[0];
+    } else {
+      // Fallback: use direct children of heroBlock
+      contentDiv = heroBlock;
     }
+    // Now, extract heading and other content
+    // Heading: the first h1-h6 inside contentDiv
+    headlineEl = contentDiv.querySelector('h1, h2, h3, h4, h5, h6');
+    // Description: all <p> or other nodes after the heading
+    // (keep only those that have text)
+    // We'll get all children and process after heading
+    let foundHeadline = false;
+    Array.from(contentDiv.children).forEach(child => {
+      if (!foundHeadline && child === headlineEl) {
+        foundHeadline = true;
+        return;
+      }
+      if (foundHeadline && (child.tagName === 'P' || child.tagName === 'DIV')) {
+        if (child.textContent.trim()) {
+          descriptionEls.push(child);
+        }
+      }
+    });
+  } else {
+    // Fallback: look for picture/img and heading in element
+    imageEl = element.querySelector('picture') || element.querySelector('img');
+    headlineEl = element.querySelector('h1, h2, h3, h4, h5, h6');
+    // Description: all paragraphs after heading
+    let foundHeadline = false;
+    Array.from(element.children).forEach(child => {
+      if (!foundHeadline && child === headlineEl) {
+        foundHeadline = true;
+        return;
+      }
+      if (foundHeadline && child.tagName === 'P' && child.textContent.trim()) {
+        descriptionEls.push(child);
+      }
+    });
   }
 
-  // For the text cell, collect everything except the image
-  // Reference existing child nodes, skipping the image/picture node
-  const textNodes = [];
-  Array.from(contentWrapper.childNodes).forEach(node => {
-    // If node is picture/img, skip
-    if (node === imgOrPicture) return;
-    // If empty <p>, skip
-    if (node.nodeType === 1 && node.tagName === 'P' && node.textContent.trim() === '') return;
-    // Only add non-empty text nodes and elements
-    if (node.nodeType === 1 || (node.nodeType === 3 && node.textContent.trim().length)) {
-      textNodes.push(node);
-    }
-  });
+  // Second row: Image (optional, can be null)
+  rows.push([imageEl ? imageEl : '']);
 
-  // Build table rows for block
-  const rows = [
-    ['Hero'],
-    [imageElem ? imageElem : ''],
-    [textNodes.length ? textNodes : ''],
-  ];
+  // Third row: Headline and description (optional)
+  const contentCell = [];
+  if (headlineEl) contentCell.push(headlineEl);
+  if (descriptionEls.length) contentCell.push(...descriptionEls);
+  rows.push([contentCell.length ? (contentCell.length === 1 ? contentCell[0] : contentCell) : '']);
 
+  // Create and replace with table
   const table = WebImporter.DOMUtils.createTable(rows, document);
   element.replaceWith(table);
 }
