@@ -1,39 +1,44 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the direct .cards.block inside the element
+  // Find the cards block from within the wrapper
   const cardsBlock = element.querySelector('.cards.block');
   if (!cardsBlock) return;
 
-  // The cards are inside a <ul>, each <li> is a card
-  const ul = cardsBlock.querySelector('ul');
-  if (!ul) return;
-  const cardItems = Array.from(ul.children);
+  // Get all card <li> items
+  const cardItems = Array.from(cardsBlock.querySelectorAll('ul > li'));
 
-  // Prepare table rows: first row is the header
-  const rows = [['Cards']];
+  // Table header as per spec
+  const tableRows = [['Cards']];
 
-  // For each card, extract the image and text content
-  cardItems.forEach(li => {
-    // Image cell: .cards-card-image (should contain a <picture> or <img>)
-    const imageDiv = li.querySelector('.cards-card-image');
-    let imageContent = null;
-    if (imageDiv) {
-      // Reference the <picture> if present, otherwise the <img>
-      imageContent = imageDiv.querySelector('picture') || imageDiv.querySelector('img');
+  // For each card, extract image and rich text body
+  cardItems.forEach(cardEl => {
+    // Image (always present)
+    const imgContainer = cardEl.querySelector('.cards-card-image');
+    let imageEl = null;
+    if (imgContainer) {
+      // Use <picture> if available, else <img>
+      const pic = imgContainer.querySelector('picture');
+      if (pic) {
+        imageEl = pic;
+      } else {
+        const img = imgContainer.querySelector('img');
+        if (img) imageEl = img;
+      }
     }
 
-    // Text cell: .cards-card-body
-    const textDiv = li.querySelector('.cards-card-body');
-    // Reference the whole textDiv (contains heading, description, etc)
-    // Only add the row if at least image or text is present
-    if (imageContent || textDiv) {
-      rows.push([imageContent, textDiv]);
+    // Body (always present)
+    const bodyContainer = cardEl.querySelector('.cards-card-body');
+    let bodyEl = null;
+    if (bodyContainer) {
+      bodyEl = bodyContainer;
     }
+
+    // Add row: image | body
+    tableRows.push([imageEl, bodyEl]);
   });
 
-  if (rows.length > 1) {
-    // Create the block table only if there is at least one card
-    const table = WebImporter.DOMUtils.createTable(rows, document);
-    element.replaceWith(table);
-  }
+  // Create block table
+  const blockTable = WebImporter.DOMUtils.createTable(tableRows, document);
+  // Replace the original wrapper
+  element.replaceWith(blockTable);
 }
