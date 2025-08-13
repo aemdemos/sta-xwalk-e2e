@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .cards > ul {
   list-style: none;
   margin: 0;
@@ -13,7 +14,7 @@
 }
 
 .cards .cards-card-body {
-  padding: 22px 16px 24px;
+  padding: 20px 20px 16px;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -24,13 +25,14 @@
   align-items: flex-start;
   background: #fff;
   box-sizing: border-box;
+  flex-grow: 1;
 }
 
 .cards .cards-card-image {
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  display: flex;
+  display: block;
   line-height: 0;
   flex: 0 0 auto;
   height: 140px;
@@ -121,9 +123,9 @@
 }
 
 .cards .cards-card-body p:first-child strong {
-  color: #121212;
-  font-size: 18px;
-  font-weight: 700;
+  color: #000;
+  font-size: 17px;
+  font-weight: bold;
   display: block;
   margin-bottom: 8px;
   font-family: inherit;
@@ -202,9 +204,9 @@
 }
 
 .cards .cards-card-body p:not(:first-child) {
-  color: #333;
-  font-size: 16px;
-  line-height: 1.5;
+  color: #222;
+  font-size: 15px;
+  line-height: 1.4;
   margin: 0;
   font-family: inherit;
   font-weight: 400;
@@ -309,22 +311,89 @@
   }
 }
 
-/* Card */
-
-/* Image container */
-
-/* Image itself */
-
-/* Body */
-
-/* Title */
-
-/* Body text */
-
-/* Remove all default margin/padding from ul and li in cards block */
 .cards .cards-wrapper > .cards.block > ul,
 .cards .cards-wrapper > .cards.block > ul > li {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Minimize left/right padding for a wider grid, matching original content area */
+.cards > .cards-wrapper,
+.cards > .cards-wrapper > .cards.block {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+/* Main grid: responsive, even tighter vertical gap as in the original */
+.cards > .cards-wrapper > .cards.block > ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px 24px; /* row gap: 12px, column gap: 24px */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+@media (width <= 1024px) {
+  .cards > .cards-wrapper > .cards.block > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 600px) {
+  .cards > .cards-wrapper > .cards.block > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Remove all borders from cards, ensure equal height in row */
+.cards > .cards-wrapper > .cards.block > ul > li {
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 0;
+  margin: 0;
+  min-height: 340px;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Card image: flush at top, full width, fixed height */
+
+.cards .cards-card-image picture,
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* Card body: balanced padding, left-aligned */
+
+/* Title: color, size, spacing as original */
+
+/* Description: color, size, line-height, no extra margin */
+
+/* Remove bullets and default spacing from any nested ul */
+.cards ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
