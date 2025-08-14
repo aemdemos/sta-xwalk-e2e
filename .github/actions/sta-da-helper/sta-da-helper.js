@@ -104,16 +104,20 @@ async function uploadToDa(contentPath, target, token, skipAssets) {
       '--site', site,
       '--da-folder', `${contentPath}/da`,
       '--asset-list', `${contentPath}/asset-list.json`,
-      '--token', token,
     ];
+
+    // Only pass token if available
+    if (token) {
+      args.push('--token', token);
+    }
 
     if (skipAssets) {
       args.push('--skip-assets');
     }
 
     core.info('Running command:');
-    const argsWithoutToken = args.filter((arg) => arg !== token);
-    core.info(`${JSON.stringify(argsWithoutToken, null, 2)}`);
+    const argsSafe = token ? args.filter((arg) => arg !== token) : args;
+    core.info(`${JSON.stringify(argsSafe, null, 2)}`);
 
     const child = spawn('npx', args, {
       stdio: ['inherit', 'inherit', 'pipe'], // Pipe stderr to capture errors
@@ -197,18 +201,23 @@ export async function run() {
     const skipAssets = core.getInput('skip_assets') || false;
 
     // DA IMS credentials for token exchange
-    const clientId = process.env.DA_CLIENT_ID;
-    const clientSecret = process.env.DA_CLIENT_SECRET;
-    const serviceToken = process.env.DA_SERVICE_TOKEN;
+    let clientId = process.env.DA_CLIENT_ID;
+    let clientSecret = process.env.DA_CLIENT_SECRET;
+    let serviceToken = process.env.DA_SERVICE_TOKEN;
 
     try {
-      // Validate required IMS credentials
-      if (!clientId || !clientSecret || !serviceToken) {
-        throw new Error('Missing required DA credentials: DA_CLIENT_ID, DA_CLIENT_SECRET, and DA_SERVICE_TOKEN must be set');
-      }
+      let accessToken = null;
+      // Conditionally exchange IMS credentials if all are present
+      if (clientId && clientSecret && serviceToken) {
+        // Trim whitespace from credentials
+        clientId = clientId.trim();
+        clientSecret = clientSecret.trim();
+        serviceToken = serviceToken.trim();
 
-      // Exchange IMS credentials for access token
-      const accessToken = await getAccessToken(clientId, clientSecret, serviceToken);
+        accessToken = await getAccessToken(clientId, clientSecret, serviceToken);
+      } else {
+        core.warning('DA credentials not set (DA_CLIENT_ID, DA_CLIENT_SECRET, DA_SERVICE_TOKEN). Proceeding without token.');
+      }
 
       checkForRequiredContent(contentPath);
       const files = await uploadToDa(contentPath, target, accessToken, skipAssets);
