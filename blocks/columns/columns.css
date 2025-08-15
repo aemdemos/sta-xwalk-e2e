@@ -48,10 +48,12 @@
 }
 
 .columns {
-  color: #222;
+  color: #212121;
   font-size: 16px;
-  font-family: inherit;
+  font-family: var(--body-font-family);
   padding: 40px 0;
+  background: #fff;
+  box-sizing: border-box;
 }
 
 @media (width <= 900px) {
@@ -115,24 +117,29 @@
 }
 
 .columns .button {
-  background: #3B4FE4;
+  background: #3C4FFF;
   color: #fff;
   border: none;
   border-radius: 999px;
   font-size: 15px;
   padding: 8px 24px;
   min-width: 80px;
-  font-weight: 500;
+  font-weight: 600;
   margin: 0;
   box-shadow: none;
   font-style: normal;
   line-height: 1.2;
+  font-family: var(--body-font-family);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
 }
 
 .columns .button.secondary {
-  background: #fff;
-  border: 1px solid #222;
-  color: #222;
+  background: transparent;
+  border: 1.5px solid #212121;
+  color: #212121;
   font-style: normal;
   font-size: 15px;
   border-radius: 999px;
@@ -200,8 +207,8 @@
 .columns .button.secondary:hover,
 .columns .button.secondary:focus {
   background: #f3f3f3;
-  border-color: #3F51B5;
-  color: #3F51B5;
+  border-color: #3C4FFF;
+  color: #3C4FFF;
 }
 
 .columns,
@@ -215,11 +222,12 @@
 .columns ul {
   padding-left: 18px;
   margin: 0 0 8px 16px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  margin-left: 18px;
 }
 
 .columns li {
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 @media (width <= 900px) {
@@ -237,7 +245,7 @@
 .columns > .block.columns-2-cols > div {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 36px 32px;
+  gap: 48px;
   align-items: start;
   grid-template-rows: auto auto;
   width: 100%;
@@ -262,19 +270,19 @@
 
 .columns > .block.columns-2-cols > div > div:first-child > div:first-child {
   margin-bottom: 36px;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
+  grid-column: 1;
+  grid-row: 1;
   justify-content: flex-start;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 14px;
+  gap: 20px;
 }
 
 .columns > .block.columns-2-cols > div > div:last-child > div:first-child {
   margin-bottom: 36px;
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
+  grid-column: 1;
+  grid-row: 2;
   align-self: start;
   justify-content: flex-start;
   display: flex;
@@ -285,22 +293,22 @@
 .columns > .block.columns-2-cols > div > div:last-child > div:last-child {
   justify-content: flex-start;
   margin-top: 0;
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
+  grid-column: 2;
+  grid-row: 2;
   align-self: start;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 20px;
 }
 
 .columns p,
 .columns ul,
 .columns li {
-  color: #222;
-  font-size: 15px;
-  font-family: inherit;
-  margin: 0 0 8px;
+  color: #212121;
+  font-size: 16px;
+  font-family: var(--body-font-family);
+  margin: 0 0 12px;
   line-height: 1.5;
   text-align: left;
 }
@@ -331,8 +339,8 @@
 }
 
 .columns > .block.columns-2-cols > div > div:first-child > div:last-child {
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
+  grid-column: 2;
+  grid-row: 1;
   align-self: start;
   justify-content: flex-start;
   display: flex;
@@ -388,21 +396,6 @@
   }
 }
 
-/* Outer grid: two columns, two rows, reduced horizontal gap for tighter look */
-
-/* Flatten inner column structure for grid placement */
-
-/* --- Place grid cells --- */
-
-/* Top-left: text/list/button, top-aligned */
-
-/* Top-right: image, top-aligned */
-
-/* Bottom-left: image, top-aligned */
-
-/* Bottom-right: text/button, top-aligned */
-
-/* --- Typography and List --- */
 .columns > .block.columns-2-cols p,
 .columns > .block.columns-2-cols ul,
 .columns > .block.columns-2-cols li {
@@ -424,7 +417,6 @@
   margin-bottom: 5px;
 }
 
-/* --- Buttons --- */
 .columns > .block.columns-2-cols .button {
   background: #3e49fa;
   color: #fff;
@@ -449,7 +441,6 @@
   background: #2731b2;
 }
 
-/* Preview button: outlined style */
 .columns > .block.columns-2-cols .button.secondary {
   background: #fff;
   color: #000;
@@ -476,7 +467,6 @@
   color: #3e49fa;
 }
 
-/* --- Images --- */
 .columns > .block.columns-2-cols img {
   width: 100%;
   max-width: 100%;
@@ -492,13 +482,11 @@
   margin: 0;
 }
 
-/* --- Remove extra gap in buttons container --- */
 .columns > .block.columns-2-cols .button-container {
   margin: 0;
   padding: 0;
 }
 
-/* --- Responsive: stack all cells vertically for small screens --- */
 @media (width <= 900px) {
   .columns > .block.columns-2-cols > div {
     display: flex;
@@ -519,3 +507,50 @@
     align-items: flex-start;
   }
 }
+
+/* --- Layout: 2x2 grid for checkerboard arrangement --- */
+
+/* --- Place each quadrant in correct grid cell --- */
+
+/* Top left: Text/list/LIVE button */
+
+/* Top right: Blue helix image */
+
+/* Bottom left: Yellow helix image */
+
+/* Bottom right: Preview text & button */
+
+/* --- Only direct children participate in grid --- */
+
+/* --- Responsive: Stack everything vertically on mobile --- */
+@media (width <= 900px) {
+  .columns > .block.columns-2-cols > div {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    height: auto;
+  }
+
+  .columns > .block.columns-2-cols > div > div > div {
+    width: 100%;
+    margin-bottom: 0;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: auto;
+  }
+
+  .columns > .block.columns-2-cols img,
+  .columns > .block.columns-2-cols picture {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* --- Image styling --- */
+
+/* --- Text styles --- */
+
+/* --- Button styles --- */
+
+/* --- Button container spacing --- */
