@@ -1,69 +1,53 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // 1. Create the header row
-  const headerRow = ['Hero'];
+  // Get the hero block
+  let heroBlock = element.querySelector('.hero.block');
+  if (!heroBlock) heroBlock = element;
 
-  // 2. Find the background image (the first <img> inside a <picture>)
-  let backgroundImg = '';
-  const firstPicture = element.querySelector('picture');
-  if (firstPicture) {
-    const img = firstPicture.querySelector('img');
-    if (img) backgroundImg = img;
-  }
+  // Get the inner content wrapper (usually a div > div)
+  let innerWrap = heroBlock.querySelector('div > div');
+  if (!innerWrap) innerWrap = heroBlock;
 
-  // 3. Gather text content (headings, subheading, cta, etc.)
-  // We'll get all h1, h2, h3, and p tags inside the same container as the image, after the image
-  // The actual content block is a div containing both the image (in a <p><picture></picture></p>) and the rest of the text
-  let textContentElements = [];
-  // Find the innermost wrapper containing both the image and the text
-  let innerWrapper = null;
-  // The structure from the example HTML:
-  // <div class="hero block"> -> <div> -> <div> -> ...
-  // We'll descend into single-child divs to find the innermost
-  let curr = element;
-  while (curr && curr.children.length === 1 && curr.firstElementChild.tagName === 'DIV') {
-    curr = curr.firstElementChild;
-  }
-  innerWrapper = curr;
+  // Find the <picture> element for the background image
+  const picture = innerWrap.querySelector('picture');
+  // Prepare image row
+  const imageRow = [picture ? picture : ''];
 
-  if (innerWrapper) {
-    // Exclude <p> containing only <picture>, include all other h1/h2/h3/p
-    Array.from(innerWrapper.children).forEach((child) => {
-      if (
-        child.tagName === 'H1' ||
-        child.tagName === 'H2' ||
-        child.tagName === 'H3'
-      ) {
-        textContentElements.push(child);
-      } else if (child.tagName === 'P') {
-        // Only include p tags that do not have a picture child
-        if (!child.querySelector('picture')) {
-          textContentElements.push(child);
-        }
+  // Gather rich content: headings and non-empty paragraphs AFTER the image
+  let richContent = [];
+  let foundPicture = false;
+  innerWrap.childNodes.forEach((node) => {
+    // Only process elements
+    if (node.nodeType === 1) {
+      // If this node is or contains the picture, set flag then skip
+      if (!foundPicture && (node === picture || (node.contains && node.contains(picture)))) {
+        foundPicture = true;
+        return;
       }
-    });
+      // After picture, collect headings and non-empty paragraphs
+      if (foundPicture) {
+        if (/^H[1-6]$/.test(node.tagName)) {
+          richContent.push(node);
+        } else if (node.tagName === 'P' && node.textContent.trim().length > 0) {
+          richContent.push(node);
+        }
+        // Could add CTA detection here if needed
+      }
+    }
+  });
+  // If nothing captured, fallback: try to find any heading
+  if (richContent.length === 0) {
+    const heading = innerWrap.querySelector('h1, h2, h3, h4, h5, h6');
+    if (heading) richContent.push(heading);
   }
 
-  // If nothing found in innerWrapper, fallback to all h1/h2/h3/p in element (excluding <p> with <picture>)
-  if (textContentElements.length === 0) {
-    element.querySelectorAll('h1,h2,h3,p').forEach((el) => {
-      if (el.tagName === 'P' && el.querySelector('picture')) return;
-      textContentElements.push(el);
-    });
-  }
-
-  // 4. Compose the rows
-  const imageRow = [backgroundImg ? backgroundImg : ''];
-  const textRow = [textContentElements.length > 0 ? textContentElements : ''];
-
-  // 5. Assemble the table
-  const cells = [
-    headerRow,
-    imageRow,
-    textRow,
+  const rows = [
+    ['Hero'], // header row, exactly as specified
+    imageRow, // image row
+    [richContent.length === 1 ? richContent[0] : richContent] // rich content row
   ];
 
-  // 6. Create the block table and replace the element
-  const block = WebImporter.DOMUtils.createTable(cells, document);
-  element.replaceWith(block);
+  const table = WebImporter.DOMUtils.createTable(rows, document);
+  // Replace original element with the block table
+  element.replaceWith(table);
 }

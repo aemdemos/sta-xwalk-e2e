@@ -1,29 +1,29 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the columns block (div with data-block-name="columns")
-  let block = element.querySelector('[data-block-name="columns"]');
-  if (!block) block = element;
+  // Prepare the header row exactly as needed
+  const headerRow = ['Columns'];
+  const tableRows = [headerRow];
 
-  // Each direct child of block is a 'row' group (for this HTML that means two rows, each with two columns)
-  const rowGroups = Array.from(block.children);
+  // The intended structure: one row after the header, containing all content columns side-by-side
+  // Find all immediate child divs (these are the 'rows' in the block, each containing several columns)
+  const rowGroups = Array.from(element.querySelectorAll(':scope > div'));
+  const columnCells = [];
 
-  // Prepare table rows
-  const rows = [];
-
-  // 1. Header row - always 'Columns' as per the instructions and example
-  rows.push(['Columns']);
-
-  // 2+. For each row, extract its direct children as columns
-  rowGroups.forEach(rowGroup => {
-    // Each column is a direct child div
-    const columns = Array.from(rowGroup.children);
-    // Reference the original divs to preserve all content/structure within
-    rows.push(columns);
+  rowGroups.forEach((rowGroup) => {
+    // Each rowGroup contains columns as its immediate children
+    const cols = Array.from(rowGroup.querySelectorAll(':scope > div'));
+    // For each column, add it directly to the array
+    cols.forEach((col) => {
+      columnCells.push(col);
+    });
   });
 
-  // Create table
-  const table = WebImporter.DOMUtils.createTable(rows, document);
+  // Only add the content row if there are any columns
+  if (columnCells.length) {
+    tableRows.push(columnCells);
+  }
 
-  // Replace original element with table
-  element.replaceWith(table);
+  // Create table and replace original element
+  const block = WebImporter.DOMUtils.createTable(tableRows, document);
+  element.replaceWith(block);
 }
