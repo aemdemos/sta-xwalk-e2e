@@ -1,53 +1,52 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Get the hero block
-  let heroBlock = element.querySelector('.hero.block');
-  if (!heroBlock) heroBlock = element;
+  // Find relevant content container
+  let heroContent = element.querySelector('.hero-wrapper');
+  if (!heroContent) heroContent = element.querySelector('.hero.block');
+  if (!heroContent) heroContent = element;
 
-  // Get the inner content wrapper (usually a div > div)
-  let innerWrap = heroBlock.querySelector('div > div');
-  if (!innerWrap) innerWrap = heroBlock;
-
-  // Find the <picture> element for the background image
-  const picture = innerWrap.querySelector('picture');
-  // Prepare image row
-  const imageRow = [picture ? picture : ''];
-
-  // Gather rich content: headings and non-empty paragraphs AFTER the image
-  let richContent = [];
-  let foundPicture = false;
-  innerWrap.childNodes.forEach((node) => {
-    // Only process elements
-    if (node.nodeType === 1) {
-      // If this node is or contains the picture, set flag then skip
-      if (!foundPicture && (node === picture || (node.contains && node.contains(picture)))) {
-        foundPicture = true;
-        return;
-      }
-      // After picture, collect headings and non-empty paragraphs
-      if (foundPicture) {
-        if (/^H[1-6]$/.test(node.tagName)) {
-          richContent.push(node);
-        } else if (node.tagName === 'P' && node.textContent.trim().length > 0) {
-          richContent.push(node);
-        }
-        // Could add CTA detection here if needed
-      }
+  // Drill down to inner content div if structure exists
+  let contentDiv = heroContent;
+  if (heroContent.classList.contains('hero-wrapper')) {
+    const block = heroContent.querySelector('.hero.block');
+    if (block && block.firstElementChild && block.firstElementChild.firstElementChild) {
+      contentDiv = block.firstElementChild.firstElementChild;
     }
-  });
-  // If nothing captured, fallback: try to find any heading
-  if (richContent.length === 0) {
-    const heading = innerWrap.querySelector('h1, h2, h3, h4, h5, h6');
-    if (heading) richContent.push(heading);
+  } else if (heroContent.classList.contains('hero')) {
+    if (heroContent.firstElementChild && heroContent.firstElementChild.firstElementChild) {
+      contentDiv = heroContent.firstElementChild.firstElementChild;
+    }
   }
 
-  const rows = [
-    ['Hero'], // header row, exactly as specified
-    imageRow, // image row
-    [richContent.length === 1 ? richContent[0] : richContent] // rich content row
-  ];
+  // Find image (background)
+  let backgroundImage = null;
+  let pictureParent = null;
+  const picture = contentDiv.querySelector('picture');
+  if (picture) {
+    // Use the immediate parent of picture (usually <p>) for correct referencing
+    if (picture.parentElement && picture.parentElement.tagName === 'P') {
+      backgroundImage = picture.parentElement;
+    } else {
+      backgroundImage = picture;
+    }
+  }
 
-  const table = WebImporter.DOMUtils.createTable(rows, document);
-  // Replace original element with the block table
+  // Gather non-image content
+  const contentNodes = [];
+  Array.from(contentDiv.children).forEach((child) => {
+    // Skip the background image node
+    if (backgroundImage && child === backgroundImage) return;
+    // Skip empty paragraphs
+    if (child.tagName === 'P' && child.textContent.trim() === '') return;
+    contentNodes.push(child);
+  });
+
+  // Construct table cells
+  const cells = [
+    ['Hero'],
+    [backgroundImage || ''],
+    [contentNodes.length === 1 ? contentNodes[0] : contentNodes],
+  ];
+  const table = WebImporter.DOMUtils.createTable(cells, document);
   element.replaceWith(table);
 }
