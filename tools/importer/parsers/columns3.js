@@ -1,29 +1,34 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Prepare the header row exactly as needed
+  // Table header row, per block name
   const headerRow = ['Columns'];
-  const tableRows = [headerRow];
 
-  // The intended structure: one row after the header, containing all content columns side-by-side
-  // Find all immediate child divs (these are the 'rows' in the block, each containing several columns)
-  const rowGroups = Array.from(element.querySelectorAll(':scope > div'));
-  const columnCells = [];
+  // Find the main columns block inside the wrapper
+  const columnsBlock = element.querySelector(':scope > .columns.block');
+  if (!columnsBlock) return;
 
-  rowGroups.forEach((rowGroup) => {
-    // Each rowGroup contains columns as its immediate children
-    const cols = Array.from(rowGroup.querySelectorAll(':scope > div'));
-    // For each column, add it directly to the array
-    cols.forEach((col) => {
-      columnCells.push(col);
-    });
+  // Find each row inside the columns block (each is a direct child div)
+  const rowDivs = Array.from(columnsBlock.querySelectorAll(':scope > div'));
+
+  const tableRows = [];
+
+  // For each row, extract its columns (each is a direct child div)
+  rowDivs.forEach(rowDiv => {
+    const colDivs = Array.from(rowDiv.querySelectorAll(':scope > div'));
+    // If no columns found, skip
+    if (colDivs.length === 0) return;
+    tableRows.push(colDivs);
   });
 
-  // Only add the content row if there are any columns
-  if (columnCells.length) {
-    tableRows.push(columnCells);
-  }
+  // Only add rows with at least one column
+  if (tableRows.length === 0) return;
 
-  // Create table and replace original element
-  const block = WebImporter.DOMUtils.createTable(tableRows, document);
-  element.replaceWith(block);
+  // Build the table data array: headerRow + tableRows
+  const tableData = [headerRow, ...tableRows];
+
+  // Create the block table
+  const blockTable = WebImporter.DOMUtils.createTable(tableData, document);
+
+  // Replace the element with the new block table
+  element.replaceWith(blockTable);
 }
