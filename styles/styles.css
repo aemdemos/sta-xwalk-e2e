@@ -45,17 +45,6 @@
 }
 
 @font-face {
-  font-family:"roboto-condensed Fallback";
-  font-style:normal;
-  font-weight:700;
-  src:local("Arial Bold");
-  ascent-override:128.41%;
-  descent-override:35.29%;
-  line-gap-override:0.00%;
-  size-adjust:82.32%;
-}
-
-@font-face {
   font-family:"roboto Fallback";
   font-style:normal;
   font-weight:500;
@@ -64,6 +53,17 @@
   descent-override:24.11%;
   line-gap-override:0.00%;
   size-adjust:101.26%;
+}
+
+@font-face {
+  font-family:"roboto-condensed Fallback";
+  font-style:normal;
+  font-weight:700;
+  src:local("Arial Bold");
+  ascent-override:128.41%;
+  descent-override:35.29%;
+  line-gap-override:0.00%;
+  size-adjust:82.32%;
 }
 
 @font-face {
