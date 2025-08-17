@@ -1,52 +1,71 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find relevant content container
-  let heroContent = element.querySelector('.hero-wrapper');
-  if (!heroContent) heroContent = element.querySelector('.hero.block');
-  if (!heroContent) heroContent = element;
+  // The block name header row
+  const headerRow = ['Hero'];
 
-  // Drill down to inner content div if structure exists
-  let contentDiv = heroContent;
-  if (heroContent.classList.contains('hero-wrapper')) {
-    const block = heroContent.querySelector('.hero.block');
-    if (block && block.firstElementChild && block.firstElementChild.firstElementChild) {
-      contentDiv = block.firstElementChild.firstElementChild;
-    }
-  } else if (heroContent.classList.contains('hero')) {
-    if (heroContent.firstElementChild && heroContent.firstElementChild.firstElementChild) {
-      contentDiv = heroContent.firstElementChild.firstElementChild;
-    }
+  // Drill to the main hero content: find the innermost div with the actual content
+  let heroContent = element;
+  while (
+    heroContent &&
+    heroContent.children.length === 1 &&
+    heroContent.firstElementChild.tagName === 'DIV'
+  ) {
+    heroContent = heroContent.firstElementChild;
   }
 
-  // Find image (background)
-  let backgroundImage = null;
-  let pictureParent = null;
-  const picture = contentDiv.querySelector('picture');
-  if (picture) {
-    // Use the immediate parent of picture (usually <p>) for correct referencing
-    if (picture.parentElement && picture.parentElement.tagName === 'P') {
-      backgroundImage = picture.parentElement;
-    } else {
-      backgroundImage = picture;
-    }
+  // Find the image (prefer <picture> containing <img>, else <img>)
+  let imageCell = null;
+  const imgEl = heroContent.querySelector('img');
+  if (imgEl) {
+    const pictureEl = imgEl.closest('picture');
+    imageCell = pictureEl || imgEl;
   }
 
-  // Gather non-image content
-  const contentNodes = [];
-  Array.from(contentDiv.children).forEach((child) => {
-    // Skip the background image node
-    if (backgroundImage && child === backgroundImage) return;
-    // Skip empty paragraphs
-    if (child.tagName === 'P' && child.textContent.trim() === '') return;
-    contentNodes.push(child);
+  // The third row must contain ALL the text content except the picture:
+  // - Heading (h1-h6), subheading (h2-h6), rich text (p, a, etc.)
+
+  // Gather heading (if any)
+  const headings = Array.from(heroContent.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+  // Gather all paragraphs that are not empty and do NOT contain the image (to avoid duplicate)
+  const paragraphs = Array.from(heroContent.querySelectorAll('p')).filter(p => {
+    // skip if empty or only whitespace
+    if (!p.textContent.trim()) return false;
+    // skip if it contains the imageCell (already in image row)
+    if (imageCell && p.contains(imageCell)) return false;
+    return true;
   });
 
-  // Construct table cells
-  const cells = [
-    ['Hero'],
-    [backgroundImage || ''],
-    [contentNodes.length === 1 ? contentNodes[0] : contentNodes],
+  // Build the third row content array, maintain document order
+  // Get all direct children of the content div, and include each relevant heading or paragraph in order
+  const textCellContent = [];
+  Array.from(heroContent.children).forEach(child => {
+    if (/^h[1-6]$/i.test(child.tagName)) {
+      textCellContent.push(child);
+    } else if (child.tagName === 'P' && child.textContent.trim()) {
+      // Exclude <p> containing the image
+      if (!(imageCell && child.contains(imageCell))) {
+        textCellContent.push(child);
+      }
+    } else if (child.tagName !== 'DIV' && child.textContent.trim()) {
+      // Include non-div, non-heading, non-empty elements (edge case for future variants)
+      textCellContent.push(child);
+    }
+  });
+  // If textCellContent is empty, but headings or paragraphs exist (e.g., if they're nested deeper), add them
+  if (textCellContent.length === 0) {
+    textCellContent.push(...headings, ...paragraphs);
+  }
+
+  // Ensure at least an empty cell for the text row (never undefined)
+  const textRow = textCellContent.length > 0 ? [textCellContent.length === 1 ? textCellContent[0] : textCellContent] : [''];
+
+  // Compose the rows for the table: header, image, text
+  const rows = [
+    headerRow,
+    [imageCell],
+    textRow
   ];
-  const table = WebImporter.DOMUtils.createTable(cells, document);
-  element.replaceWith(table);
+
+  const block = WebImporter.DOMUtils.createTable(rows, document);
+  element.replaceWith(block);
 }
