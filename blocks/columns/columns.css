@@ -1,6 +1,9 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: 0;
+  margin-bottom: 6px;
 }
 
 .columns img {
@@ -29,5 +32,134 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns {
+  background: #fff;
+  padding: 40px 0 0;
+}
+
+/* Each row is a flex row on desktop, stack on mobile */
+
+@media (width >= 900px) {
+  .columns > div {
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 10px; /* Tighter column gap */
+    margin-bottom: 5px;
+  }
+}
+
+/* Ensure columns are equal width on desktop, no padding/margin */
+@media (width >= 900px) {
+  .columns > div > div {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* Images: fill their columns with almost no extra white space */
+.columns .columns-img-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  padding: 0;
+}
+
+.columns .columns-img-col picture,
+.columns .columns-img-col img {
+  width: 100%;
+  max-width: none; /* Remove max-width so image fills column */
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+/* Vertically center the right column of second row relative to the image */
+@media (width >= 900px) {
+  .columns > div:nth-child(2) {
+    align-items: center;
+    min-height: 0;
+    height: 420px; /* Approximate image height for best centering */
+  }
+
+  .columns > div:nth-child(2) > div:not(.columns-img-col) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    min-height: 0;
+    padding-left: 0;
+    margin-left: 0;
+  }
+}
+
+/* Text columns: left aligned, no padding */
+.columns > div > div:not(.columns-img-col) {
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+
+/* Tighter spacing for lists and paragraphs */
+.columns ul {
+  margin-top: 0.3em;
+  margin-bottom: 1em;
+  padding-left: 1em;
+}
+
+.columns p,
+.columns li {
+  margin: 0 0 0.5em;
+  font-size: 1rem;
+}
+
+/* Button container: minimal top margin for tight grouping */
+.columns .button-container {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+/* Buttons: ensure compact, visually balanced */
+.columns .button,
+.columns .button.secondary {
+  min-width: 120px;
+  font-size: 1rem;
+  padding: 0.7em 2em;
+  border-radius: 2em;
+}
+
+.columns .button.secondary {
+  border-color: #131313;
+  color: #131313;
+  background: #fff;
+}
+
+/* Responsive: stack columns on mobile and remove inner paddings */
+@media (width <= 899px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .columns > div > div,
+  .columns > div > .columns-img-col {
+    padding: 0 !important;
+    max-width: 100%;
+  }
+
+  .columns .columns-img-col picture,
+  .columns .columns-img-col img {
+    max-width: 100%;
   }
 }
