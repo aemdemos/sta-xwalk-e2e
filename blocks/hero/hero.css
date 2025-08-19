@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -6,7 +7,15 @@
 .hero {
   position: relative;
   padding: 40px 24px;
-  min-height: 300px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  padding-left: 48px;
+  padding-right: 0;
+  background: #0f2b46;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -28,10 +37,16 @@
 
 .hero picture {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   inset: 0;
   object-fit: cover;
   box-sizing: border-box;
+  display: block;
+  width: 100vw;
+  height: 100%;
+  max-width: none;
+  min-width: 0;
+  pointer-events: none;
 }
 
 .hero img {
@@ -44,4 +59,156 @@
   .hero {
     padding: 40px 32px;
   }
+}
+
+/* Layer the image as a faux background, not as a column */
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+
+  /* Remove column effect */
+  flex: none;
+}
+
+.hero > div:first-child > div {
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hero picture img {
+  display: block;
+  width: 100vw;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  right: 0;
+  max-width: none;
+  min-width: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  /* Blend/fade left edge for original-style softness */
+  mask-image: linear-gradient(
+    to left,
+    transparent 0%,
+    rgb(0 0 0 / 18%) 8%,
+    black 20%,
+    black 100%
+  );
+  mask-image: linear-gradient(
+    to left,
+    transparent 0%,
+    rgb(0 0 0 / 18%) 8%,
+    black 20%,
+    black 100%
+  );
+}
+
+/* Keep text on top of the image, not in a column */
+.hero > div:last-child {
+  position: relative;
+  z-index: 1;
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  max-width: 70vw;
+  padding-right: 4vw;
+}
+
+.hero > div:last-child > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-family: var(--heading-font-family);
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.2;
+  text-align: left;
+  letter-spacing: 0.01em;
+  max-width: none;
+  padding: 0;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 22%);
+}
+
+/* Responsive: stack vertically on small screens, image fades out sooner */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px 8px 8px;
+    min-height: 0;
+  }
+
+  .hero > div,
+  .hero > div:first-child,
+  .hero > div:last-child {
+    max-width: 100%;
+    flex: 1 1 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important;
+  }
+
+  .hero > div:last-child {
+    margin-bottom: 12px;
+    max-width: 100%;
+    padding-right: 0;
+  }
+
+  .hero h1 {
+    font-size: 1.3rem;
+    text-align: center;
+    padding: 0 4vw;
+  }
+
+  .hero picture,
+  .hero picture img {
+    width: 100vw;
+    min-width: 0;
+    min-height: 120px;
+    max-width: none;
+    max-height: 200px;
+    margin: 0 auto;
+  }
+
+  .hero picture img {
+    mask-image: linear-gradient(
+      to left,
+      transparent 0%,
+      rgb(0 0 0 / 24%) 15%,
+      black 35%,
+      black 100%
+    );
+    mask-image: linear-gradient(
+      to left,
+      transparent 0%,
+      rgb(0 0 0 / 24%) 15%,
+      black 35%,
+      black 100%
+    );
+  }
+}
+
+/* Edge-to-edge hero */
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
 }
