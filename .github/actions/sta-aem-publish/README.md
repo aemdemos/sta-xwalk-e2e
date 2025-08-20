@@ -20,56 +20,24 @@ This GitHub Action replicates content to Adobe Experience Manager (AEM) using th
   with:
     access_token: ${{ steps.get-token.outputs.access_token }}
     aem_url: 'https://author-p12345-e67890.adobeaemcloud.com'
-    content_paths: '/content/dam/my-assets,/content/my-page'
-    replicate_type: 'activate'
+    page_paths: '/content/dam/my-assets,/content/my-page'
     is_preview: 'false'
 ```
 
 ### Inputs
 
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `access_token` | JWT access token for AEM authentication | Yes | - |
-| `aem_url` | The AEM instance URL (e.g., https://author-p12345-e67890.adobeaemcloud.com) | Yes | - |
-| `content_paths` | Comma-separated list of content paths to replicate | Yes | - |
-| `replicate_type` | Type of replication operation (activate, deactivate, delete) | No | `activate` |
-| `is_preview` | Whether to replicate to preview (true) or publish (false) | No | `false` |
+| Input | Description                                                                   | Required | Default |
+|-------|-------------------------------------------------------------------------------|----------|---------|
+| `access_token` | JWT access token for AEM authentication                                       | Yes | - |
+| `aem_url` | The AEM instance URL (e.g., https://author-p12345-e6e12345.adobeaemcloud.com) | Yes | - |
+| `page_paths` | Comma-separated list of page paths to replicate                               | Yes | - |
+| `is_preview` | Whether to replicate to preview (true) or publish (false)                     | No | `false` |
 
 ### Outputs
 
 | Output | Description |
 |--------|-------------|
 | `error_message` | Error message if replication failed |
-
-## Examples
-
-### Replicate to Publish (Live)
-```yaml
-content_paths: '/content/dam/my-assets,/content/my-page'
-replicate_type: 'activate'
-is_preview: 'false'
-```
-
-### Replicate to Preview
-```yaml
-content_paths: '/content/dam/my-assets,/content/my-page'
-replicate_type: 'activate'
-is_preview: 'true'
-```
-
-### Deactivate from Publish
-```yaml
-content_paths: '/content/my-page'
-replicate_type: 'deactivate'
-is_preview: 'false'
-```
-
-### Delete from Preview
-```yaml
-content_paths: '/content/my-page'
-replicate_type: 'delete'
-is_preview: 'true'
-```
 
 ## API Details
 
