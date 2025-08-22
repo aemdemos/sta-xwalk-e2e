@@ -1,27 +1,120 @@
+/* stylelint-disable no-descending-specificity */
 .cards > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
+  gap: 16px;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  border: none;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgb(60 60 60 / 4%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 260px;
+  height: 100%;
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: 0;
+  padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  justify-content: flex-start;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background: #eee;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  height: 100%;
+  display: block;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+
+.cards {
+  background: #fff;
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+
+  /* Ensure inner list fills width */
+  width: 100%;
+}
+
+/* Responsive: 2 columns on medium screens, 1 on small */
+@media (width <= 1100px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (width <= 700px) {
+  .cards > ul {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 100%;
+  }
+}
+
+/* Card appearance */
+
+/* Card image styling */
+
+/* Image: fill container and round top corners */
+
+/* Card body and text spacing */
+
+/* Title styling */
+.cards .cards-card-body p:first-child strong {
+  font-size: 17px;
+  color: #191919;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 2px;
+  display: block;
+}
+
+/* Description text styling */
+.cards .cards-card-body p:not(:first-child) {
+  font-size: 15px;
+  color: #464646;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Remove extra vertical space from all paragraphs in card body */
+.cards .cards-card-body p {
+  margin-top: 0;
+  margin-bottom: 0;
 }
