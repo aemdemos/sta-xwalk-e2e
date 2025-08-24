@@ -5,8 +5,14 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 190px;
+  background: #0a2239;
+  height: 190px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -43,5 +49,107 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* DNA image container: full width for maximal blending and overlap */
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Make sure the image fills the container, is cropped right, and bleeds left */
+.hero > div:first-child > div > picture,
+.hero > div:first-child > div > picture > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: right center;
+}
+
+/* Gradient overlay: blend the DNA image into solid blue background under text */
+.hero::after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 56%; /* Adjusted to reach just under/left of the text */
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to right, #0a2239 85%, rgb(10 34 57 / 0%) 100%);
+  display: block;
+  content: "";
+}
+
+/* Text block: highest z-index, full flex and padding */
+.hero > div:last-child {
+  position: relative;
+  z-index: 3;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 28px;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  margin: 0;
+  padding-left: 40px;
+  line-height: 1.2;
+}
+
+/* Responsive: stack and soften blend for mobile */
+@media (width <= 700px) {
+  .hero {
+    flex-direction: column;
+    height: auto;
+    min-height: unset;
+  }
+
+  .hero > div:first-child {
+    position: static;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .hero::after {
+    display: none;
+  }
+
+  .hero > div:last-child {
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero h1 {
+    padding-left: 0;
+    padding-top: 16px;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .hero > div:first-child > div > picture,
+  .hero > div:first-child > div > picture > img {
+    width: 100%;
+    height: auto;
+    object-position: center;
   }
 }
