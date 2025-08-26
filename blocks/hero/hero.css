@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,8 +6,15 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 180px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+  background: linear-gradient(90deg, #102744 45%, transparent 100%);
+  overflow: hidden;
 }
 
 .hero h1,
@@ -43,5 +51,110 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Remove margin above the hero for full-bleed layout */
+main > .hero-wrapper,
+main > div.hero-wrapper,
+.section > .hero-wrapper {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Hero block styles */
+
+/* Side-by-side layout for hero's direct children */
+.hero > div {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: stretch;
+  min-width: 0;
+  height: 100%;
+}
+
+/* DNA image container on right */
+.hero > div:first-child {
+  order: 2;
+  padding: 0;
+}
+
+.hero > div:first-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.hero picture,
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Text container on left */
+.hero > div:last-child {
+  order: 1;
+  padding-left: 48px;
+  padding-right: 32px;
+}
+
+.hero > div:last-child > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Headline styling */
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  text-align: left;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 35%);
+  max-width: 90%;
+  overflow-wrap: break-word;
+}
+
+/* Responsive stacking for mobile */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+  }
+
+  .hero > div {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    padding-left: 0;
+    padding-right: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero > div:last-child {
+    padding: 16px 0 0;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+    text-align: center;
+    max-width: 100%;
+    padding: 0 16px;
   }
 }
