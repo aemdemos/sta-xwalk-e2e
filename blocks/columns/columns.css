@@ -31,3 +31,108 @@
     order: unset;
   }
 }
+
+
+.columns {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+/* Each column stacks its children vertically */
+.columns > div {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Images fill their column width and don't stretch beyond */
+.columns .columns-img-col {
+  width: 100%;
+  margin: 0;
+}
+.columns .columns-img-col img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: cover;
+}
+
+/* Button container spacing and alignment */
+.columns .button-container {
+  margin-top: 10px;
+  margin-bottom: 0;
+  display: flex; /* ensure container doesn't collapse */
+  justify-content: flex-start;
+}
+
+/* Primary button styles */
+.columns .button {
+  background: #3E5AF7;
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s;
+}
+
+/* Secondary button styles */
+.columns .button.secondary {
+  background: none;
+  color: #222;
+  border: 2px solid #222;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: normal;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.15s;
+  margin-top: 8px;
+}
+
+/* Typography and spacing */
+.columns p,
+.columns ul,
+.columns li {
+  color: #222;
+  text-align: left;
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-family: var(--body-font-family);
+}
+
+.columns ul {
+  padding-left: 26px;
+  margin-bottom: 16px;
+}
+
+/* Ensure block stays at desired max-width if wrapper is used */
+.columns-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+/* Prevent image from shrinking on small columns */
+.columns > div > .columns-img-col {
+  flex-shrink: 0;
+}
