@@ -31,3 +31,106 @@
     order: unset;
   }
 }
+
+
+.columns {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Stack the two rows (each is a direct child of .block.columns-2-cols) */
+.columns > .block.columns-2-cols {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  width: 100%;
+}
+
+/* Each row: two columns, side by side */
+.columns > .block.columns-2-cols > div {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 56px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Each column: force exactly half width, never let flexbox stretch them */
+.columns > .block.columns-2-cols > div > div,
+.columns > .block.columns-2-cols > div > .columns-img-col {
+  flex: 0 0 50%;
+  width: 50%;
+  min-width: 0;
+  max-width: 50%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* Center images horizontally in their column */
+.columns > .block.columns-2-cols > div > .columns-img-col {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Image sizing: fit container, never overflow, always centered horizontally */
+.columns > .block.columns-2-cols > div > .columns-img-col picture,
+.columns > .block.columns-2-cols > div > .columns-img-col img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+/* Button spacing (optional, for visual comfort) */
+.columns .button {
+  margin-top: 32px;
+  margin-bottom: 0;
+}
+
+/* "Preview" button style tweak for width balance */
+.columns .button.secondary {
+  background-color: unset;
+  border: 2px solid var(--text-color);
+  color: var(--text-color);
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Avoid extra margin after the last row */
+.columns > .block.columns-2-cols > div:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive: stack columns vertically under each row */
+@media (width <= 900px) {
+  .columns {
+    max-width: 100vw;
+    padding: 0 16px;
+  }
+
+  .columns > .block.columns-2-cols {
+    gap: 32px;
+  }
+
+  .columns > .block.columns-2-cols > div {
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+  }
+
+  .columns > .block.columns-2-cols > div > div,
+  .columns > .block.columns-2-cols > div > .columns-img-col {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    align-items: stretch;
+  }
+}
