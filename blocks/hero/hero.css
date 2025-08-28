@@ -45,3 +45,122 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 180px;
+  width: 100%;
+  background: radial-gradient(circle at 60% 50%, #11355c 70%, #09213a 100%);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+/* Text column (left) - now takes ~60% for better balance */
+.hero > div:last-child {
+  flex: 0 1 60%;
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-left: 32px;
+  padding-top: 32px;
+  padding-bottom: 0;
+  min-width: 0;
+  z-index: 2;
+}
+
+/* Ensure inner div doesn't restrict layout */
+.hero > div:last-child > div {
+  width: 100%;
+}
+
+/* Heading style */
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.18;
+  letter-spacing: 0.01em;
+  text-align: left;
+  text-shadow: 0 2px 8px #09213a33;
+  max-width: 100%;
+}
+
+/* Image column (right) - now takes ~40% for better match */
+.hero > div:first-child {
+  flex: 0 1 40%;
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 0;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure inner div fills available space for alignment */
+.hero > div:first-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+/* Picture & Image styling */
+.hero picture, .hero img {
+  display: block;
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0;
+  box-shadow: 0 0 32px 0 rgba(71, 166, 255, 0.3);
+  border-radius: 0;
+  /* Optional: fade the left edge for smoother blend, browser support permitting */
+  /* mask-image: linear-gradient(to left, transparent 0px, #fff 40px, #fff 100%); */
+}
+
+/* Responsive for mobile/tablet: stack and size down image */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 120px;
+  }
+  .hero > div,
+  .hero > div:first-child,
+  .hero > div:last-child {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 18px 16px 0 16px;
+    min-width: 0;
+    order: unset;
+  }
+  .hero > div:first-child > div {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+  }
+  .hero picture,
+  .hero img {
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .hero h1 {
+    font-size: 1.2rem;
+    padding: 0;
+  }
+}
