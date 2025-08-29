@@ -1,14 +1,25 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 48px;
 }
 
 .columns img {
   width: 100%;
+  display: block;
+  max-width: 520px;
+  height: auto;
+  border-radius: 16px;
 }
 
 .columns > div > div {
   order: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  flex: 1 1 0;
 }
 
 .columns > div > .columns-img-col {
@@ -29,5 +40,33 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+.columns .button-container {
+  margin: 0;
+}
+
+.columns .button.secondary {
+  background: transparent;
+  color: var(--text-color);
+  border: 2px solid var(--text-color);
+  border-radius: 1.8em;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 0.55em 1.4em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  min-width: 120px;
+}
+
+@media (width <= 900px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .columns > div > div {
+    gap: 24px;
   }
 }
