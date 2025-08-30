@@ -1,6 +1,9 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .columns img {
@@ -9,6 +12,10 @@
 
 .columns > div > div {
   order: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .columns > div > .columns-img-col {
@@ -29,5 +36,121 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+/* Outer flex row for columns, tight gap for compact layout */
+
+/* Responsive: stack columns on mobile */
+@media (width <= 899px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* Each column stacks its items vertically, tight gap */
+
+/* Images: compact size and equal width in both columns */
+.columns picture img {
+  width: 245px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+}
+
+/* Push right column down to align yellow image with blue image in left col */
+@media (width >= 900px) {
+  .columns > div > div:last-child {
+    margin-top: 146px; /* Increase or decrease to match the left image top */
+  }
+}
+
+/* Left column: reduce space above blue image */
+.columns > div > div:first-child > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+}
+
+/* List: very tight vertical spacing */
+.columns ul {
+  margin: 0 0 1px 18px;
+  padding: 0;
+  font-size: 16px;
+}
+
+.columns li {
+  margin: 0;
+}
+
+/* Button area: tight spacing and left-align */
+.columns .button-container {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  display: block;
+}
+
+/* Button: compact, left-aligned, override if needed */
+.columns .button,
+.columns a.button {
+  margin: 0;
+  min-width: 96px;
+  text-align: left;
+  padding: 8px 18px;
+  font-size: 16px;
+  font-family: inherit;
+  border-radius: 20px;
+  background-color: #4361ee;
+  color: #fff;
+  border: none;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* Secondary button styling */
+.columns .button.secondary,
+.columns a.button.secondary {
+  background: #fff;
+  color: #222;
+  border: 2px solid #222;
+}
+
+/* Paragraphs: minimum margin and smaller font for preview area */
+.columns p {
+  margin: 0 0 2px;
+  font-size: 13px;
+  color: #222;
+}
+
+/* Preview area: text and button extra-tight */
+.columns > div > div:last-child > p {
+  margin-top: 6px;
+  margin-bottom: 1px;
+  font-size: 12.5px;
+  color: #222;
+  text-align: left;
+}
+
+.columns > div > div:last-child .button-container {
+  margin-top: 2px;
+  margin-bottom: 0;
+}
+
+/* Responsive: reset image and column margin on small screens */
+@media (width <= 899px) {
+  .columns picture img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .columns > div > div:last-child {
+    margin-top: 0;
   }
 }
