@@ -1,6 +1,9 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
 }
 
 .columns img {
@@ -9,6 +12,15 @@
 
 .columns > div > div {
   order: 1;
+  flex: 1 1 0;
+  width: 50%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 32px;
 }
 
 .columns > div > .columns-img-col {
@@ -29,5 +41,99 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+/* Each row: side-by-side columns, stretch to same height */
+
+/* Each column: equal width, padding for visual comfort */
+
+/* Image columns: ensure images fill their side, don't overflow row */
+.columns .columns-img-col {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0;
+}
+
+.columns .columns-img-col picture,
+.columns .columns-img-col img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 440px;
+  object-fit: contain;
+  display: block;
+  margin: 0;
+}
+
+/* Tighter vertical spacing for text */
+.columns p,
+.columns ul,
+.columns li {
+  color: #000;
+  font-family: var(--body-font-family);
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* Bullet alignment */
+.columns ul {
+  margin-left: 18px;
+  padding-left: 0;
+}
+
+/* Button tweaks for proper visual spacing */
+.columns .button {
+  font-size: 15px;
+  border-radius: 99px;
+  padding: 8px 24px;
+  font-weight: 400;
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+.columns .button.secondary {
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+
+/* Responsive: stack columns vertically below 900px */
+@media (width <= 900px) {
+  .columns {
+    gap: 32px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .columns > div {
+    flex-direction: column;
+  }
+
+  .columns > div > div {
+    width: 100%;
+    min-width: 0;
+    padding: 24px 16px;
+    align-items: flex-start;
+  }
+
+  .columns .columns-img-col picture,
+  .columns .columns-img-col img {
+    max-height: 260px;
   }
 }
