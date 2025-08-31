@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,8 +6,16 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 180px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: stretch;
+  width: 100%;
+  background: linear-gradient(90deg, #132846 65%, #174070 100%);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .hero h1,
@@ -43,5 +52,120 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* LEFT COLUMN: TEXT */
+.hero > div:last-child {
+  order: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 40px;
+  padding-right: 24px;
+}
+
+.hero > div:last-child > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2em;
+  font-family: var(--heading-font-family, "roboto-condensed", sans-serif);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.1;
+  text-align: left;
+  max-width: none;
+}
+
+/* RIGHT COLUMN: IMAGE */
+.hero > div:first-child {
+  order: 2;
+  flex: 1 1 0;
+  min-width: 350px;
+  max-width: 50vw;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  padding-right: 0;
+}
+
+.hero > div:first-child > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+}
+
+.hero > div:first-child picture {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 420px;
+  height: 160px;
+}
+
+.hero > div:first-child img {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  min-width: 240px;
+  height: 160px;
+  object-fit: contain;
+  margin-right: 0;
+  filter: drop-shadow(0 0 16px rgb(30 60 120 / 20%));
+}
+
+/* Responsive adjustments for smaller screens */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+  }
+
+  .hero > div,
+  .hero > div:first-child > div,
+  .hero > div:last-child > div {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+  }
+
+  .hero > div:first-child {
+    order: 2;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    padding: 0;
+  }
+
+  .hero > div:last-child {
+    order: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .hero h1 {
+    font-size: 1.4em;
+    text-align: center;
+  }
+
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    max-width: 320px;
+    min-width: 160px;
+    height: 120px;
+    margin: 0 auto;
   }
 }
