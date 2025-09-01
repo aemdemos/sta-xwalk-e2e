@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +30,114 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+/* Two-row, two-column grid for desktop */
+.columns > .block.columns-2-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (width <= 900px) {
+  .columns > .block.columns-2-cols {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 32px;
+  }
+
+  .columns > .block.columns-2-cols > div > div,
+  .columns > .block.columns-2-cols > div > .columns-img-col {
+    grid-column: unset !important;
+    grid-row: unset !important;
+  }
+}
+
+/* Place items into grid cells for desktop */
+.columns > .block.columns-2-cols > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.columns > .block.columns-2-cols > div:last-child > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.columns > .block.columns-2-cols > div:first-child > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.columns > .block.columns-2-cols > div:last-child > div:last-child {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Remove stacking for grid children, flatten structure */
+.columns > .block.columns-2-cols > div {
+  display: contents;
+}
+
+/* All blocks fill their grid cell and align at the top */
+.columns > .block.columns-2-cols > div > div,
+.columns > .block.columns-2-cols > div > .columns-img-col {
+  width: 100%;
+  align-self: start;
+  margin: 0;
+  padding: 0;
+}
+
+/* Images always fill their grid cell */
+.columns .columns-img-col img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Remove extra spacing for compact stacking */
+.columns > .block.columns-2-cols ul {
+  margin-top: 4px;
+  margin-bottom: 12px;
+  margin-left: 18px;
+  padding-left: 0;
+}
+
+.columns > .block.columns-2-cols p {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+.columns .button-container {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+/* Button tweaks for color and border in this block */
+.columns .button.secondary,
+.columns .button.secondary:any-link {
+  background-color: #fff;
+  color: #222;
+  border: 1px solid #222;
+}
+
+.columns .button.secondary em {
+  font-style: normal;
+}
+
+/* Ensure bottom-right cell (text/button) is top-aligned, not vertically centered */
+@media (width >= 901px) {
+  .columns > .block.columns-2-cols > div:last-child > div:last-child {
+    display: block;
+    margin-top: 0;
+    padding-top: 0;
   }
 }
