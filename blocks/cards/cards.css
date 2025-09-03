@@ -14,14 +14,128 @@
 
 .cards .cards-card-body {
   margin: 16px;
+  padding: 20px 20px 16px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  min-height: 135px;
+  height: 135px;
+  overflow: hidden;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: #fff;
+  display: block;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+
+.cards {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.cards .cards-wrapper {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.cards .block {
+  max-width: 1160px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  padding-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cards .block > ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: start;
+}
+
+@media (width <= 1024px) {
+  .cards .block {
+    max-width: 880px;
+  }
+
+  .cards .block > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 600px) {
+  .cards .block {
+    max-width: 100%;
+    padding: 0 8px;
+  }
+
+  .cards .block > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cards .block > ul > li {
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 7%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 330px;
+  transition: box-shadow 0.21s;
+}
+
+.cards .block > ul > li:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 13%);
+}
+
+.cards .cards-card-image picture,
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  visibility: visible;
+  opacity: 1;
+  background: transparent;
+}
+
+.cards .cards-card-body p:first-child {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.cards .cards-card-body p:first-child strong {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #111;
+  line-height: 1.25;
+}
+
+.cards .cards-card-body p:not(:first-child) {
+  font-size: 1rem;
+  color: #444;
+  margin: 0;
+  line-height: 1.5;
 }
