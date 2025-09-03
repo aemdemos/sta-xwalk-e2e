@@ -45,3 +45,134 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: stretch;
+  min-height: 190px;
+  width: 100%;
+  background: radial-gradient(circle at 70% 40%, #0d253f 60%, #112c44 100%);
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* --- Image Column (move to right side) --- */
+.hero > div:first-child {
+  flex: 0 1 45%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  padding: 0;
+  order: 2; /* move the image column to the right */
+  z-index: 1;
+}
+
+/* Target nested div for flex alignment */
+.hero > div:first-child > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+/* Make DNA image fill the height, overlap left for effect */
+.hero picture {
+  position: relative;
+  width: 380px;
+  max-width: 100%;
+  height: 190px;
+  margin-left: -60px; /* overlap DNA slightly into text side */
+  margin-right: 0;
+  -webkit-mask-image: linear-gradient(to left, black 80%, transparent 100%);
+          mask-image: linear-gradient(to left, black 80%, transparent 100%);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.hero picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- Text Column (left) --- */
+.hero > div:last-child {
+  flex: 0 1 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertical centering */
+  align-items: flex-start; /* left-align */
+  height: 100%;
+  padding-left: 32px;
+  padding-right: 16px;
+  order: 1; /* move text column to left */
+  z-index: 2;
+}
+
+.hero > div:last-child > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: var(--heading-font-size-l);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  max-width: 600px;
+  text-align: left;
+}
+
+/* --- Responsive adjustments --- */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+  }
+
+  .hero > div:first-child,
+  .hero > div:last-child {
+    flex: 1 1 100%;
+    min-width: 0;
+    padding: 0 12px;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    order: unset;
+  }
+
+  .hero > div:first-child > div,
+  .hero > div:last-child > div {
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
+  }
+
+  .hero picture {
+    width: 220px;
+    height: 120px;
+    margin: 0 auto;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+
+  .hero h1 {
+    font-size: var(--heading-font-size-m);
+    max-width: 100vw;
+    margin-top: 16px;
+    text-align: center;
+  }
+}
