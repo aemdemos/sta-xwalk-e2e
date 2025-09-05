@@ -1,6 +1,9 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 48px;
+  align-items: flex-start;
 }
 
 .columns img {
@@ -9,6 +12,13 @@
 
 .columns > div > div {
   order: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1 1 0;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .columns > div > .columns-img-col {
@@ -29,5 +39,59 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+/* Responsive: stack columns vertically on narrow screens */
+@media (width <= 899px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
+}
+
+/* Each column: stack content vertically */
+
+/* --- Remove image reordering in the left column: 
+      Let heading, list, and button appear above the image by default --- */
+
+/* Right column: keep image at the top for preview block */
+.columns > div > div:last-child > p:first-child {
+  order: -1;
+  margin-bottom: 20px;
+}
+
+/* Spacing for nested elements (text, list, button) */
+.columns > div > div p,
+.columns > div > div ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Optional: Add a bit more vertical gap between button and content */
+.columns .button,
+.columns .button.secondary {
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+/* Ensure images fill column width and are crisp */
+.columns img,
+.columns picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+  margin: 0;
+}
+
+/* Reduce gap on very small screens */
+@media (width <= 599px) {
+  .columns > div {
+    gap: 16px;
+  }
+
+  .columns > div > div {
+    gap: 14px;
   }
 }
