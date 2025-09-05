@@ -45,3 +45,127 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 170px;
+  background: #0a2744;
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Ensure both columns can shrink/grow and content doesn't overflow */
+.hero > div {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 100%;
+}
+
+/* IMAGE COLUMN: place image on the RIGHT */
+.hero > div:first-child {
+  justify-content: flex-end;
+  order: 2;
+  padding-right: 0;
+  min-width: 220px;
+}
+
+/* Image fills available height, covers right half without squashing */
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  max-width: 100%;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* TEXT COLUMN: left side, left aligned and padded */
+.hero > div:last-child {
+  justify-content: flex-start;
+  align-items: center;
+  order: 1;
+  padding-left: 48px;
+  min-width: 0;
+  height: 100%;
+  flex-basis: 60%;
+}
+
+/* Vertical centering for the inner text container */
+.hero > div:last-child > div {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Headline styles: ensure large, white, left aligned, never clipped */
+.hero > div:last-child h1,
+.hero > div:last-child h2,
+.hero > div:last-child h3,
+.hero > div:last-child h4,
+.hero > div:last-child h5,
+.hero > div:last-child h6 {
+  margin: 0;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.2;
+  text-align: left;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Responsive: stack image and text vertically on smaller screens */
+@media (max-width: 700px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+    padding: 12px 0;
+  }
+  .hero > div {
+    height: auto;
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    min-width: 0;
+    flex-basis: auto;
+  }
+  .hero > div:first-child {
+    margin-bottom: 16px;
+    order: 1;
+    min-width: 0;
+  }
+  .hero > div:last-child {
+    order: 2;
+    padding-left: 0;
+  }
+  .hero > div:last-child > div {
+    height: auto;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .hero > div:last-child h1,
+  .hero > div:last-child h2,
+  .hero > div:last-child h3,
+  .hero > div:last-child h4,
+  .hero > div:last-child h5,
+  .hero > div:last-child h6 {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+}
+
+/* Remove z-index if present from .hero .picture */
+.hero picture {
+  z-index: unset;
+}
