@@ -49,10 +49,6 @@
   }
 }
 
-
-/* Main grid: two columns, moderate vertical gap for balanced rows */
-
-/* Responsive: stack columns on small screens */
 @media (width <= 900px) {
   .columns > div {
     grid-template-columns: 1fr;
@@ -61,40 +57,28 @@
   }
 }
 
-/* Columns: vertical stacking in each column */
-
-/* ----- LEFT COLUMN ----- */
-
-/* Top group (text/list/button), extra space below to separate from image */
 .columns > div > div:first-child > div {
-  margin-bottom: 40px;
+  margin-bottom: 12px;
 }
 
-/* Blue DNA image: keep close to bottom, no extra margin */
 .columns > div > div:first-child > p:last-of-type {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* ----- RIGHT COLUMN ----- */
-
-/* Yellow DNA image (top): add margin below to visually create a "row break" */
 .columns > div > div:last-child > p:first-child {
-  margin-bottom: 40px;
+  margin-bottom: 16px;
 }
 
-/* Preview text: remove excess margin above or below, keep paired with button */
 .columns > div > div:last-child > p:nth-last-child(2) {
   margin-top: 0;
   margin-bottom: 4px;
 }
 
 .columns > div > div:last-child > p.button-container {
-  margin-top: 0;
+  margin-top: 8px;
   margin-bottom: 0;
 }
-
-/* Images: balanced sizing and aspect ratio */
 
 @media (width >= 900px) {
   .columns > div > div:last-child > p:first-child img {
@@ -106,15 +90,14 @@
   }
 }
 
-/* Button styling, left-aligned with text */
 .columns .button-container {
-  margin-top: 12px;
+  margin-top: 18px;
   margin-bottom: 0;
 }
 
 .columns .button {
   border-radius: 999px;
-  padding: 0.5em 2em;
+  padding: 10px 24px;
   min-width: 96px;
   font-size: 18px;
   margin: 0.5em 0 0;
@@ -122,18 +105,114 @@
   text-align: center;
   transition: background 0.2s, color 0.2s;
   display: inline-block;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  background: #3f51b5;
+  color: #fff;
 }
 
 .columns .button.secondary {
-  background: #fff;
-  border: 2px solid #131313;
-  color: #131313;
+  background: transparent;
+  border: 1.5px solid #222;
+  color: #222;
 }
 
-/* Universal left alignment for all content in both columns */
 .columns > div > div, 
 .columns > div > div > p, 
 .columns > div > div > ul {
   align-items: flex-start;
   text-align: left;
 }
+
+
+.columns {
+  /* Use grid for precise control of vertical and horizontal alignment */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 48px;
+  align-items: start;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Responsive: Stack as single column on mobile */
+@media (width <= 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 32px;
+  }
+}
+
+/* 
+   Place each block into a specific grid cell based on DOM order:
+   - Left text/list/button:     row 1, column 1
+   - Right image:              row 1, column 2
+   - Left image:               row 2, column 1
+   - Right text/button:        row 2, column 2
+*/
+
+/* First column, first child (text/list/button) */
+.columns > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* First column, second child (image) */
+.columns > div:first-child > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/* Second column, first child (image) */
+.columns > div:last-child > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Second column, second child (text/button) */
+.columns > div:last-child > div:not(.columns-img-col) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Make each child stretch to fill grid area */
+.columns > div,
+.columns > div > div,
+.columns > div > .columns-img-col {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure images fill their grid cell */
+.columns .columns-img-col picture,
+.columns .columns-img-col img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+/* Text and list styling for left alignment and spacing */
+.columns p,
+.columns ul,
+.columns li {
+  color: #222;
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.columns ul {
+  margin-left: 1.2em;
+  padding-left: 0;
+}
+
+/* Button styling for vertical rhythm */
+
+/* Tighten margins for vertical rhythm */
