@@ -1,4 +1,4 @@
-name: Daily E2E Test
+name: Daily XWalk E2E Test
 
 on:
   schedule:
@@ -7,9 +7,8 @@ on:
   workflow_dispatch:
     inputs:
       test_context:
-        description: 'Which test to run'
-        required: true
-        default: 'wknd'
+        description: 'Which test to run (optional - will use time-based logic if not specified)'
+        required: false
         type: choice
         options:
           - boilerplate
@@ -27,14 +26,14 @@ jobs:
       - name: Determine test context
         id: context
         run: |
-          # Check if this is a manual trigger with input
+          # Check if manual trigger provided a test context
           if [ -n "${{ github.event.inputs.test_context }}" ]; then
             TEST_CONTEXT="${{ github.event.inputs.test_context }}"
-            echo "Manual trigger with test context: $TEST_CONTEXT"
+            echo "Manual trigger with specified test context: $TEST_CONTEXT"
           else
-            # Get current UTC hour to determine which test to run
+            # Use time-based logic (for scheduled triggers or manual triggers without input)
             CURRENT_HOUR=$(date -u +"%H")
-            echo "Scheduled trigger - Current UTC hour: $CURRENT_HOUR"
+            echo "Using time-based logic - Current UTC hour: $CURRENT_HOUR"
             
             if [ "$CURRENT_HOUR" = "07" ]; then
               TEST_CONTEXT="boilerplate"
@@ -107,13 +106,23 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issue_number = Number(process.env.ISSUE_NUMBER);
+            const slack_outcome = process.env.SLACK_OUTCOME;
             const thread_ts = process.env.SLACK_THREAD_TS;
+            
+            let comment_body;
+            if (slack_outcome === 'success') {
+              comment_body = `Slack thread_ts: ${thread_ts}`;
+            } else {
+              comment_body = `⚠️ Slack notification failed - no thread timestamp available`;
+            }
+            
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number,
-              body: `Slack thread_ts: ${thread_ts}`
+              body: comment_body
             });
         env:
           ISSUE_NUMBER: ${{ steps.create_issue.outputs.issue_number }}
           SLACK_THREAD_TS: ${{ steps.slack_notify.outputs.ts }}
+          SLACK_OUTCOME: ${{ steps.slack_notify.outcome }}
