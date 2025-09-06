@@ -9,27 +9,25 @@ export default function parse(element, { document }) {
   const rows = [headerRow];
 
   // Each <li> is a card
-  const cards = ul.querySelectorAll(':scope > li');
-  cards.forEach((card) => {
-    // Find image container and body container
-    const imageDiv = card.querySelector('.cards-card-image');
-    const bodyDiv = card.querySelector('.cards-card-body');
+  ul.querySelectorAll(':scope > li').forEach((li) => {
+    // Defensive: Find image container and body container
+    const imgDiv = li.querySelector('.cards-card-image');
+    const bodyDiv = li.querySelector('.cards-card-body');
 
-    // Defensive: Ensure both exist
-    if (!imageDiv || !bodyDiv) return;
-
-    // Get the image element (use <picture> if present, else <img>)
-    let imageCell;
-    const picture = imageDiv.querySelector('picture');
-    if (picture) {
-      imageCell = picture;
-    } else {
-      const img = imageDiv.querySelector('img');
-      imageCell = img || '';
+    // Get image element (use the <picture> block directly for resilience)
+    let imageCell = '';
+    if (imgDiv) {
+      const picture = imgDiv.querySelector('picture');
+      if (picture) {
+        imageCell = picture;
+      }
     }
 
-    // For the text cell, use the entire bodyDiv (preserves heading and description)
-    const textCell = bodyDiv;
+    // Get text content (use the body div directly for resilience)
+    let textCell = '';
+    if (bodyDiv) {
+      textCell = bodyDiv;
+    }
 
     rows.push([imageCell, textCell]);
   });

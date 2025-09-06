@@ -1,56 +1,47 @@
 /* global WebImporter */
 export default function parse(element, { document }) {
-  // Find the hero block
-  const heroBlock = element.querySelector('.hero.block') || element;
+  // Defensive: find the hero image and heading
+  // The structure is: div.hero.block > div > div > p (picture), h1, p (empty)
+  // We'll reference the image and heading directly
 
-  // Find image (picture or img)
-  let imageEl = null;
-  const picture = heroBlock.querySelector('picture');
-  if (picture) {
-    imageEl = picture;
-  } else {
-    const img = heroBlock.querySelector('img');
-    if (img) imageEl = img;
+  // Get the deepest content container
+  let contentDiv = element;
+  // Defensive: traverse down to the actual content if wrapped
+  // Find the first child div that contains the image and heading
+  while (contentDiv && contentDiv.children.length === 1 && contentDiv.firstElementChild.tagName === 'DIV') {
+    contentDiv = contentDiv.firstElementChild;
   }
 
-  // Find heading (h1, h2, h3)
+  // Now, contentDiv should contain the image and heading
+  // Find the <picture> (inside a <p>), and the <h1>
+  let pictureEl = null;
   let headingEl = null;
-  const heading = heroBlock.querySelector('h1, h2, h3');
-  if (heading) headingEl = heading;
-
-  // Find subheading (h2, h3 after heading)
-  let subheadingEl = null;
-  if (headingEl) {
-    let next = headingEl.nextElementSibling;
-    while (next) {
-      if (/^h[2-6]$/i.test(next.tagName)) {
-        subheadingEl = next;
-        break;
-      }
-      next = next.nextElementSibling;
+  Array.from(contentDiv.children).forEach((child) => {
+    // Find <p><picture>
+    if (child.tagName === 'P' && child.querySelector('picture')) {
+      pictureEl = child.querySelector('picture');
     }
-  }
+    // Find <h1>
+    if (child.tagName === 'H1') {
+      headingEl = child;
+    }
+  });
 
-  // Find CTA (a link)
-  let ctaEl = null;
-  const link = heroBlock.querySelector('a');
-  if (link) ctaEl = link;
-
-  // Compose text row: always present, even if empty
-  const textContent = [];
-  if (headingEl) textContent.push(headingEl);
-  if (subheadingEl) textContent.push(subheadingEl);
-  if (ctaEl) textContent.push(ctaEl);
-
-  // Table rows
+  // Build the table rows
   const headerRow = ['Hero (hero2)'];
-  const imageRow = [imageEl ? imageEl : ''];
-  // Always include the third row, even if empty
-  const textRow = [textContent.length ? textContent : ''];
+  const imageRow = [pictureEl ? pictureEl : ''];
+  // The third row should contain title, subheading, CTA (all in one cell)
+  const thirdRowContent = [];
+  if (headingEl) thirdRowContent.push(headingEl);
+  // If there were other text elements (h2, p, CTA), add here
+  const thirdRow = [thirdRowContent.length ? thirdRowContent : ''];
 
-  // Ensure 3 rows always
-  const cells = [headerRow, imageRow, textRow];
+  const cells = [
+    headerRow,
+    imageRow,
+    thirdRow,
+  ];
+
   const block = WebImporter.DOMUtils.createTable(cells, document);
-
   element.replaceWith(block);
 }
