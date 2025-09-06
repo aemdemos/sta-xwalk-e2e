@@ -5,8 +5,17 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 190px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: stretch;
+  height: 190px;
+  background: #0a2337;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -27,17 +36,27 @@
 }
 
 .hero picture {
-  position: absolute;
+  position: relative;
   z-index: -1;
   inset: 0;
   object-fit: cover;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
 }
 
 .hero img {
   object-fit: cover;
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  object-position: right center;
+  max-height: none;
+  display: block;
+  border: none;
+  background: transparent;
 }
 
 @media (width >= 900px) {
@@ -46,21 +65,6 @@
   }
 }
 
-.hero {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: stretch;
-  min-height: 190px;
-  height: 190px;
-  background: #0a2337;
-  width: 100%;
-  padding: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* Text Container: left side, leave more room for image */
 .hero > div:last-child {
   flex: 0 1 38%;
   order: 1;
@@ -68,11 +72,16 @@
   align-items: center;
   justify-content: flex-start;
   min-width: 0;
-  padding-left: 2rem;
+  padding-left: 40px;
   height: 100%;
+  position: relative;
+  z-index: 2;
+  padding-right: 0;
+  width: 100vw;
+  max-width: 660px;
+  box-sizing: border-box;
 }
 
-/* Image Container: right side, fill the hero and show more of DNA */
 .hero > div:first-child {
   flex: 1 1 62%;
   order: 2;
@@ -82,30 +91,13 @@
   min-width: 0;
   height: 100%;
   overflow: hidden;
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* Make image fill right side better and show more DNA (shift left) */
-.hero picture {
-  position: static;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: stretch;
-  justify-content: flex-end;
-}
-
-.hero img {
-  object-fit: cover;
-  object-position: 75% center; /* show more of the DNA and its glow */
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  display: block;
-  border: none;
-  background: transparent;
-}
-
-/* Headline styles: left alignment, vertical centering, strong contrast */
 .hero h1,
 .hero h2,
 .hero h3,
@@ -117,22 +109,23 @@
   margin: 0;
   line-height: 1.1;
   text-align: left;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 8px rgb(0 0 0 / 15%);
   padding: 0;
   width: 100%;
-  max-width: unset;
-  display: flex;
+  max-width: 90%;
+  display: block;
   align-items: center;
+  font-size: var(--heading-font-size-l);
 }
 
-/* Responsive adjustments for narrow screens */
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .hero {
     flex-direction: column;
     min-height: 220px;
     height: auto;
     padding: 0;
   }
+
   .hero > div {
     flex: 1 1 100%;
     justify-content: center;
@@ -142,10 +135,12 @@
     height: auto;
     order: unset;
   }
+
   .hero img {
     max-height: 140px;
     height: auto;
   }
+
   .hero h1,
   .hero h2,
   .hero h3,
@@ -158,5 +153,86 @@
     text-align: center;
     align-items: center;
     justify-content: center;
+  }
+}
+
+
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+/* Make image fill full hero block, anchored to the right */
+
+/* DNA image covers hero, focused right */
+
+/* Gradient overlay blends from dark left to transparent right */
+.hero::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    #0a2337 0%,
+    #0a2337 30%,
+    rgb(10 35 55 / 75%) 50%,
+    rgb(10 35 55 / 30%) 70%,
+    rgb(10 35 55 / 0%) 82%,
+    transparent 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Text on left, restrict width, vertically centered */
+
+/* Keep vertical centering inside inner div */
+.hero > div:last-child > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Heading styling */
+
+/* Responsive: stack vertically on small screens */
+@media (width <= 700px) {
+  .hero {
+    flex-direction: column;
+    min-height: 320px;
+    height: auto;
+  }
+
+  .hero > div:first-child {
+    position: static;
+    width: 100vw;
+    height: 140px;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .hero > div:last-child {
+    width: 100vw;
+    max-width: none;
+    padding-top: 24px;
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: var(--heading-font-size-m);
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .hero img {
+    max-height: 140px;
+    height: auto;
   }
 }
