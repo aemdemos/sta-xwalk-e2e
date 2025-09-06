@@ -49,10 +49,6 @@
   }
 }
 
-
-/* Main grid: two columns, moderate vertical gap for balanced rows */
-
-/* Responsive: stack columns on small screens */
 @media (width <= 900px) {
   .columns > div {
     grid-template-columns: 1fr;
@@ -61,29 +57,19 @@
   }
 }
 
-/* Columns: vertical stacking in each column */
-
-/* ----- LEFT COLUMN ----- */
-
-/* Top group (text/list/button), extra space below to separate from image */
 .columns > div > div:first-child > div {
   margin-bottom: 40px;
 }
 
-/* Blue DNA image: keep close to bottom, no extra margin */
 .columns > div > div:first-child > p:last-of-type {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* ----- RIGHT COLUMN ----- */
-
-/* Yellow DNA image (top): add margin below to visually create a "row break" */
 .columns > div > div:last-child > p:first-child {
   margin-bottom: 40px;
 }
 
-/* Preview text: remove excess margin above or below, keep paired with button */
 .columns > div > div:last-child > p:nth-last-child(2) {
   margin-top: 0;
   margin-bottom: 4px;
@@ -93,8 +79,6 @@
   margin-top: 0;
   margin-bottom: 0;
 }
-
-/* Images: balanced sizing and aspect ratio */
 
 @media (width >= 900px) {
   .columns > div > div:last-child > p:first-child img {
@@ -106,9 +90,8 @@
   }
 }
 
-/* Button styling, left-aligned with text */
 .columns .button-container {
-  margin-top: 12px;
+  margin-top: 16px;
   margin-bottom: 0;
 }
 
@@ -130,10 +113,95 @@
   color: #131313;
 }
 
-/* Universal left alignment for all content in both columns */
 .columns > div > div, 
 .columns > div > div > p, 
 .columns > div > div > ul {
   align-items: flex-start;
   text-align: left;
+}
+
+
+.columns > .block.columns-2-cols {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* Remove vertical gap for a unified grid look */
+  width: 100%;
+}
+
+/* Each row: side by side columns using flex */
+.columns > .block.columns-2-cols > div {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  width: 100%;
+  align-items: stretch; /* Stretch children to match height */
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  min-height: 340px; /* Ensures both rows are same height as images */
+}
+
+/* Column cells: stack inner content vertically if needed */
+.columns > .block.columns-2-cols > div > div {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+/* Image containers: identical and fixed height for perfect row alignment */
+.columns .columns-img-col {
+  width: 100%;
+  height: 340px;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.columns .columns-img-col img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+/* Space buttons/text correctly */
+
+.columns > .block.columns-2-cols p,
+.columns > .block.columns-2-cols ul,
+.columns > .block.columns-2-cols li {
+  color: var(--text-color);
+  font-size: var(--body-font-size-xs);
+  text-align: left;
+  margin: 0 0 0.2em;
+  padding: 0;
+}
+
+/* Responsive adjustments for mobile: stack rows vertically */
+@media (width <= 900px) {
+  .columns > .block.columns-2-cols {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .columns > .block.columns-2-cols > div {
+    flex-direction: column;
+    gap: 24px;
+    min-height: unset;
+  }
+
+  .columns .columns-img-col {
+    height: 220px;
+  }
 }
