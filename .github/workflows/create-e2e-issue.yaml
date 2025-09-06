@@ -112,7 +112,7 @@ jobs:
               const formatted_ts = 'p' + thread_ts.replace('.', '');
               const slack_url = `https://adobe.enterprise.slack.com/archives/${channel_id}/${formatted_ts}`;
               
-              comment_body = `✅ Slack notification posted successfully to channel ${channel_id}\n\n🔗 [View Slack message](${slack_url})`;
+              comment_body = `Slack thread_ts: ${channel_id}\n\n🔗 [View Slack message](${slack_url})`;
             } else {
               comment_body = `⚠️ Slack notification failed - no thread timestamp available`;
             }
