@@ -59,8 +59,6 @@
   box-sizing: border-box;
   overflow: hidden;
 }
-
-/* Text Container: left side, leave more room for image */
 .hero > div:last-child {
   flex: 0 1 38%;
   order: 1;
@@ -71,8 +69,6 @@
   padding-left: 2rem;
   height: 100%;
 }
-
-/* Image Container: right side, fill the hero and show more of DNA */
 .hero > div:first-child {
   flex: 1 1 62%;
   order: 2;
@@ -83,8 +79,6 @@
   height: 100%;
   overflow: hidden;
 }
-
-/* Make image fill right side better and show more DNA (shift left) */
 .hero picture {
   position: static;
   width: 100%;
@@ -96,7 +90,7 @@
 
 .hero img {
   object-fit: cover;
-  object-position: 75% center; /* show more of the DNA and its glow */
+  object-position: 75% center;
   width: 100%;
   height: 100%;
   max-height: none;
@@ -104,8 +98,6 @@
   border: none;
   background: transparent;
 }
-
-/* Headline styles: left alignment, vertical centering, strong contrast */
 .hero h1,
 .hero h2,
 .hero h3,
@@ -124,8 +116,6 @@
   display: flex;
   align-items: center;
 }
-
-/* Responsive adjustments for narrow screens */
 @media (max-width: 900px) {
   .hero {
     flex-direction: column;
@@ -158,5 +148,141 @@
     text-align: center;
     align-items: center;
     justify-content: center;
+  }
+}
+
+
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100vw;
+  min-height: 190px;
+  height: 190px;
+  background: linear-gradient(90deg, #10293d 60%, #1a3750 100%);
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Text block: ensure vertical and horizontal placement matches original */
+.hero > div:last-child {
+  flex: 0 1 58%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0;
+  height: 100%;
+  padding-left: 2.8rem;
+  z-index: 1;
+}
+
+/* Prevent heading margins from affecting vertical centering */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--heading-font-size-l);
+  line-height: 1.1;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+/* Image block: make image larger and allow it to overflow left for immersive effect */
+.hero > div:first-child {
+  flex: 0 1 42%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  height: 100%;
+  padding-right: 0;
+  overflow: visible;
+  order: 2;
+}
+
+.hero > div:first-child > div {
+  width: 115%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hero picture {
+  width: 100%;
+  height: 100%;
+  max-width: unset;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: unset;
+}
+
+.hero img {
+  width: 105%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% center;
+  border: none;
+  max-width: none;
+  max-height: none;
+  background: transparent;
+  display: block;
+  /* More pronounced fade for blending effect, starts earlier and ends later for softer mask */
+  mask-image: linear-gradient(to left, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 95%);
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 95%);
+}
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+    height: auto;
+  }
+  .hero > div {
+    flex: 1 1 100%;
+    min-width: 0;
+    width: 100%;
+    height: auto;
+    padding-left: 0;
+    padding-right: 0;
+    justify-content: center;
+    align-items: center;
+    order: unset;
+  }
+  .hero img {
+    max-height: 140px;
+    height: auto;
+    object-position: center top;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    font-size: var(--heading-font-size-l);
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 }
