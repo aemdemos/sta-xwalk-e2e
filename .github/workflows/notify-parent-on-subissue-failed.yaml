@@ -24,7 +24,7 @@ jobs:
             const body = context.payload.issue.body || '';
             const match = body.match(/Parent issue: #([0-9]+)/);
             if (!match) {
-              console.log('No parent issue number found in body.');
+              console.log(`No parent issue number found in body: ${body}`);
               return;
             }
             const parentIssueNumber = Number(match[1]);
