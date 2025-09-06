@@ -48,12 +48,10 @@ jobs:
           # Set outputs based on test context
           if [ "$TEST_CONTEXT" = "boilerplate" ]; then
             echo "Running XWalk E2E Boilerplate test"
-            echo "test_type=XWalk-boilerplate" >> $GITHUB_OUTPUT
             echo "site_url=https://main--aem-boilerplate--adobe.aem.page" >> $GITHUB_OUTPUT
-            echo "site_name=XWalk-boilerplate" >> $GITHUB_OUTPUT
+            echo "site_name=XWalk boilerplate" >> $GITHUB_OUTPUT
           else
             echo "Running XWalk WKND E2E test"
-            echo "test_type=wknd" >> $GITHUB_OUTPUT
             echo "site_url=https://wknd.site" >> $GITHUB_OUTPUT
             echo "site_name=WKND" >> $GITHUB_OUTPUT
           fi
@@ -64,7 +62,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const today = new Date().toISOString().split('T')[0];
-            const testType = process.env.TEST_TYPE;
             const siteName = process.env.SITE_NAME;
             const siteUrl = process.env.SITE_URL;
 
@@ -84,7 +81,6 @@ jobs:
 
             console.log(`Created issue: ${response.data.html_url}`);
         env:
-          TEST_TYPE: ${{ steps.context.outputs.test_type }}
           SITE_NAME: ${{ steps.context.outputs.site_name }}
           SITE_URL: ${{ steps.context.outputs.site_url }}
 
