@@ -2,7 +2,8 @@ name: Backup and Reset to E2E Workflow
 
 on:
   schedule:
-    - cron: '45 6 * * *'  # every day at 6:45 AM UTC (15 minutes before E2E test)
+    - cron: '45 3 * * *'  # every day at 3:45 AM UTC (15 minutes before boilerplate E2E test)
+    - cron: '45 7 * * *'  # every day at 7:45 AM UTC (15 minutes before wknd E2E test)
   workflow_dispatch:
     inputs:
       backup_branch_name:
@@ -82,7 +83,7 @@ jobs:
               
               const threadComment = comment.data.find(c => c.body.includes('Slack thread_ts:'));
               if (threadComment) {
-                const threadTs = threadComment.body.match(/Slack thread_ts: (.*)/)[1];
+                const threadTs = threadComment.body.match(/Slack thread_ts: ([0-9]+\.[0-9]+)/)?.[1];
                 core.setOutput('thread_ts', threadTs);
               }
             }
@@ -102,12 +103,13 @@ jobs:
             console.log(`Created issue #${issue.number}: ${issue.html_url}`);
 
       - name: Post Slack notification
+        if: steps.get_issue.outputs.thread_ts != ''
         uses: slackapi/slack-github-action@v1.25.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload: |
             {
-              "text": "*Backup and Reset Completed* :white_check_mark:\n• Created backup branch: `${{ steps.backup.outputs.branch_name }}`\n• Reset main branch to commit: `${{ vars.E2E_WORKFLOW_COMMIT }}`",
+              "text": "*XWalk Backup and Reset Completed* :white_check_mark:\n• Created backup branch: `${{ steps.backup.outputs.branch_name }}`\n• Reset main branch to commit: `${{ vars.E2E_WORKFLOW_COMMIT }}`",
               "thread_ts": "${{ steps.get_issue.outputs.thread_ts }}"
             }
         env:
