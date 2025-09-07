@@ -82,7 +82,7 @@ jobs:
               
               const threadComment = comment.data.find(c => c.body.includes('Slack thread_ts:'));
               if (threadComment) {
-                const threadTs = threadComment.body.match(/Slack thread_ts: ([A-Za-z0-9]+)/)?.[1];
+                const threadTs = threadComment.body.match(/Slack thread_ts: ([0-9]+)/)?.[1];
                 core.setOutput('thread_ts', threadTs);
               }
             }
