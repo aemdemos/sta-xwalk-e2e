@@ -31,3 +31,102 @@
     order: unset;
   }
 }
+
+
+.columns > .block > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 48px; /* Reduced gap for more balanced column spacing */
+  max-width: 800px; /* Closer to typical content/container width */
+  margin: 0 auto; /* Center block within parent */
+  padding-left: 0; /* Remove any left offset */
+}
+
+.columns > .block > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+  flex: 1 1 0;
+  max-width: 340px; /* Both columns similar width for better balance */
+}
+
+.columns > .block > div > div:first-child {
+  max-width: 340px;
+  flex: 1 1 340px;
+}
+
+.columns > .block > div > div:last-child {
+  max-width: 300px;
+  flex: 1 1 300px;
+  gap: 8px; /* Tighten vertical gap between preview text and button */
+}
+
+.columns > .block > div > div p,
+.columns > .block > div > div ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.columns > .block > div > div ul {
+  margin-left: 18px;
+  padding-left: 0;
+}
+
+.columns > .block > div > div li {
+  color: var(--text-color);
+  font-size: var(--body-font-size-xs);
+  margin-bottom: 0.25em;
+}
+
+.columns > .block > div > div .button-container {
+  margin-top: 8px;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.columns > .block > div > div .button {
+  padding: 8px 24px;
+  font-size: var(--body-font-size-xs);
+  font-weight: 500;
+  border-radius: 22px;
+  box-shadow: none;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.columns > .block > div > div .button.secondary {
+  background: #fff;
+  color: var(--text-color);
+  border: 2px solid var(--text-color);
+  font-weight: 400;
+}
+
+.columns > .block > div > div:last-child .button-container {
+  margin-top: 2px; /* Reduce gap between preview text and button */
+}
+
+.columns > .block > div > div:last-child p {
+  margin-bottom: 2px;
+}
+
+@media (width <= 900px) {
+  .columns > .block > div {
+    flex-direction: column;
+    gap: 32px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .columns > .block > div > div,
+  .columns > .block > div > div:first-child,
+  .columns > .block > div > div:last-child {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+}
