@@ -1,19 +1,153 @@
-name: Daily E2E Test
+name: Daily XWalk E2E Test
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # every day at 7:00 am UTC
+    - cron: '3 4 * * *'  # every day at 4:03 am UTC
+    - cron: '3 8 * * *'  # every day at 8:03 am UTC
   workflow_dispatch:
+    inputs:
+      test_context:
+        description: 'Which test to run (optional - will use time-based logic if not specified)'
+        required: false
+        type: choice
+        options:
+          - boilerplate
+          - wknd
 
 permissions:
   issues: write
   contents: read
+  actions: write
 
 jobs:
+  backup-and-reset-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger backup and reset workflow
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.WORKFLOW_PAT }}
+          script: |
+            const workflowId = 'backup-and-reset-e2e.yaml';
+            
+            console.log('🚀 Triggering backup-and-reset-e2e workflow...');
+            
+            try {
+              // Trigger the workflow
+              const dispatch = await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflowId,
+                ref: 'main'
+              });
+              
+               console.log(`✅ Workflow ${workflowId} dispatched successfully.`);
+              
+              // Wait a bit for the workflow to start
+              await new Promise(resolve => setTimeout(resolve, 5000));
+              
+              // Get the most recent run of the backup workflow
+              const runs = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflowId,
+                per_page: 1
+              });
+              
+              if (runs.data.workflow_runs.length === 0) {
+                throw new Error('❌ No workflow runs found after triggering');
+              }
+              
+              const run = runs.data.workflow_runs[0];
+              const runId = run.id;
+              const runUrl = run.html_url;
+              
+              console.log(`📊 Monitoring workflow run: ${runUrl}`);
+              console.log(`🔍 Run ID: ${runId}, Status: ${run.status}, Conclusion: ${run.conclusion}`);
+              
+              // Poll for completion
+              let attempts = 0;
+              const maxAttempts = 60; // 10 minutes maximum wait
+              
+              while (attempts < maxAttempts) {
+                const runStatus = await github.rest.actions.getWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: runId
+                });
+                
+                console.log(`⏰ Attempt ${attempts + 1}/${maxAttempts}: Status: ${runStatus.data.status}, Conclusion: ${runStatus.data.conclusion}`);
+                
+                if (runStatus.data.status === 'completed') {
+                  if (runStatus.data.conclusion === 'success') {
+                    console.log('✅ Backup and reset workflow completed successfully!');
+                    break;
+                  } else {
+                    const errorMsg = `❌ Backup and reset workflow failed with conclusion: ${runStatus.data.conclusion}`;
+                    console.log(errorMsg);
+                    console.log(`🔗 View failed run: ${runUrl}`);
+                    core.setFailed(errorMsg);
+                    return;
+                  }
+                }
+                
+                attempts++;
+                if (attempts >= maxAttempts) {
+                  const timeoutMsg = '⏰ Timeout: Backup and reset workflow did not complete within 10 minutes';
+                  console.log(timeoutMsg);
+                  console.log(`🔗 View running workflow: ${runUrl}`);
+                  core.setFailed(timeoutMsg);
+                  return;
+                }
+                
+                // Wait 10 seconds before next check
+                await new Promise(resolve => setTimeout(resolve, 10000));
+              }
+              
+            } catch (error) {
+              const errorMsg = `❌ Failed to trigger or monitor backup workflow: ${error.message}`;
+              console.log(errorMsg);
+              core.setFailed(errorMsg);
+              throw error;
+            }
+
   create-issue:
     runs-on: ubuntu-latest
+    needs: backup-and-reset-e2e
 
     steps:
+      - name: Determine test context
+        id: context
+        run: |
+          # Check if manual trigger provided a test context
+          if [ -n "${{ github.event.inputs.test_context }}" ]; then
+            TEST_CONTEXT="${{ github.event.inputs.test_context }}"
+            echo "Manual trigger with specified test context: $TEST_CONTEXT"
+          else
+            # Use time-based logic (for scheduled triggers or manual triggers without input)
+            CURRENT_HOUR=$(date -u +"%H")
+            echo "Using time-based logic - Current UTC hour: $CURRENT_HOUR"
+            
+            if [ "$CURRENT_HOUR" = "04" ]; then
+              TEST_CONTEXT="boilerplate"
+            elif [ "$CURRENT_HOUR" = "08" ]; then
+              TEST_CONTEXT="wknd"
+            else
+              echo "::error::Unexpected time ($CURRENT_HOUR UTC) - scheduled runs only supported at 07 and 08 UTC"
+              exit 1
+            fi
+          fi
+          
+          # Set outputs based on test context
+          if [ "$TEST_CONTEXT" = "boilerplate" ]; then
+            echo "Running XWalk E2E Boilerplate test"
+            echo "site_url=https://main--aem-boilerplate--adobe.aem.page" >> $GITHUB_OUTPUT
+            echo "site_name=XWalk boilerplate" >> $GITHUB_OUTPUT
+          else
+            echo "Running XWalk WKND E2E test"
+            echo "site_url=https://wknd.site" >> $GITHUB_OUTPUT
+            echo "site_name=WKND" >> $GITHUB_OUTPUT
+          fi
       - name: Create GitHub Issue
         id: create_issue
         uses: actions/github-script@v7
@@ -21,8 +155,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const today = new Date().toISOString().split('T')[0];
-            const issueTitle = `AEMY Catalyze - ${today}`;
-            const issueBody = `Catalyze https://main--aem-boilerplate--adobe.aem.page/.`;
+            const siteName = process.env.SITE_NAME;
+            const siteUrl = process.env.SITE_URL;
+
+            const issueTitle = `AEMY XWalk Catalyze ${siteName} - ${today}`;
+            const issueBody = `Catalyze ${siteUrl}/.`;
 
             const response = await github.rest.issues.create({
               owner: context.repo.owner,
@@ -36,14 +173,19 @@ jobs:
             core.setOutput('issue_number', response.data.number);
 
             console.log(`Created issue: ${response.data.html_url}`);
+        env:
+          SITE_NAME: ${{ steps.context.outputs.site_name }}
+          SITE_URL: ${{ steps.context.outputs.site_url }}
+
       - name: Post Slack message for new issue
         id: slack_notify
+        continue-on-error: true
         uses: slackapi/slack-github-action@v1.25.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload: |
             {
-              "text": "*E2E Crosswalk Test Started* :rocket:\nIssue created: <${{ steps.create_issue.outputs.issue_url }}|${{ steps.create_issue.outputs.issue_title }}>"
+              "text": "*E2E Crosswalk ${{ steps.context.outputs.site_name }} Test Started* :rocket:\nIssue created: <${{ steps.create_issue.outputs.issue_url }}|${{ steps.create_issue.outputs.issue_title }}>"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -53,13 +195,29 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issue_number = Number(process.env.ISSUE_NUMBER);
+            const slack_outcome = process.env.SLACK_OUTCOME;
             const thread_ts = process.env.SLACK_THREAD_TS;
+            const channel_id = process.env.SLACK_CHANNEL_ID;
+            
+            let comment_body;
+            if (slack_outcome === 'success') {
+              // Format thread_ts for Slack URL (remove decimal point, add 'p' prefix)
+              const formatted_ts = 'p' + thread_ts.replace('.', '');
+              const slack_url = `https://adobe.enterprise.slack.com/archives/${channel_id}/${formatted_ts}`;
+              
+              comment_body = `Slack thread_ts: ${channel_id}\n\n🔗 [View Slack message](${slack_url})`;
+            } else {
+              comment_body = `⚠️ Slack notification failed - no thread timestamp available`;
+            }
+            
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number,
-              body: `Slack thread_ts: ${thread_ts}`
+              body: comment_body
             });
         env:
           ISSUE_NUMBER: ${{ steps.create_issue.outputs.issue_number }}
           SLACK_THREAD_TS: ${{ steps.slack_notify.outputs.ts }}
+          SLACK_OUTCOME: ${{ steps.slack_notify.outcome }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}

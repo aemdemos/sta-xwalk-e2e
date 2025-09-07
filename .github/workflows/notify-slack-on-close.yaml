@@ -22,7 +22,7 @@ jobs:
             });
             const threadComment = comments.data.reverse().find(c => c.body.startsWith('Slack thread_ts: '));
             if (threadComment) {
-              const thread_ts = threadComment.body.replace('Slack thread_ts: ', '').trim();
+              const thread_ts = threadComment.body.match(/Slack thread_ts: ([0-9]+)/)?.[1];
               core.setOutput('thread_ts', thread_ts);
             }
       - name: Notify Slack that E2E test completed

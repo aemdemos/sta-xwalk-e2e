@@ -82,7 +82,7 @@ jobs:
               
               const threadComment = comment.data.find(c => c.body.includes('Slack thread_ts:'));
               if (threadComment) {
-                const threadTs = threadComment.body.match(/Slack thread_ts: (.*)/)[1];
+                const threadTs = threadComment.body.match(/Slack thread_ts: ([0-9]+)/)?.[1];
                 core.setOutput('thread_ts', threadTs);
               }
             }
@@ -107,7 +107,7 @@ jobs:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload: |
             {
-              "text": "*Backup and Reset Completed* :white_check_mark:\n• Created backup branch: `${{ steps.backup.outputs.branch_name }}`\n• Reset main branch to commit: `${{ vars.E2E_WORKFLOW_COMMIT }}`",
+              "text": "*XWalk Backup and Reset Completed* :white_check_mark:\n• Created backup branch: `${{ steps.backup.outputs.branch_name }}`\n• Reset main branch to commit: `${{ vars.E2E_WORKFLOW_COMMIT }}`",
               "thread_ts": "${{ steps.get_issue.outputs.thread_ts }}"
             }
         env:
