@@ -6,7 +6,7 @@ on:
 
 jobs:
   notify:
-    if: startsWith(github.event.issue.title, 'AEMY Catalyze -')
+    if: startsWith(github.event.issue.title, 'AEMY XWalk Catalyze -')
     runs-on: ubuntu-latest
     steps:
       - name: Get Slack thread_ts from issue comments
