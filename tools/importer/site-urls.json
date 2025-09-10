@@ -1,0 +1,34 @@
+{
+  "originUrl": "https://main--aem-boilerplate--adobe.aem.page",
+  "aborted": false,
+  "lastCrawled": "https://main--aem-boilerplate--adobe.aem.page/",
+  "urls": [
+    {
+      "url": "https://main--aem-boilerplate--adobe.aem.page/",
+      "source": "SITEMAPS",
+      "targetPath": "/",
+      "id": "3e001f8e061719b5b648a04afeb2d041bf93d5fd"
+    }
+  ],
+  "crawlOptions": {
+    "timeout": 64800000,
+    "inclusionPatterns": [],
+    "exclusionPatterns": [],
+    "limit": 100,
+    "sameDomain": true,
+    "keepHash": false,
+    "strategy": "sitemaps",
+    "logger": {},
+    "strategiesAttempted": [
+      "SITEMAPS"
+    ]
+  },
+  "extractionErrors": [
+    {
+      "url": "https://main--aem-boilerplate--adobe.aem.page/test-page",
+      "status": "404 Not Found"
+    }
+  ],
+  "errorCountMessage": "{\"E_404\":1}",
+  "error": null
+}
