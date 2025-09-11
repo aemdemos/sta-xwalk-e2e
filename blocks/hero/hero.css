@@ -45,3 +45,103 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 180px;
+  width: 100vw;
+  background: linear-gradient(90deg, #0b233a 35%, rgba(11,35,58,0.85) 65%, transparent 95%);
+  box-sizing: border-box;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Make the image blend and cover more of the right side */
+.hero > div:first-of-type {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 48%;
+  width: 52%;
+  height: 100%;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none; /* allow text to be clickable */
+}
+
+.hero > div:first-of-type picture,
+.hero > div:first-of-type img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero > div:last-of-type {
+  position: relative;
+  z-index: 1;
+  width: 52%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 48px;
+  padding-right: 16px;
+  min-height: 180px;
+  background: linear-gradient(90deg, #0b233a 99%, transparent);
+  box-sizing: border-box;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: var(--heading-font-size-l);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-align: left;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.09);
+}
+
+/* Responsive adjustments: stack text above image, let image fill background */
+@media (max-width: 900px) {
+  .hero {
+    min-height: 140px;
+    width: 100vw;
+    flex-direction: column;
+    padding: 0;
+  }
+  .hero > div:first-of-type {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hero > div:last-of-type {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: linear-gradient(90deg, #0b233a 99%, transparent);
+    justify-content: center;
+  }
+  .hero h1 {
+    font-size: var(--heading-font-size-m);
+  }
+  .hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Hero full-bleed */
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
