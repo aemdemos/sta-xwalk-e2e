@@ -1,14 +1,22 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: 40px;
+  align-items: flex-start;
 }
 
 .columns img {
   width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .columns > div > div {
   order: 1;
+  width: 50%;
+  box-sizing: border-box;
 }
 
 .columns > div > .columns-img-col {
@@ -29,5 +37,24 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+.columns > div > div > * {
+  margin-bottom: 18px;
+}
+
+.columns > div > div > *:last-child {
+  margin-bottom: 0;
+}
+
+@media (width <= 900px) {
+  .columns > div {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .columns > div > div {
+    width: 100%;
   }
 }
