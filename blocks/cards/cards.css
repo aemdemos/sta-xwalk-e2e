@@ -3,25 +3,119 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
+  gap: 12px;
+  align-items: stretch;
+  grid-auto-rows: 1fr;
+  box-sizing: border-box;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  border: none;
+  background: var(--background-color);
+  box-shadow: 0 2px 8px rgb(60 60 60 / 3%);
+  display: flex;
+  flex-direction: column;
+  min-height: 310px;
+  height: 100%;
+  padding: 0;
+  border-radius: 0;
+  overflow: hidden;
+  align-self: stretch;
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: 0;
+  padding: 12px 14px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  justify-content: flex-start;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  height: 138px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: flex;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+
+.cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+  background: none;
+}
+
+/* Tablet: 2 columns */
+@media (width <= 1023px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile: 1 column */
+@media (width <= 600px) {
+  .cards > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card appearance: force equal height, subtle shadow, no border, no border-radius */
+
+/* Image container at the top of the card, fixed height for equal alignment */
+
+/* Card image: fill container, cover, no extra margin/padding */
+.cards > ul > li img,
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  margin: 0;
+  padding: 0;
+}
+
+/* Card body: tighter, more compact vertical padding */
+
+/* Headline/title styling */
+.cards .cards-card-body p:first-child {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+  line-height: 1.2;
+  margin: 0 0 2px;
+  padding: 0;
+}
+
+/* Description/body text styling */
+.cards .cards-card-body p:not(:first-child) {
+  font-size: 14px;
+  font-weight: normal;
+  color: #444;
+  margin: 0;
+  padding: 0;
+  line-height: 1.55;
+}
+
+/* Ensure images/picture fill their container without extra spacing */
+.cards .cards-card-image picture,
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
 }
