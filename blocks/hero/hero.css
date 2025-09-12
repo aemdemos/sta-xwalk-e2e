@@ -5,8 +5,15 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 180px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  background: linear-gradient(90deg, #0d2942 60%, #173c57 100%);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -32,16 +39,135 @@
   inset: 0;
   object-fit: cover;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: -24vw;
 }
 
 .hero img {
   object-fit: cover;
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0 0 60px #0d294299);
+  opacity: 0.92;
+  max-width: none;
+  min-width: 800px;
 }
 
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Text area: allow text to be left-aligned and float over image area if needed */
+.hero > div:last-child {
+  flex: 1 1 60%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  z-index: 2;
+  position: relative;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero h4,
+.hero h5,
+.hero h6 {
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px #173c5777;
+  text-align: left;
+  padding-left: 40px;
+  max-width: 700px;
+  position: relative;
+  z-index: 3;
+}
+
+/* DNA image: absolute, very wide, overlapping leftwards for a natural blend */
+.hero > div:first-child {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 90vw;
+  min-width: 700px;
+  max-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Responsive for small screens */
+@media (width <= 900px) {
+  .hero > div:first-child {
+    width: 130vw;
+    min-width: 500px;
+    margin-left: -20vw;
+  }
+
+  .hero picture {
+    margin-left: -30vw;
+  }
+
+  .hero img {
+    min-width: 600px;
+  }
+}
+
+@media (width <= 700px) {
+  .hero {
+    flex-direction: column;
+    min-height: 120px;
+  }
+
+  .hero > div:last-child {
+    width: 100%;
+    justify-content: center;
+    padding-left: 0;
+  }
+
+  .hero h1,
+  .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    text-align: center;
+    font-size: 1.2rem;
+    padding-left: 0;
+    max-width: 90vw;
+  }
+
+  .hero > div:first-child {
+    position: static;
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    pointer-events: auto;
+  }
+
+  .hero picture {
+    margin-left: 0;
+  }
+
+  .hero img {
+    margin: 24px auto 0;
+    width: 100%;
+    height: auto;
+    max-width: 340px;
+    min-width: 0;
+    opacity: 1;
   }
 }
