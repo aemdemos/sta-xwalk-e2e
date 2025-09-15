@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +30,78 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+/* Use a grid for the inner block; assign quadrants to individual elements */
+.columns > .columns.block.columns-2-cols > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Top left: text/list/button (first column, all except image) */
+.columns > .columns.block.columns-2-cols > div > div:first-child {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Top right: blue DNA image (picture in first column) */
+.columns > .columns.block.columns-2-cols > div > div:first-child > picture {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  margin-top: 0;
+}
+
+/* Bottom left: gold DNA image (picture in second column) */
+.columns > .columns.block.columns-2-cols > div > div:last-child > picture {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  margin-top: 0;
+}
+
+/* Bottom right: preview text/button (everything in second column except image) */
+.columns > .columns.block.columns-2-cols > div > div:last-child > p,
+.columns > .columns.block.columns-2-cols > div > div:last-child .button-container {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Make images fill their grid cell */
+.columns picture,
+.columns img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+/* Tight grouping for preview text/button */
+.columns .button-container {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+/* Responsive: stack everything vertically on small screens */
+@media (width <= 900px) {
+  .columns > .columns.block.columns-2-cols > div {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .columns > .columns.block.columns-2-cols > div > div {
+    width: 100%;
   }
 }
