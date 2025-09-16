@@ -3,25 +3,102 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
+  gap: 8px;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  border: none;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgb(44 62 80 / 21%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  min-width: 0;
+  height: 100%;
+  transition: box-shadow 0.2s;
+  box-sizing: border-box;
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 10px 12px;
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  box-sizing: border-box;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  height: 132px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-radius: 3px 3px 0 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  height: 100%;
+  border-radius: 3px 3px 0 0;
+  display: block;
+  box-sizing: border-box;
+}
+
+
+.cards {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  background: none;
+}
+
+/* Tighter, denser grid with minimal horizontal/vertical gaps */
+
+/* Responsive: 2 columns, then 1 column */
+@media (width <= 900px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 6px;
+  }
+}
+
+@media (width <= 600px) {
+  .cards > ul {
+    grid-template-columns: 1fr;
+    gap: 6px 0;
+  }
+}
+
+/* Slightly taller image for visual density; fixed height for strict alignment */
+
+.cards .cards-card-body p {
+  margin: 0;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.cards .cards-card-body p strong {
+  font-size: 16px;
+  color: #212121;
+  font-weight: 700;
+  display: block;
 }
