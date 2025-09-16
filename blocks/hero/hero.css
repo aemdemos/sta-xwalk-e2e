@@ -45,3 +45,113 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 190px;
+  width: 100%;
+  padding: 0;
+  background: linear-gradient(90deg, #0c2339 60%, transparent 100%);
+  overflow: hidden;
+}
+
+/* Left: Text block */
+.hero > div:last-child {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 48px;
+  min-width: 0;
+  z-index: 2;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: left;
+  margin: 0;
+  line-height: 1.2;
+  max-width: 90%;
+}
+
+/* Right: Image block --- make image fill right side */
+.hero > div:first-child {
+  flex: 1.15 1 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-width: 0;
+  z-index: 1;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  width: 110%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: right center;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 0 24px rgba(85,198,255,0.25));
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .hero {
+    min-height: 140px;
+    background: linear-gradient(90deg, #0c2339 75%, transparent 100%);
+  }
+  .hero > div:last-child {
+    padding-left: 20px;
+  }
+  .hero h1 {
+    font-size: 21px;
+    max-width: 100%;
+  }
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    width: 120%;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    flex-direction: column-reverse;
+    min-height: 100px;
+    background: #0c2339;
+    padding: 0;
+  }
+  .hero > div {
+    width: 100%;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+  }
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    width: 100vw;
+    max-width: none;
+    min-width: 0;
+    height: 100px;
+    object-position: center top;
+    margin: 0;
+  }
+  .hero > div:last-child {
+    padding: 12px 8px 0 8px;
+    align-items: flex-start;
+  }
+  .hero h1 {
+    font-size: 15px;
+    text-align: left;
+    margin-bottom: 8px;
+    max-width: 100%;
+  }
+}
