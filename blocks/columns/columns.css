@@ -1,6 +1,10 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
-  display: flex;
+  display: grid;
   flex-direction: column;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 48px;
+  align-items: start;
 }
 
 .columns img {
@@ -9,6 +13,10 @@
 
 .columns > div > div {
   order: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
 }
 
 .columns > div > .columns-img-col {
@@ -29,5 +37,72 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns {
+  background: var(--background-color);
+  padding: 32px 0;
+}
+
+/* Main columns layout: grid for side-by-side, but use align-items: start for top alignment */
+
+/* Each column is a vertical stack */
+
+/* Subtle stagger: nudge the right image down just a bit, but LESS than before */
+@media (width >= 900px) {
+  .columns > div > div:last-child picture {
+    margin-top: 10px;
+  }
+}
+
+/* Remove any margin from left image */
+.columns > div > div:first-child picture {
+  margin-top: 0;
+}
+
+/* Images: responsive and sharp */
+.columns picture img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Reduce bottom margin on text and lists for tighter grouping */
+.columns > div > div p,
+.columns > div > div ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.columns .button-container {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+/* Secondary button outline style */
+.columns .button.secondary {
+  background: unset;
+  border: 2px solid var(--text-color);
+  color: var(--text-color);
+}
+
+.columns .button.secondary:hover,
+.columns .button.secondary:focus {
+  border-color: var(--link-color);
+  color: var(--link-color);
+}
+
+/* Responsive: stack columns vertically on smaller screens */
+@media (width <= 900px) {
+  .columns > div {
+    grid-template-columns: 1fr;
+    gap: 32px 0;
+    align-items: start;
+  }
+
+  .columns > div > div:last-child picture {
+    margin-top: 0;
   }
 }
