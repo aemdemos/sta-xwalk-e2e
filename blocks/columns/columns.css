@@ -31,3 +31,53 @@
     order: unset;
   }
 }
+
+
+.columns {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* Each column stacks its children vertically */
+.columns > div {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  min-width: 0;
+  align-items: flex-start;
+}
+
+/* Make images fill column width */
+.columns .columns-img-col picture,
+.columns .columns-img-col img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Button and text should be snug with images */
+.columns .button-container {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+/* Remove vertical margin from text/button blocks */
+.columns > div > div:not(.columns-img-col) {
+  margin: 0;
+}
+
+/* Responsive: stack columns vertically on small screens */
+@media (max-width: 900px) {
+  .columns {
+    flex-direction: column;
+    gap: 32px;
+  }
+  .columns > div {
+    width: 100%;
+    gap: 32px;
+  }
+}
