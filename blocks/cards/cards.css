@@ -13,11 +13,18 @@
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: 0;
+  padding: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
 .cards > ul > li img {
@@ -25,3 +32,80 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+
+.cards .cards.block > ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  place-items: stretch stretch;
+  width: 100%;
+}
+
+/* Responsive columns for smaller screens */
+@media (width <= 1200px) {
+  .cards .cards.block > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (width <= 900px) {
+  .cards .cards.block > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 600px) {
+  .cards .cards.block > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card styling */
+.cards .cards.block > ul > li {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgb(20 20 40 / 7%);
+  padding: 24px;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: none;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+/* Card image styling */
+
+.cards .cards.block > ul > li img {
+  display: block;
+  width: 100%;
+  height: 132px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Card body/text styling */
+
+.cards .cards-card-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.cards .cards-card-body p {
+  font-size: 15px;
+  color: #333;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Ensure equal height for cards in grid */
+
+/* Fix spacing between grid rows/columns */
