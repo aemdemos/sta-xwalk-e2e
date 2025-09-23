@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -6,7 +7,13 @@
 .hero {
   position: relative;
   padding: 40px 24px;
-  min-height: 300px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100vw;
+  background: linear-gradient(90deg, #0b223a 60%, #144369 100%);
+  overflow: hidden;
 }
 
 .hero h1,
@@ -44,4 +51,119 @@
   .hero {
     padding: 40px 32px;
   }
+}
+
+/* Text column - left side */
+.hero > div:last-child {
+  flex: 1 1 0;
+  display: flex;
+  align-items: flex-start; /* align text toward top */
+  justify-content: flex-start;
+  padding-left: 48px;
+  padding-top: 32px;
+  min-width: 0;
+  z-index: 2;
+  height: 100%;
+}
+
+/* Center the text vertically with a little offset from top */
+.hero > div:last-child > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+/* Heading style */
+.hero h1 {
+  color: #fff;
+  font-size: var(--heading-font-size-l, 28px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  text-align: left;
+  text-shadow: 0 1px 2px rgb(24 40 60 / 24%);
+  max-width: 600px;
+}
+
+/* DNA image column - right side (visually blends, overflows background) */
+.hero > div:first-child {
+  flex: 1 1 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50vw;
+  min-width: 420px;
+  max-width: 900px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 1;
+  height: 100%;
+}
+
+/* Ensure image fills and overflows naturally */
+.hero > div:first-child picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: static;
+}
+
+.hero > div:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  box-shadow: none;
+  border: none;
+}
+
+/* Responsive behavior: stack text above image, shrink image */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: unset;
+    width: 100vw;
+    padding: 0 0 24px;
+  }
+
+  .hero > div:first-child {
+    position: static;
+    width: 100vw;
+    min-width: 0;
+    max-width: none;
+    height: 180px;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hero > div:first-child picture,
+  .hero > div:first-child img {
+    width: 100%;
+    height: 180px;
+    min-width: 0;
+    object-fit: cover;
+  }
+
+  .hero > div:last-child {
+    padding-left: 24px;
+    padding-top: 18px;
+    min-height: 120px;
+  }
+
+  .hero h1 {
+    font-size: var(--heading-font-size-m, 22px);
+    text-align: center;
+    max-width: 100vw;
+  }
+}
+
+/* Remove unwanted margins for headings */
+.hero h1, .hero h2, .hero h3, .hero h4, .hero h5, .hero h6 {
+  margin-top: 0;
+  margin-bottom: 0;
 }
