@@ -5,8 +5,16 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0 32px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: radial-gradient(ellipse at right, #13304a 60%, #0b192a 100%);
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .hero h1,
@@ -43,5 +51,139 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* --- LEFT COLUMN: TEXT --- */
+.hero > div:last-child {
+  flex: 0 1 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  order: 1;
+  padding-top: 56px;
+  padding-right: 22px;
+  box-sizing: border-box;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  text-align: left;
+  max-width: 100%;
+}
+
+/* --- RIGHT COLUMN: IMAGE --- */
+
+/* Explicitly set all containers to expand and allow image visibility */
+.hero > div:first-child {
+  flex: 1 1 60%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  order: 2;
+  overflow: visible;
+}
+
+.hero > div:first-child > div {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.hero > div:first-child picture {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Make the DNA image visible and fill the right half visually */
+.hero > div:first-child picture img {
+  display: block;
+  object-fit: cover;
+  width: 420px;
+  max-width: 100%;
+  height: 240px;
+  max-height: 100%;
+  margin-right: 0;
+  margin-bottom: 0;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* --- Responsive Adjustments --- */
+@media (width <= 900px) {
+  .hero {
+    padding: 0 12px;
+    min-height: 180px;
+  }
+
+  .hero > div:last-child {
+    padding-top: 26px;
+    padding-right: 10px;
+  }
+
+  .hero > div:first-child picture img {
+    width: 230px;
+    height: 140px;
+    max-width: 100vw;
+  }
+}
+
+@media (width <= 700px) {
+  .hero {
+    flex-direction: column;
+    min-height: 120px;
+    padding: 16px 4vw;
+  }
+
+  .hero > div:first-child,
+  .hero > div:last-child {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    order: unset;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding-top: 0;
+    padding-right: 0;
+  }
+
+  .hero > div:first-child > div,
+  .hero > div:first-child picture {
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .hero h1 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .hero > div:first-child picture img {
+    width: 160px;
+    height: 100px;
+    max-width: 100vw;
   }
 }
