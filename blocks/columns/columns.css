@@ -31,3 +31,83 @@
     order: unset;
   }
 }
+
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 40px;
+  align-items: start;
+  width: 100%;
+}
+
+/* Make each column a flex column, stacking its two children vertically and keeping them top-aligned */
+.columns > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+  height: 100%;
+}
+
+/* Force both columns to stretch to the height of the tallest column, so both rows always align at the top */
+.columns {
+  align-items: stretch;
+}
+
+/* Ensure bottom row content (image and text/button) is top-aligned */
+.columns > div > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Image columns: consistent height, images fill, no overflow */
+.columns .columns-img-col {
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.columns .columns-img-col img,
+.columns .columns-img-col picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Top-left text block: spacing between list and button */
+.columns > div:first-child > div:first-child ul {
+  margin-bottom: 16px;
+}
+
+/* Style text/button cell in bottom-right for compact look */
+.columns > div:last-child > div:last-child {
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+/* Prevent extra vertical spacing around button containers */
+.columns .button-container {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* Responsive: stack columns vertically on small screens */
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .columns > div {
+    gap: 24px;
+  }
+  .columns .columns-img-col {
+    height: 180px;
+  }
+}
