@@ -3,25 +3,116 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
+  gap: 22px 26px;
+  align-items: stretch;
+  justify-content: center;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  border: none;
+  background: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .cards .cards-card-body {
   margin: 16px;
+  flex: 1 1 auto;
+  padding: 20px 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  position: relative;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+
+.cards {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 20px;
+  padding-bottom: 32px;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+/* Responsive Columns */
+@media (width <= 1100px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 700px) {
+  .cards > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cards .cards-card-image picture,
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.cards .cards-card-image img {
+  object-fit: cover;
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* Show background only if image fails to load */
+.cards .cards-card-image:not(:has(img[src])) {
+  background: #eee;
+}
+
+/* Card body: padding for accurate spacing */
+
+.cards .cards-card-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #202124;
+  margin: 0 0 9px;
+  line-height: 1.18;
+  text-align: left;
+}
+
+.cards .cards-card-body p {
+  font-size: 15px;
+  font-weight: 400;
+  color: #444;
+  margin: 0;
+  line-height: 1.5;
+  text-align: left;
 }
