@@ -1,6 +1,10 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 8vw;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .columns img {
@@ -13,6 +17,11 @@
 
 .columns > div > .columns-img-col {
   order: 0;
+  flex: 1 1 0;
+  min-width: 320px;
+  max-width: 540px;
+  display: flex;
+  align-items: center;
 }
 
 .columns > div > .columns-img-col img {
@@ -29,5 +38,108 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Tighten vertical gap between rows */
+  padding: 0 48px; /* Generous horizontal padding for centering */
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Each row in the block */
+
+/* Vertically center right column content in second row */
+.columns > div:nth-child(2) {
+  align-items: center;
+}
+
+/* Text column: set a balanced width, not too narrow */
+.columns > div > div:not(.columns-img-col) {
+  flex: 0 1 32vw;
+  max-width: 380px;
+  min-width: 260px;
+  align-self: flex-start;
+  margin-left: 16px; /* Pull text away from left edge for breathing room */
+}
+
+/* Image column: take remaining space, but do not overpower text */
+
+/* Images fill their container neatly, but do not dominate */
+.columns .columns-img-col img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0;
+  background: #000;
+  max-height: 320px;
+}
+
+/* Spacing below text and lists */
+.columns p,
+.columns ul {
+  color: #000;
+  font-size: 18px;
+  margin-bottom: 16px;
+  margin-top: 0;
+  line-height: 1.4;
+}
+
+/* Button tweaks for block-specific appearance */
+.columns .button {
+  background-color: #3b45ff;
+  color: #fff;
+  border-radius: 18px;
+  border: none;
+  padding: 8px 24px;
+  font-size: 16px;
+  min-width: 90px;
+  box-sizing: border-box;
+  text-align: center;
+  margin: 16px 0 0;
+}
+
+.columns .button.secondary {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 18px;
+}
+
+.columns .button-container {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+/* Responsive: stack columns vertically on small screens */
+@media (width <= 900px) {
+  .columns {
+    padding: 0 8px;
+    max-width: none;
+  }
+
+  .columns > div {
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  .columns > div > div:not(.columns-img-col),
+  .columns > div > .columns-img-col {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .columns .columns-img-col img {
+    max-height: 210px;
   }
 }
