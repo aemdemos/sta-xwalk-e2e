@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -5,8 +6,14 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 190px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  background: #09223a;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -44,4 +51,89 @@
   .hero {
     padding: 40px 32px;
   }
+}
+
+/* Aggressively remove margin and padding above the hero block in common parent containers */
+main > div:first-child,
+main > .hero-wrapper:first-child,
+main > .section:first-child,
+.hero-container,
+.hero-container > .hero-wrapper:first-child,
+.hero-container > .hero-wrapper,
+.section:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Hero layout */
+
+/* Image as background effect */
+.hero > div:first-child {
+  flex: 1 1 0%;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  pointer-events: none;
+}
+
+.hero > div:first-child picture,
+.hero > div:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  display: block;
+}
+
+/* Text content area, top-left aligned */
+.hero > div:last-child {
+  flex: 1 1 0%;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero > div:last-child > div {
+  width: auto;
+  max-width: 60vw;
+  padding-left: 40px;
+  padding-top: 28px; /* Control vertical offset (adjust to match reference image) */
+}
+
+/* Heading styling */
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.15;
+  text-align: left;
+  max-width: 100%;
+}
+
+/* Responsive: stack text closer to top for small screens */
+@media (width <= 600px) {
+  .hero > div:last-child > div {
+    padding-left: 16px;
+    padding-top: 18px;
+    max-width: 90vw;
+  }
+
+  .hero h1 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Hero should span full width */
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
 }
