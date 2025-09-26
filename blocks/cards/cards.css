@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .cards > ul {
   list-style: none;
   margin: 0;
@@ -13,15 +14,127 @@
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: 0;
+  padding: 20px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  display: block;
+  background: #e0e0e0;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+
+.cards {
+  background: #f5f5f5;
+  padding: 40px 0;
+}
+
+/* Reduce the container width so only 3 columns fit at desktop */
+.cards > .block {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Always 3 columns at desktop */
+.cards > .block > ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  place-items: stretch stretch;
+}
+
+@media (width <= 1000px) {
+  .cards > .block {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+}
+
+@media (width <= 900px) {
+  .cards > .block > ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (width <= 600px) {
+  .cards > .block > ul {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .cards {
+    padding: 20px 0;
+  }
+
+  .cards > .block {
+    padding: 0 8px;
+  }
+}
+
+/* Card styling: remove border, soften shadow */
+.cards > .block > ul > li {
+  background: #fff;
+  border: none;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 9%);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  overflow: hidden;
+  transition: box-shadow 0.18s;
+  border-width: 0;
+}
+
+/* Card hover effect */
+.cards > .block > ul > li:hover {
+  box-shadow: 0 10px 28px rgb(0 0 0 / 12%);
+}
+
+/* Remove any lingering border from previous styles */
+
+/* Image styling */
+
+.cards .cards-card-image img,
+.cards .cards-card-image picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card body styling */
+
+/* Title styling */
+.cards .cards-card-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #232323;
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
+
+/* Body text styling */
+.cards .cards-card-body p {
+  font-size: 15px;
+  color: #333;
+  margin: 0;
+  line-height: 1.5;
 }
