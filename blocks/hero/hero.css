@@ -5,8 +5,16 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 190px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 190px;
+  width: 100%;
+  background: linear-gradient(90deg, #0b2540 0%, #16344f 100%);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -43,5 +51,118 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Text area: left side */
+.hero > div:last-child {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  min-width: 0;
+  padding-left: 40px;
+  z-index: 2;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.1;
+  text-align: left;
+  max-width: 80%;
+}
+
+/* Image right side: make it visually "bleed" into center */
+.hero > div:first-child {
+  flex: 1.3 1 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  height: 100%;
+  min-width: 0;
+  order: 2;
+  z-index: 1;
+  margin-left: -80px; /* makes image visually overlap central area */
+}
+
+/* Ensure the picture container fills height and is flush right */
+.hero > div:first-child picture {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  min-width: 0;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+  width: auto;
+}
+
+/* Key image rules for visual integration */
+.hero > div:first-child img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  display: block;
+  max-width: none;
+  min-width: 340px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: 0 0 32px #16344f40;
+
+  /* Overlap image into content area */
+
+  /* Optionally, try transform for further overlap: */
+
+  /* transform: translateX(-8%); */
+}
+
+/* Responsive: stack vertically + shrink image */
+@media (width <= 800px) {
+  .hero {
+    flex-direction: column;
+    min-height: 140px;
+    height: auto;
+    padding: 16px 0;
+  }
+
+  .hero > div {
+    width: 100%;
+    height: auto;
+    justify-content: center;
+    min-width: 0;
+    padding-left: 0;
+  }
+
+  .hero > div:last-child {
+    margin-bottom: 16px;
+    max-width: 100%;
+    padding-left: 0;
+  }
+
+  .hero h1 {
+    font-size: 1.2rem;
+    max-width: 100%;
+  }
+
+  .hero > div:first-child {
+    margin-left: 0;
+    flex: 1 1 0;
+  }
+
+  .hero > div:first-child picture {
+    width: 100vw;
+    justify-content: center;
+  }
+
+  .hero > div:first-child img {
+    width: 100vw;
+    min-width: 0;
+    height: 100px;
+    object-fit: contain;
   }
 }
