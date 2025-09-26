@@ -31,3 +31,120 @@
     order: unset;
   }
 }
+
+
+.columns {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 32px;
+  margin: 40px auto 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 20px;
+  }
+}
+
+.columns > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Left column content: subtle left indent for breathing room */
+.columns > div:first-child > div:not(.columns-img-col) {
+  padding-left: 12px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .columns > div:first-child > div:not(.columns-img-col) {
+    padding-left: 0;
+  }
+}
+
+/* Make spacing between button and image tighter for compactness */
+.columns > div:first-child > .columns-img-col {
+  margin-top: 8px;
+}
+
+/* Right column: image above text/button, keep spacing compact */
+.columns > div:last-child > .columns-img-col {
+  margin-bottom: 16px;
+}
+.columns > div:last-child > div:not(.columns-img-col) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Images sizing and alignment (less wide for more whitespace) */
+.columns .columns-img-col {
+  width: 100%;
+}
+
+.columns .columns-img-col img,
+.columns .columns-img-col picture {
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+/* Text and list styling */
+.columns p,
+.columns ul,
+.columns li {
+  color: #222222;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: left;
+  margin-bottom: 0.5em;
+  margin-top: 0;
+}
+
+.columns ul {
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+/* Button container and button styles */
+.columns .button-container {
+  margin-top: 0.7em;
+  margin-bottom: 0;
+  width: auto;
+  display: flex;
+  align-items: flex-start;
+}
+
+.columns .button {
+  margin: 0;
+  min-width: 90px;
+  padding: 0.45em 1.2em;
+  border-radius: 2em;
+  text-align: left;
+  font-size: 15px;
+  box-shadow: none;
+}
+
+.columns .button.secondary {
+  background-color: #fff;
+  border: 2px solid #222222;
+  color: #222222;
+}
+
+.columns .button.secondary:hover,
+.columns .button.secondary:focus {
+  background-color: #f0f0f0;
+}
