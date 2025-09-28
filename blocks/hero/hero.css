@@ -45,3 +45,119 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  min-height: 190px;
+  width: 100%;
+  background: #0b2844;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Left column: Text, fully vertically and horizontally centered */
+.hero > div:last-child {
+  flex: 1 1 50%;
+  order: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  height: 100%;
+  padding-left: 40px;
+  box-sizing: border-box;
+}
+
+/* Make sure the inner div is full height to help centering */
+.hero > div:last-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Vertically center h1 (use auto top and bottom margins) */
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin: auto 0;
+  max-width: 100%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Right column: Image, vertically centered */
+.hero > div:first-child {
+  flex: 1 1 50%;
+  order: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  height: 100%;
+  padding-right: 0;
+  box-sizing: border-box;
+}
+.hero picture {
+  position: static;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.hero img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  box-sizing: border-box;
+  display: block;
+}
+
+/* Responsive: stack vertically on small screens, center text */
+@media (max-width: 700px) {
+  .hero {
+    flex-direction: column-reverse;
+    min-height: 220px;
+    padding: 0;
+    justify-content: flex-start;
+  }
+  .hero > div:first-child,
+  .hero > div:last-child {
+    flex: 1 1 100%;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .hero > div:last-child {
+    padding: 16px 0 0 0;
+  }
+  .hero > div:last-child > div {
+    height: auto;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero h1 {
+    max-width: 100%;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
+
+.hero-container > .hero-wrapper {
+  max-width: unset;
+  padding: 0;
+}
