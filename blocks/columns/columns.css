@@ -1,5 +1,6 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
-  display: flex;
+  display: contents;
   flex-direction: column;
 }
 
@@ -30,4 +31,161 @@
     flex: 1;
     order: unset;
   }
+}
+
+
+.columns {
+  /* 2x2 grid, rows expand to fit content, tighter vertical spacing */
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-rows: auto auto;
+  gap: 12px 32px;
+  background: #fff;
+  padding: 48px 0;
+
+  /* Remove min-height to let content fill grid naturally */
+}
+
+/* Make row containers transparent to grid so their children are true grid items */
+
+/* Top left text */
+.columns > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+  place-self: start start;
+  padding-right: 0;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Top right image: center vertically and horizontally, fill space */
+.columns > div:first-child > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch; /* allow image to fill entire row height */
+  height: 100%;
+}
+
+/* Bottom left image: center vertically/horizontally, fill space */
+.columns > div:nth-child(2) > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  height: 100%;
+}
+
+/* Bottom right text/button: center vertically, align left horizontally */
+.columns > div:nth-child(2) > div:last-child {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  align-self: stretch;
+  padding-left: 0;
+  padding-right: 0;
+  height: 100%;
+}
+
+/* Images: fill available vertical grid cell space, stay centered, fill more of cell */
+.columns .columns-img-col img {
+  max-width: 100%;
+  height: 95%;      /* Fill most of the cell for visual impact */
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Responsive: stack rows and columns on small screens */
+@media (width <= 800px) {
+  .columns {
+    display: block;
+    padding: 24px 0;
+    gap: 0;
+  }
+
+  .columns > div {
+    display: block;
+  }
+
+  .columns > div > div,
+  .columns > div > .columns-img-col {
+    display: block;
+    width: 100%;
+    margin-bottom: 24px;
+    grid-column: auto;
+    grid-row: auto;
+    padding-right: 0;
+    padding-left: 0;
+    height: auto;
+  }
+
+  .columns .columns-img-col img {
+    max-height: 220px;
+    height: auto;
+    margin-bottom: 16px;
+  }
+}
+
+/* Button styles - scoped for columns block */
+.columns .button {
+  background: #3a50ff;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 10px;
+  margin-bottom: 0;
+  box-shadow: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.columns .button.secondary {
+  background: #fff;
+  color: #222;
+  border: 1px solid #222;
+}
+
+.columns .button:hover,
+.columns .button:focus {
+  background: #1d3ecf;
+  color: #fff;
+}
+
+.columns .button-container {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+/* Paragraphs, lists, and items inside columns */
+.columns p,
+.columns ul,
+.columns li {
+  color: #222;
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.columns ul {
+  margin-left: 18px;
+  margin-bottom: 18px;
+  padding-left: 0;
+}
+
+.columns li {
+  line-height: 1.7;
 }
