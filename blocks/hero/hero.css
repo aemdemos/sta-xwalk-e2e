@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -6,7 +7,16 @@
 .hero {
   position: relative;
   padding: 40px 24px;
-  min-height: 300px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background: #0d2642;
+  padding-left: 48px;
+  padding-right: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .hero h1,
@@ -43,5 +53,155 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* IMAGE COLUMN - use absolute positioning for blending effect */
+.hero > div:first-child {
+  flex: 1 1 50%;
+  order: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 65vw;
+  max-width: 900px;
+  pointer-events: none;
+
+  /* Let the image visually blend with the background */
+}
+
+/* Remove z-index styling from picture if present */
+.hero > div:first-child picture {
+  z-index: unset;
+}
+
+.hero > div:first-child > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* DNA image: very large, slightly overflows left, blends background */
+.hero > div:first-child img {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  min-width: 380px;
+  max-width: none;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 24px #0d2642) brightness(1.1);
+
+  /* Optionally: a left-side gradient mask for extra blend effect */
+  mask-image: linear-gradient(to left, black 85%, transparent 100%);
+  mask-image: linear-gradient(to left, black 85%, transparent 100%);
+  pointer-events: none;
+}
+
+/* TEXT COLUMN - left side, stay above image */
+.hero > div:last-child {
+  flex: 1 1 50%;
+  order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.hero > div:last-child > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 36px;
+  padding-bottom: 36px;
+  padding-right: 32px;
+}
+
+.hero h1 {
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--heading-font-size-xl);
+  margin: 0;
+  line-height: 1.13;
+  max-width: 90%;
+  text-align: left;
+  padding: 0;
+  z-index: 2;
+}
+
+/* Responsive: stack vertically, image below text, shrink image */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 0;
+    min-height: unset;
+  }
+
+  .hero > div:first-child {
+    position: static;
+    order: 2;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    pointer-events: none;
+  }
+
+  .hero > div:first-child > div {
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    height: auto;
+  }
+
+  .hero > div:first-child img {
+    position: static;
+    transform: none;
+    width: 85vw;
+    min-width: 0;
+    max-width: 350px;
+    margin: 0 auto;
+    mask-image: none;
+    mask-image: none;
+    filter: drop-shadow(0 0 12px #0d2642) brightness(1.05);
+    opacity: 1;
+  }
+
+  .hero > div:last-child {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    z-index: 2;
+  }
+
+  .hero > div:last-child > div {
+    padding: 32px 0 8px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: var(--heading-font-size-l);
+    max-width: 100%;
+    text-align: center;
+    padding: 0;
   }
 }
