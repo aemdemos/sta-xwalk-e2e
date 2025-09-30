@@ -1,5 +1,6 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
-  display: flex;
+  display: contents;
   flex-direction: column;
 }
 
@@ -29,5 +30,104 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 32px 40px; /* tighter vertical gap for compact visual alignment */
+  align-items: start;
+  max-width: 1200px;
+  margin: 48px auto;
+}
+
+/* Remove flex layouts on direct children so grid works naturally */
+
+/* Top-left: text/list/button */
+.columns > div:first-child > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+  place-self: start start;
+  padding: 0;
+  margin: 0;
+}
+
+/* Top-right: image */
+.columns > div:first-child > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+  place-self: start start;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Bottom-left: image */
+.columns > div:last-child > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+  place-self: start start;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Bottom-right: text/button */
+.columns > div:last-child > div:not(.columns-img-col) {
+  grid-column: 2;
+  grid-row: 2;
+  place-self: start start;
+  padding: 0;
+  margin: 0;
+}
+
+/* Images: fill cell width, constrain vertical growth for visual balance */
+.columns .columns-img-col img {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Ensure bottom row blocks align visually */
+.columns > div:last-child > .columns-img-col,
+.columns > div:last-child > div:not(.columns-img-col) {
+  min-height: 320px; /* adjust as needed for visual row alignment */
+  box-sizing: border-box;
+}
+
+/* Space between text and buttons */
+.columns .button-container {
+  margin-top: 18px;
+}
+
+/* Responsive: stack columns vertically on mobile */
+@media (width <= 900px) {
+  .columns {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin: 32px 0;
+    max-width: 100%;
+  }
+
+  .columns > div {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 0;
+  }
+
+  .columns > div > div,
+  .columns > div > .columns-img-col {
+    align-self: stretch;
+    padding: 0;
+    margin: 0;
+    min-height: unset;
   }
 }
