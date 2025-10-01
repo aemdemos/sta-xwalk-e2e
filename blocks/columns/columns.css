@@ -1,5 +1,6 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
-  display: flex;
+  display: contents;
   flex-direction: column;
 }
 
@@ -30,4 +31,136 @@
     flex: 1;
     order: unset;
   }
+}
+
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 32px;
+  place-items: start stretch;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Top-left cell: text/list/button */
+.columns > div:nth-child(1) > div:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+  place-self: start stretch;
+  padding: 0 20px 0 0;
+}
+
+/* Top-right cell: image */
+.columns > div:nth-child(1) > .columns-img-col {
+  grid-column: 2;
+  grid-row: 1;
+  place-self: start stretch;
+  padding: 0 0 0 20px;
+}
+
+/* Bottom-left cell: image */
+.columns > div:nth-child(2) > .columns-img-col {
+  grid-column: 1;
+  grid-row: 2;
+  place-self: start stretch;
+  padding: 0 20px 0 0;
+}
+
+/* Bottom-right cell: text/button */
+.columns > div:nth-child(2) > div:nth-child(2) {
+  grid-column: 2;
+  grid-row: 2;
+  place-self: start stretch;
+  padding: 0 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* Ensure all content is top-aligned, remove extra margin */
+.columns > div > div,
+.columns > div > .columns-img-col {
+  place-self: start stretch;
+  margin-top: 0;
+}
+
+/* Prevent images from stretching row height: use max-height and object-fit */
+.columns .columns-img-col {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.columns .columns-img-col img,
+.columns .columns-img-col picture {
+  width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  display: block;
+  margin: 0;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (width <= 900px) {
+  .columns {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .columns > div {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .columns > div > div,
+  .columns > div > .columns-img-col {
+    padding: 0;
+    place-self: stretch stretch;
+    margin-top: 0;
+  }
+}
+
+/* Text block: left alignment and spacing */
+.columns p,
+.columns ul {
+  margin-top: 0;
+  margin-bottom: 1em;
+  color: var(--text-color);
+  font-size: 18px;
+  text-align: left;
+}
+
+.columns ul {
+  padding-left: 20px;
+  margin-bottom: 1.2em;
+}
+
+/* Button container: tight vertical spacing */
+.columns .button-container {
+  margin-top: 1em;
+  margin-bottom: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Button overrides */
+.columns .button {
+  min-width: 80px;
+  padding: 0.5em 1.5em;
+  font-size: 16px;
+  border-radius: 999px;
+}
+
+.columns .button.secondary {
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
 }
