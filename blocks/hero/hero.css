@@ -45,3 +45,116 @@
     padding: 40px 32px;
   }
 }
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 180px;
+  background: #0d233e;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Make the image visually dominant and fill the right area */
+.hero > div:first-child {
+  flex: 1 1 80%;
+  order: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  min-height: 180px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.hero > div:first-child picture {
+  position: static;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.hero > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  margin: 0;
+  padding: 0;
+  /* Optional: slightly overlap the left side for blending if desired
+  margin-left: -2vw;
+  */
+}
+
+/* Make text area narrow and anchor headline to top-left */
+.hero > div:last-child {
+  flex: 0 1 20%;
+  order: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 180px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: var(--heading-font-size-xl);
+  font-weight: 700;
+  margin: 12px 0 0 12px;
+  line-height: 1.125;
+  text-align: left;
+  max-width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .hero h1 {
+    font-size: var(--heading-font-size-l);
+    margin: 8px 0 0 8px;
+    max-width: 100%;
+  }
+  .hero > div:first-child {
+    flex-basis: 65%;
+  }
+  .hero > div:last-child {
+    flex-basis: 35%;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero {
+    flex-direction: column-reverse;
+    min-height: 200px;
+  }
+  .hero > div:first-child,
+  .hero > div:last-child {
+    flex: 1 1 100%;
+    width: 100%;
+    height: auto;
+  }
+  .hero > div:first-child {
+    order: 2;
+  }
+  .hero > div:last-child {
+    order: 1;
+  }
+  .hero h1 {
+    margin: 8px 0 0 8px;
+    font-size: var(--heading-font-size-m);
+    max-width: 100%;
+  }
+}
