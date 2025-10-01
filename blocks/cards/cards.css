@@ -3,25 +3,101 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
+  gap: 24px;
+  grid-auto-rows: 1fr;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+  margin: 0;
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 20px 16px 16px;
+  min-height: 0;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  height: 132px;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+
+.cards {
+  width: 100%;
+}
+
+/* Use CSS Grid: 4 columns, equally tall rows, perfectly aligned block */
+
+/* Responsive columns: 2 on tablet, 1 on mobile */
+@media (width <= 1200px) {
+  .cards > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 700px) {
+  .cards > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card: fill entire grid row, flexes for vertical card body alignment */
+
+/* Image section: always exact height, never stretches */
+
+/* Image: covers area, never distorted */
+.cards .cards-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: unset;
+}
+
+/* Body section: fills remaining space, keeps all cards perfectly aligned */
+
+/* Title styles */
+.cards .cards-card-body p:first-child {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  line-height: 1.2;
+}
+
+/* Body text styles */
+.cards .cards-card-body p:not(:first-child) {
+  margin: 0;
+  font-size: 15px;
+  color: #333;
+  font-weight: 400;
+  line-height: 1.5;
 }
