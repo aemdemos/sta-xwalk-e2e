@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
@@ -6,7 +7,15 @@
 .hero {
   position: relative;
   padding: 40px 24px;
-  min-height: 300px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  background: linear-gradient(90deg, #0B2A3C 60%, rgb(11 42 60 / 0%) 100%);
+  box-sizing: border-box;
+  padding-left: 40px;
+  padding-right: 0;
 }
 
 .hero h1,
@@ -43,5 +52,121 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+.hero div {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 100%;
+}
+
+.hero div:first-child {
+  justify-content: flex-end;
+  order: 2;
+  height: 100%;
+  overflow: hidden; /* ensure image crops to container */
+  position: relative;
+}
+
+.hero div:last-child {
+  justify-content: flex-start;
+  order: 1;
+  height: 100%;
+}
+
+.hero div div {
+  flex: 1 1 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+}
+
+.hero div div picture {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  margin: 0;
+  position: relative;
+}
+
+.hero div div picture img {
+  width: 140%;          /* Make image wider and more cropped for bold visual */
+  min-width: 900px;     /* Ensures bold DNA at desktop */
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: none;
+  transform: translateX(-15%); /* shift image left for cropping effect */
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
+  line-height: 1.2;
+  padding-left: 8px;
+  align-self: center;
+}
+
+@media (width <= 1200px) {
+  .hero div div picture img {
+    width: 120%;
+    min-width: 700px;
+    transform: translateX(-10%);
+  }
+}
+
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 220px;
+    padding: 24px 0;
+    align-items: center;
+  }
+
+  .hero div {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    padding-left: 0;
+  }
+
+  .hero div:first-child,
+  .hero div:last-child {
+    order: unset;
+  }
+
+  .hero div div picture img {
+    width: 100%;
+    min-width: 0;
+    transform: none;
+  }
+}
+
+@media (width <= 600px) {
+  .hero div div picture img {
+    height: 120px;
+    min-height: 0;
+    width: 100%;
+    transform: none;
   }
 }
