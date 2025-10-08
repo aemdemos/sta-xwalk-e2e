@@ -5,8 +5,17 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  padding: 0;
+  min-height: 440px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100vw;
+  background: linear-gradient(90deg, #071734 60%, rgb(7 23 52 / 0%) 100%);
+  overflow: hidden;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .hero h1,
@@ -32,6 +41,17 @@
   inset: 0;
   object-fit: cover;
   box-sizing: border-box;
+  flex: 1;
+  order: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-width: 320px;
+  max-width: 720px;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .hero img {
@@ -43,5 +63,95 @@
 @media (width >= 900px) {
   .hero {
     padding: 40px 32px;
+  }
+}
+
+/* Ensure hero covers full width with no wrapper padding */
+
+/* Root hero block uses flex row for side-by-side image/text */
+
+/* DNA image positioned on right, faded into gradient */
+
+.hero picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  /* Fade left edge for soft blend into background */
+  mask-image: linear-gradient(to left, black 78%, transparent 100%);
+  mask-image: linear-gradient(to left, black 78%, transparent 100%);
+  background: transparent;
+  box-sizing: border-box;
+}
+
+/* Text column: left-aligned, significant top/left padding */
+.hero div {
+  flex: 1;
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 0;
+  box-sizing: border-box;
+  padding-left: 48px;
+  padding-top: 56px;
+  padding-right: 24px;
+  z-index: 1;
+}
+
+.hero h1 {
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--heading-font-size-xxl, 45px);
+  line-height: 1.15;
+  margin: 0 0 0.4em;
+  text-align: left;
+  letter-spacing: -0.01em;
+  max-width: 540px;
+  text-shadow: 0 2px 24px rgb(7 23 52 / 14%);
+}
+
+/* Responsive: stack vertically and center text on mobile */
+@media (width <= 900px) {
+  .hero {
+    flex-direction: column;
+    min-height: 320px;
+    width: 100vw;
+    padding: 0;
+  }
+
+  .hero div {
+    padding-left: 16px;
+    padding-top: 32px;
+    padding-right: 16px;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .hero h1 {
+    font-size: var(--heading-font-size-xl, 36px);
+    max-width: 95vw;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .hero picture {
+    order: 2;
+    width: 100vw;
+    min-width: unset;
+    max-width: 100vw;
+    height: auto;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .hero picture img {
+    mask-image: linear-gradient(to left, black 96%, transparent 100%);
+    mask-image: linear-gradient(to left, black 96%, transparent 100%);
   }
 }
