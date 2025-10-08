@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +30,72 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+/* Select the innermost content div */
+.columns-wrapper > .columns.block > div > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem; /* adjust as needed */
+}
+
+/* Assign the first group of elements to column 1 */
+.columns-wrapper > .columns.block > div > div > *:nth-child(-n+4) {
+  grid-column: 1;
+}
+
+/* Assign the remaining elements to column 2 */
+.columns-wrapper > .columns.block > div > div > *:nth-child(n+5) {
+  grid-column: 2;
+}
+
+/* Buttons styling */
+.columns-wrapper .button {
+  background: #3f51b5;
+  color: #fff;
+  border-radius: 16px;
+  padding: 8px 24px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.columns-wrapper .button.secondary {
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+/* Image styling */
+.columns-wrapper img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0;
+  display: block;
+}
+
+/* Spacing and text */
+.columns-wrapper > .columns.block > div > div > * {
+  margin-bottom: 1.5rem;
+  font-family: sans-serif;
+  color: #222;
+}
+
+.columns-wrapper ul {
+  margin: 0 0 1rem 1.5rem;
+}
+
+/* Responsive: stack columns on mobile */
+@media (width <= 800px) {
+  .columns-wrapper > .columns.block > div > div {
+    grid-template-columns: 1fr;
+  }
+
+  .columns-wrapper > .columns.block > div > div > * {
+    grid-column: auto !important;
   }
 }
