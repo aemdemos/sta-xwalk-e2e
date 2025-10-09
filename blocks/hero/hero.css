@@ -45,3 +45,87 @@
     padding: 40px 32px;
   }
 }
+
+.hero.block {
+  /* Set up horizontal layout */
+  display: flex;
+  flex-direction: row;
+  align-items: center;         /* Vertically center children */
+  justify-content: space-between;
+  width: 100%;
+  min-height: 190px;           /* per spec */
+  background: linear-gradient(90deg, #0d2c45 0%, #173857 100%);
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* The first child <div>: DNA image area, pushed to right */
+.hero.block > div:first-child {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 0; /* Prevent flexbox overflow */
+}
+
+/* The second child <div>: Text area, aligned left */
+.hero.block > div:last-child {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+
+  /* You may use justify-content: flex-start; but default is fine */
+}
+
+/* Make the DNA image larger and let it overlap the right edge slightly */
+.hero.block picture img {
+  max-height: 170px;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+
+  /* Overlap the image by letting it "leak" to the right; adjust as needed: */
+  margin-right: -40px;
+
+  /* Optionally add drop-shadow for separation: */
+  filter: drop-shadow(0 0 12px rgb(13 44 69 / 30%));
+}
+
+/* Style the text */
+.hero.block h1 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  font-family: Inter, Arial, sans-serif; /* or your brand font */
+  margin: 0;
+  padding-left: 40px;
+  line-height: 1.2;
+}
+
+/* Responsive: Stack vertically on narrow screens */
+@media (width <= 900px) {
+  .hero.block {
+    flex-direction: column-reverse;
+    min-height: 320px;
+    justify-content: flex-start;
+  }
+
+  .hero.block > div {
+    flex: none;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero.block h1 {
+    padding-left: 0;
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  .hero.block picture img {
+    margin-right: 0;
+    max-height: 140px;
+  }
+}
