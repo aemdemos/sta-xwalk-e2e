@@ -45,3 +45,62 @@
     padding: 40px 32px;
   }
 }
+
+.hero.block {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Vertically center items */
+  justify-content: space-between; /* Optional: space between text and image */
+  min-height: 400px; /* Adjust as needed for vertical centering */
+  background: linear-gradient(90deg, #0a2342 60%, transparent 100%); /* Optional: dark blue gradient for left side */
+}
+
+.hero.block > div:first-child {
+  flex: 1 1 50%; /* Take up right side */
+  display: flex;
+  justify-content: flex-end; /* Align image to the right edge */
+  align-items: center;
+  min-width: 0; /* Prevent overflow */
+}
+
+.hero.block > div:last-child {
+  flex: 1 1 50%; /* Take up left side */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align text to left edge */
+  min-width: 0;
+}
+
+.hero.block h1 {
+  color: #fff;
+  font-size: 2.2em; /* ~32px */
+  font-weight: bold;
+  margin: 0;
+
+  /* Optional: add text-shadow for better legibility on image backgrounds */
+
+  /* text-shadow: 0 1px 4px rgba(0,0,0,0.4); */
+}
+
+.hero.block picture img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+
+  /* Optionally, set a max-height to prevent giant images */
+  max-height: 400px;
+}
+
+@media (width <= 900px) {
+  .hero.block {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .hero.block > div {
+    flex: 1 1 100%;
+    justify-content: center;
+    align-items: center;
+  }
+}
