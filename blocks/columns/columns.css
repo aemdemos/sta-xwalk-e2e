@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +30,102 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.columns .block,
+.columns .columns-2-cols {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.columns div div {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.columns div div + div {
+  margin-top: 20px;
+}
+
+/* Compact lists and headings within group */
+.columns ul,
+.columns ol {
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding-left: 24px;
+}
+
+.columns li {
+  margin-bottom: 7px;
+}
+
+.columns h1,
+.columns h2,
+.columns h3,
+.columns h4,
+.columns h5,
+.columns h6,
+.columns p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.columns button,
+.columns a.button {
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 3px 15px 0 rgb(60 100 250 / 5%);
+  margin-top: 8px;
+  margin-bottom: 0;
+  padding: 0.75em 2.2em;
+}
+
+.columns a.button.secondary,
+.columns button.secondary {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 2px solid var(--text-color);
+  box-shadow: none;
+}
+
+.columns img,
+.columns .columns-img-col img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px 0 rgb(60 70 130 / 7%);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+@media (width <= 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .columns .block,
+  .columns .columns-2-cols {
+    margin-bottom: 0;
+  }
+
+  .columns div div + div {
+    margin-top: 14px;
   }
 }
