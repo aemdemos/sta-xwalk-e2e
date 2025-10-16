@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +30,148 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns.block.columns-2-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 48px 0;
+}
+
+/* Responsive stacking for narrow screens */
+@media (width <= 900px) {
+  .columns.block.columns-2-cols {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 32px 0;
+  }
+}
+
+/* Inner columns stack items vertically */
+.columns.block.columns-2-cols > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+/* Make sure images (and their containers) appear at top of each column visually */
+.columns.block.columns-2-cols picture,
+.columns.block.columns-2-cols img {
+  order: -1;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 0;
+  display: block;
+}
+
+/* Tight vertical grouping for all text/buttons */
+.columns.block.columns-2-cols p,
+.columns.block.columns-2-cols ul,
+.columns.block.columns-2-cols li,
+.columns.block.columns-2-cols .button {
+  margin-bottom: 0;
+}
+
+/* Extra space below images to visually group following text/buttons */
+.columns.block.columns-2-cols img + *,
+.columns.block.columns-2-cols picture + * {
+  margin-top: 16px;
+}
+
+/* List styling */
+.columns.block.columns-2-cols ul {
+  padding-left: 22px;
+  color: var(--text-color);
+  font-size: var(--body-font-size-xs);
+  line-height: 1.5;
+}
+
+.columns.block.columns-2-cols li {
+  margin-bottom: 6px;
+}
+
+/* Headings and paragraph styling for clarity */
+.columns.block.columns-2-cols h1,
+.columns.block.columns-2-cols h2,
+.columns.block.columns-2-cols h3,
+.columns.block.columns-2-cols h4,
+.columns.block.columns-2-cols h5,
+.columns.block.columns-2-cols h6,
+.columns.block.columns-2-cols p {
+  color: var(--text-color);
+  font-size: var(--body-font-size-xs);
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* Buttons - keep pill shape, correct colors, override as needed */
+.columns.block.columns-2-cols .button {
+  border-radius: 9999px;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: var(--link-color);
+  color: var(--background-color);
+  border: none;
+  min-width: 120px;
+  box-sizing: border-box;
+  text-align: center;
+  transition: background 0.15s;
+  margin: 0;
+}
+
+.columns.block.columns-2-cols .button.secondary {
+  background: unset;
+  color: var(--text-color);
+  border: 2px solid currentcolor;
+}
+
+.columns.block.columns-2-cols .button:hover,
+.columns.block.columns-2-cols .button:focus {
+  background-color: var(--link-hover-color);
+}
+
+.columns.block.columns-2-cols .button.secondary:hover,
+.columns.block.columns-2-cols .button.secondary:focus {
+  background: var(--light-color);
+  border-color: var(--link-color);
+  color: var(--link-color);
+}
+
+/* Ensure tight grouping between button/text/list below images */
+.columns.block.columns-2-cols .button + p,
+.columns.block.columns-2-cols p + .button,
+.columns.block.columns-2-cols ul + .button,
+.columns.block.columns-2-cols .button + ul,
+.columns.block.columns-2-cols p + ul,
+.columns.block.columns-2-cols ul + p {
+  margin-top: 10px;
+}
+
+/* Remove any gap/margin for empty divs (if present in structure) */
+.columns.block.columns-2-cols div:empty {
+  display: none;
+}
+
+/* For mobile: reduce gap and padding */
+@media (width <= 599px) {
+  .columns.block.columns-2-cols {
+    gap: 16px;
+    padding: 12px 0;
+  }
+
+  .columns.block.columns-2-cols > div {
+    gap: 12px;
   }
 }
