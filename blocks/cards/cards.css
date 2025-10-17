@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .cards > ul {
   list-style: none;
   margin: 0;
@@ -14,14 +15,140 @@
 
 .cards .cards-card-body {
   margin: 16px;
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  background: #fff;
+  box-sizing: border-box;
+  justify-content: flex-start;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f6f6f6;
+  overflow: hidden;
+  border-radius: 0;
+  flex-shrink: 0;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+
+.cards {
+  /* Ensure cards block stretches edge-to-edge in its parent container */
+  padding: 0;
+  margin: 0;
+  background: var(--background-color);
+  box-sizing: border-box;
+}
+
+/* Cards grid: 4 columns on large, 2 on medium, 1 on small screens */
+.cards ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  box-sizing: border-box;
+
+  /* Remove max-width to allow grid to fill parent */
+  max-width: none;
+  place-items: stretch stretch;
+}
+
+/* Responsive behavior: 2 columns tablet, 1 column mobile */
+@media (width <= 1023px) {
+  .cards ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (width <= 599px) {
+  .cards ul {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Card styling: flat, equal height, no border-radius, consistent border */
+.cards li {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  box-sizing: border-box;
+  align-items: stretch;
+  justify-content: flex-start;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Card image block: always at top, aspect ratio, flat edges */
+
+/* Ensures image fills area and is clipped, with no border-radius */
+.cards .cards-card-image img,
+.cards .cards-card-image picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Card content: compact, vertical stack, fills remaining space */
+
+/* Card headline/title: bold, a bit larger, minimal margin below */
+.cards .cards-card-body p strong {
+  font-weight: 700;
+  font-size: 18px;
+  color: #000;
+  display: block;
+  margin-bottom: 6px;
+  line-height: 1.22;
+}
+
+/* Card body text: regular, compact, dark gray, tight line height */
+.cards .cards-card-body p:not(:first-child),
+.cards .cards-card-body p:not(:has(strong)) {
+  font-size: 15px;
+  color: #222;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Remove default paragraph spacing at top/bottom inside card body */
+.cards .cards-card-body p:first-child {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.cards .cards-card-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Make sure .cards li fills full width on mobile */
+@media (width <= 599px) {
+  .cards li {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
 }
