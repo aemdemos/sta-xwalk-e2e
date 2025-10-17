@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +30,151 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+/* Columns block: responsive 2-column grid on desktop, stacked on mobile */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (width <= 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Left column: tightly stack heading, list, button vertically */
+.columns .block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 0.7rem;
+}
+
+/* Left column: blue DNA image visually aligned with preview section right column */
+.columns .block img,
+.columns .block picture {
+  max-width: 76%;
+  height: auto;
+  margin-top: 2.6rem;
+  margin-bottom: 0;
+  align-self: flex-start;
+}
+
+/* Reduce vertical gap below each left column item except DNA image */
+.columns .block *:not(img, :last-child) {
+  margin-bottom: 0.25rem;
+}
+
+/* Right column: vertical stack of gold DNA and preview area */
+.columns .block:last-of-type {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 1.6rem;
+}
+
+/* Gold DNA image at full width, no gap above/below */
+.columns .block:last-of-type img,
+.columns .block:last-of-type picture {
+  width: 100%;
+  height: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: flex-start;
+}
+
+/* Ensure preview text/button group is visually compact beneath gold DNA */
+.columns .block:last-of-type p,
+.columns .block:last-of-type a.button.secondary,
+.columns .block:last-of-type button.secondary {
+  margin-top: 0.15rem;
+  margin-bottom: 0;
+  align-self: flex-start;
+  max-width: 230px;
+}
+
+/* Preview button (right column, secondary) style override */
+.columns .block:last-of-type a.button.secondary,
+.columns .block:last-of-type button.secondary {
+  background: #fff;
+  border: 2px solid #222;
+  color: #222;
+  border-radius: 999px;
+  font-weight: 500;
+  padding: 0.75em 2em;
+  text-align: left;
+}
+
+/* Primary button (left column, blue) override for specificity */
+.columns .block a.button:not(.secondary),
+.columns .block button:not(.secondary) {
+  background: #3b5bfc;
+  color: #fff;
+  border-radius: 999px;
+  border: none;
+  padding: 0.75em 2em;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.15rem;
+  margin-bottom: 0.15rem;
+  box-shadow: none;
+  max-width: 230px;
+  text-align: left;
+}
+
+/* List styling */
+.columns .block ul {
+  margin-top: 0;
+  margin-bottom: 0.32rem;
+  padding-left: 1.1em;
+  color: #222;
+  font-size: 1rem;
+}
+
+/* All text left-aligned and dark for contrast */
+.columns ul,
+.columns li,
+.columns p,
+.columns span {
+  color: #222;
+  text-align: left;
+}
+
+/* Images: block, scale, no border/shadow */
+.columns img,
+.columns picture {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* On mobile, reduce gaps and image size for better stacking */
+@media (width <= 900px) {
+  .columns {
+    gap: 1.3rem;
+  }
+
+  .columns .block {
+    row-gap: 0.45rem;
+  }
+
+  .columns .block img,
+  .columns .block picture {
+    max-width: 100%;
+    max-height: 110px;
+    margin-top: 1.1rem;
   }
 }
