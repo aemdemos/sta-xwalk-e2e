@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -29,5 +30,98 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+.columns-wrapper .columns.block.columns-1-cols > div > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 2rem;
+  padding: 2rem 0;
+  background: #fff;
+}
+
+/* Top left column: heading, list, Live button */
+.columns-wrapper .columns.block.columns-1-cols > div > div > p:nth-child(1),
+.columns-wrapper .columns.block.columns-1-cols > div > div > ul,
+.columns-wrapper .columns.block.columns-1-cols > div > div > p.button-container {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+/* Top right column: first image */
+.columns-wrapper .columns.block.columns-1-cols > div > div > p:nth-child(4) {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+/* Bottom left column: second image */
+.columns-wrapper .columns.block.columns-1-cols > div > div > p:nth-child(5) {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+/* Bottom right column: preview text, Preview button */
+.columns-wrapper .columns.block.columns-1-cols > div > div > p:nth-child(6),
+.columns-wrapper .columns.block.columns-1-cols > div > div > p.button-container:last-child {
+  grid-row: 2;
+  grid-column: 2;
+}
+
+/* Style button */
+.columns-wrapper .columns.block.columns-1-cols .button {
+  background: #3B57FF;
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5em 1.5em;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.columns-wrapper .columns.block.columns-1-cols .button.secondary {
+  background: #fff;
+  color: #222;
+  border: 2px solid #222;
+  border-radius: 1.5em;
+  padding: 0.5em 1.5em;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+/* Images */
+.columns-wrapper .columns.block.columns-1-cols picture img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 1em;
+}
+
+/* Text */
+.columns-wrapper .columns.block.columns-1-cols p {
+  color: #222;
+  font-family: sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+/* List spacing */
+.columns-wrapper .columns.block.columns-1-cols ul {
+  margin: 0 0 1rem 1.2rem;
+  padding: 0;
+}
+
+/* Responsive: stack elements vertically on small screens */
+@media (width <= 700px) {
+  .columns-wrapper .columns.block.columns-1-cols > div > div {
+    display: block;
+  }
+
+  .columns-wrapper .columns.block.columns-1-cols > div > div > * {
+    grid-row: unset;
+    grid-column: unset;
   }
 }
