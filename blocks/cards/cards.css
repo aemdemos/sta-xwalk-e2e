@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .cards > ul {
   list-style: none;
   margin: 0;
@@ -14,14 +15,115 @@
 
 .cards .cards-card-body {
   margin: 16px;
+  padding: 12px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 1 1 auto;
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  width: 100%;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+
+.cards {
+  /* Center the block and restrict its width to match visual design */
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+  background: transparent;
+}
+
+/* Use CSS Grid for a true multi-row, multi-column layout */
+.cards ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 14px 12px; /* vertical and horizontal spacing, visually tight */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each card: vertical stack with border, background, compact corners, and overflow hidden */
+.cards li {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 2px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  transition: box-shadow 0.18s;
+}
+
+/* On hover, subtle shadow for depth */
+.cards li:hover {
+  box-shadow: 0 2px 8px rgb(32 32 32 / 6%);
+}
+
+/* Image section: always at top, full width, compact corners */
+
+/* Image: aspect-ratio for uniformity, covers card width */
+.cards .cards-card-image img,
+.cards .cards-card-image picture {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+/* Card body: vertical stack, compact internal padding, no extra margin */
+
+/* Title: first paragraph, bold, larger, darker, visually separated */
+.cards .cards-card-body p:first-child {
+  font-size: 21px;
+  font-weight: 700;
+  color: #222;
+  margin-top: 0;
+  margin-bottom: 7px;
+  line-height: 1.18;
+}
+
+/* Body text: rest of paragraphs, smaller, lighter, no margin */
+.cards .cards-card-body p:not(:first-child) {
+  font-size: 15px;
+  color: #888;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive: 2 columns at tablet, 1 column on mobile */
+@media (width <= 1024px) {
+  .cards ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 600px) {
+  .cards ul {
+    grid-template-columns: 1fr;
+  }
+
+  .cards li {
+    border-radius: 0;
+  }
 }
