@@ -13,7 +13,7 @@
   "crawlOptions": {
     "timeout": 10000,
     "inclusionPatterns": [],
-    "exclusionPatterns": [],
+    "exclusionPatterns": [ ],
     "limit": 100,
     "sameDomain": true,
     "keepHash": false,
