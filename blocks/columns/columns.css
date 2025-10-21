@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -5,6 +6,12 @@
 
 .columns img {
   width: 100%;
+  max-width: 340px;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 1.1rem;
+  margin: 0;
+  display: block;
 }
 
 .columns > div > div {
@@ -29,5 +36,97 @@
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+}
+
+
+/* columns block: improved two-column layout, tight vertical grouping, correct alignment */
+
+/* Root columns block layout: two columns side by side, mobile stacks vertically */
+.columns {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3.2rem; /* horizontal gap between columns */
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Each column stacks its children vertically, aligns to top */
+.columns div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1.2rem; /* reduced gap for compact grouping */
+  width: 0; /* allow flex child to fill evenly */
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Images: maintain aspect, fill column width, visually balanced */
+
+/* Lists: ensure left indent, compact spacing */
+.columns ul {
+  padding-left: 1.5em;
+  margin: 0;
+  list-style-type: disc;
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+}
+
+/* Paragraphs: compact vertical margin */
+.columns p {
+  margin: 0;
+}
+
+/* Buttons: visual override for columns context, primary/secondary */
+.columns .button {
+  background-color: #3D5AFE;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.75em 2em;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgb(61 90 254 / 8%);
+  margin: 0;
+  align-self: flex-start;
+  transition: background 0.2s;
+}
+
+.columns .button.secondary {
+  background-color: #fff;
+  color: var(--text-color);
+  border: 2px solid #000;
+  border-radius: 1em;
+  box-shadow: none;
+  margin: 0;
+  align-self: flex-start;
+}
+
+/* Group preview text and button tightly under image in right column */
+.columns div p + .button.secondary,
+.columns div p + a.button.secondary {
+  margin-top: 0.6rem;
+}
+
+/* Responsive stacking for tablets/mobile */
+@media (width <= 900px) {
+  .columns {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .columns div {
+    gap: 1rem;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .columns img {
+    max-width: 100%;
+    max-height: 170px;
   }
 }
